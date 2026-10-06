@@ -1,0 +1,6 @@
+row,annotator_a_label,annotator_b_label,final_label,rationale
+8158,Consumer loan,Credit reporting,Consumer loan,Auto loan is the central disputed product despite resulting credit harm
+8384,Credit card,Debt collection,Credit card,"Account and payment status is central, not collection conduct"
+8590,Money transfer or service,Credit card,Money transfer or service,The missing electronic funds transfer is central despite the destination being an American Express account
+8699,Credit reporting,Debt collection,Credit reporting,The requested remedy is removal of inaccurate credit-report information
+8762,Credit card,Bank account or service,Credit card,The duplicate credit-card payment is central and the bank account is only the funding source

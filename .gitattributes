@@ -1,0 +1,5 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Preserve source narrative whitespace in CSV evidence without diff warnings.
+*.csv -whitespace
