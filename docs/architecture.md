@@ -43,6 +43,78 @@ labelling/golden_test_set.csv (row, narrative, final_label)
 
 `source_label` in `team8_rows_8000_8999.csv` is a sampling/audit aid only; annotators do not see it while labelling and it is never used as ground truth. Every row in `golden_test_set.csv` reconciles with either (a) an identical label from both annotator sheets, or (b) a recorded resolution in `disagreement_resolutions.csv`.
 
+---
+
+# Step 2 Baseline Service Architecture
+
+## Overview
+
+A single FastAPI process, one SQLite file, and an append-only JSONL request log. No queue, no cache, no background worker — every `POST /tickets` call blocks on a synchronous call to a local Ollama instance running on the host, outside the container.
+
+```text
+Client / JMeter (Step 5)
+        |
+        v (HTTP)
+FastAPI app (src/app/main.py)
+        |
+        |-- instrument_requests middleware --> logs/requests.jsonl (every request, incl. failures)
+        |
+        +-- POST /tickets --> OllamaClassifier.classify() [single lock, sequential]
+        |                           |
+        |                           v (HTTP, num_gpu=0)
+        |                     Ollama on host (host.docker.internal:11434)
+        |                           |
+        |                     category text --> categories.parse_category() (must be an exact match)
+        |                           |
+        |                           v
+        |                     TicketStore.insert() --> SQLite (runtime/tickets.db)
+        |
+        +-- GET /search?q=... --> TicketStore.search()  (LIKE match on narrative)
+        |
+        +-- GET /stats --> TicketStore.category_counts()
+```
+
+## Components
+
+| Component | Responsibility |
+| --- | --- |
+| `src/app/main.py` | FastAPI app: the three required endpoints, request-logging middleware, request/response models. |
+| `src/app/ollama_client.py` | Synchronous, lock-serialised HTTP client to local Ollama; forces `num_gpu: 0`; raises `OllamaError` on network failure, HTTP error, or malformed/invalid category output. |
+| `src/app/categories.py` | The seven allowed category strings; builds the classification prompt; strictly parses the model's raw text into exactly one category or raises. |
+| `src/app/storage.py` | SQLite-backed `TicketStore`: insert, substring search, per-category counts. No cache, no bulk import path. |
+| `src/app/config.py` | Environment-driven `Settings` (Ollama URL/model/timeout, DB path, log path) — no hardcoded model choice. |
+| `src/app/request_logging.py` | Thread-safe append-only JSONL writer for the logged fields (below). |
+| `Dockerfile`, `docker-compose.yml` | Container build and run; `host.docker.internal` reaches Ollama on the host; `runtime/` and `logs/` are bind-mounted so both persist and are inspectable outside the container. |
+
+## Logged fields
+
+The brief (`docs/PROJECT_CONTEXT.md` Section 10) only requires that every request be logged and reconcile with reported numbers; it does not name specific fields. This implementation logs one JSON line per request to `logs/requests.jsonl` with:
+
+```text
+timestamp
+request_id
+endpoint
+method
+model
+ticket_row_if_available
+request_start
+request_end
+latency_ms
+http_status
+predicted_category
+error
+```
+
+Every request produces exactly one line, success or failure (validation errors, Ollama-unreachable, invalid model output), via the `instrument_requests` middleware in `src/app/main.py`.
+
+## Baseline-fidelity notes
+
+- **Synchronous**: `POST /tickets` awaits `classifier.classify(...)` before responding; there is no background task or callback.
+- **Sequential, not parallel**: `OllamaClassifier` holds a `threading.Lock` around every inference call, by design — an explicit constraint, not a bug, so concurrent load produces queueing delay inside the service rather than parallel Ollama calls.
+- **No caching**: identical narratives are re-classified every time; nothing memoises a prompt or response.
+- **No bulk import**: the service has no endpoint or script that loads the CSV directly — tickets only enter through `POST /tickets`, exactly as the brief requires.
+- **CPU-only**: `options.num_gpu = 0` is sent on every Ollama request.
+
 ## Boundary
 
-The Step 1 branch deliberately excludes the Docker service, Ollama integration, load testing, prediction, benchmark, and analysis artefacts. Those belong to subsequent assignment steps.
+Step 2 excludes model selection/pinning (Step 4), workload modelling (Step 3), JMeter load/stress testing (Step 5), and the recommendation (Step 6). It also does not yet pull or pin any specific Ollama model — `OLLAMA_MODEL` in `.env.example` is a placeholder until Step 4 selects and pins the candidate set.

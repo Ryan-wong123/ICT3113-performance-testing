@@ -37,3 +37,41 @@ Labelling is fully manual: two team members each independently label all 175 tic
 - Cohen's kappa between the two annotators is calculated and reported as inter-human agreement.
 - Each disagreement between the two annotators has a resolution with a rationale.
 - Every row in `golden_test_set.csv` matches the two annotators' agreed label, or the recorded resolution where they disagreed.
+
+---
+
+# Step 2 Baseline Service PRD
+
+## Objective
+
+Build the Ticket Triage Service exactly as specified in the assignment brief: a synchronous, single-model, unoptimised baseline that classifies one ticket narrative per request by calling a local CPU-only Ollama model. This baseline exists to be measured in Step 5, not to be fast.
+
+## Scope and constraints
+
+- Three endpoints only: `POST /tickets`, `GET /search`, `GET /stats`.
+- Classification is synchronous: `POST /tickets` does not return until Ollama has classified the ticket.
+- Deliberately naive: sequential model calls, no caching, no request queue, no batching, no background workers, no pre-optimisation.
+- CPU-only inference. `num_gpu: 0` is passed to Ollama explicitly, and inference is serialised behind a lock so the baseline never issues parallel model calls.
+- No public model API — the service only ever calls a local Ollama instance over HTTP.
+- The service starts empty; tickets enter only through `POST /tickets`. The golden-set CSV is never bulk-loaded into the service.
+- Every request is logged (fields listed in `docs/architecture.md`, "Logged fields") for later reconciliation with JMeter results, per `docs/PROJECT_CONTEXT.md` Section 10.
+- Runs in Docker via `docker compose up`.
+
+## Required evidence
+
+| Evidence | Location |
+| --- | --- |
+| Service source | `src/app/` (`main.py`, `ollama_client.py`, `storage.py`, `categories.py`, `config.py`, `request_logging.py`) |
+| Container definition | `Dockerfile`, `docker-compose.yml` |
+| Dependencies | `requirements.txt` |
+| Configuration template | `.env.example` |
+| Request logs (generated at runtime) | `logs/requests.jsonl` |
+
+## Acceptance criteria
+
+- `POST /tickets` accepts one narrative, classifies it into exactly one of the seven categories, stores it, and returns the assigned category; a narrative that fails Ollama's output contract or an unreachable Ollama both surface as a clear error (`502`) and are logged, not silently misclassified.
+- `GET /search?q=...` returns previously stored tickets whose narrative matches the query.
+- `GET /stats` returns ticket counts grouped by assigned category.
+- No two model calls run concurrently (verified: an explicit lock serialises every classification).
+- Every request — success or failure — produces one JSON log line with timestamp, request id, endpoint, model, ticket row (if supplied), start/end time, latency, HTTP status, predicted category, and error.
+- The service builds and runs under `docker compose up`, reaching a local Ollama instance on the host.

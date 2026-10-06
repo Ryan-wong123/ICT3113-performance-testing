@@ -1,0 +1,18 @@
+services:
+  ticket-triage:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:3b}
+      OLLAMA_TIMEOUT_SECONDS: ${OLLAMA_TIMEOUT_SECONDS:-300}
+      TICKETS_DB_PATH: /app/runtime/tickets.db
+      REQUEST_LOG_PATH: /app/logs/requests.jsonl
+    volumes:
+      - ./runtime:/app/runtime
+      - ./logs:/app/logs
+    # Enables host-local Ollama access on Linux Docker engines as well as Docker Desktop.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

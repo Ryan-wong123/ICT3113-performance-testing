@@ -213,25 +213,9 @@ predictions/prediction_record.md
 
 ## 10. Instrumentation and Logging
 
-Every request handled by the service must be logged.
+Every request handled by the service must be logged. Every number shown in the final presentation must reconcile with either service logs or raw JMeter `.jtl` files.
 
-Useful fields:
-
-```text
-timestamp
-request_id
-endpoint
-model
-ticket_row_if_available
-request_start
-request_end
-latency
-http_status
-predicted_category
-error
-```
-
-Every number shown in the final presentation must reconcile with either service logs or raw JMeter `.jtl` files.
+The exact fields the implementation logs are an engineering decision, not part of this brief — see `docs/architecture.md` (Step 2 Baseline Service Architecture, `request_logging.py`) for the current field list.
 
 ## 11. Test Environment
 

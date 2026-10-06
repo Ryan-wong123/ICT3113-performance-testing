@@ -48,3 +48,50 @@ This validates the Team 8 row bounds, matching row sets across all four files, a
 ## Methodological note
 
 Labelling is fully manual and inter-human: two team members each independently labelled all 175 tickets.
+
+---
+
+# Step 2 — Baseline Service Task Record
+
+## Completed workflow
+
+- [x] Implement `POST /tickets` (synchronous classification, storage, returns category), `GET /search`, `GET /stats`.
+- [x] Serialise every Ollama call behind a single lock — no parallel inference, no caching, no queue, no batching, no background workers.
+- [x] Force CPU-only inference (`num_gpu: 0`) and call only a local Ollama instance (no public model API).
+- [x] Log every request (success and failure) with timestamp, request id, endpoint, model, ticket row, start/end time, latency, HTTP status, predicted category, and error, to `logs/requests.jsonl`.
+- [x] Containerise the service (`Dockerfile`, `docker-compose.yml`) reaching Ollama on the host via `host.docker.internal`.
+- [x] Build and run the actual container (`docker compose up --build`) against a real local Ollama instance (not a stub) — verified working.
+- [x] Install Ollama on the host, pull `llama3.2:3b`, and confirm `ollama ps` reports `100% CPU` — CPU-only inference is genuinely enforced, not just requested, even though this host has an NVIDIA GPU.
+- [x] Smoke-test all three endpoints end to end against the real container + real Ollama: `POST /tickets` (4 real tickets, all classified into plausible/correct categories), `GET /search` (including case-insensitivity and `limit`), `GET /stats`.
+- [x] Confirm sequential (non-overlapping) processing under concurrent load, from request start/end timestamps in `logs/requests.jsonl`.
+- [x] Confirm input validation: empty narrative and out-of-Team-8-range `ticket_row` both rejected with 422.
+- [x] Confirm the Ollama-unreachable failure path: 502, logged with the error, against both a stub and (incidentally, before Ollama was started) the real container.
+- [x] Confirm every request (success, validation failure, and Ollama failure) produces one log line in `logs/requests.jsonl` with the required fields, reconciling exactly with what happened.
+
+## Not yet done / left for later steps
+
+- [ ] Pin and pull real candidate Ollama models (Step 4); `.env.example`'s `OLLAMA_MODEL` is a placeholder with no recorded digest yet.
+- [ ] Automated tests for the service (none exist yet; validation so far was manual curl-based smoke testing).
+- [ ] The malformed/off-format model output path (`categories.parse_category` raising on a non-matching reply → 502) has never actually fired against a real model — it's implemented but unexercised, since the model has so far always replied with an exact category.
+- [ ] `logs/requests.jsonl` currently holds this development smoke-test traffic (a handful of tickets, a couple of induced failures) — clear it before the first real benchmark run in Step 5 so dev noise doesn't mix with reported evidence.
+
+## Verification
+
+```bash
+# 1. Run a local Ollama and pull a model, e.g.:
+ollama pull llama3.2:3b
+
+# 2. Build and start the service:
+docker compose up --build
+
+# 3. Exercise the three endpoints:
+curl -X POST http://localhost:8000/tickets -H "Content-Type: application/json" \
+  -d '{"narrative": "My card was charged twice for the same purchase", "ticket_row": 8762}'
+curl "http://localhost:8000/search?q=charged"
+curl http://localhost:8000/stats
+
+# 4. Confirm CPU-only inference:
+ollama ps   # PROCESSOR column should read "100% CPU"
+
+# 5. Confirm every call above produced a line in logs/requests.jsonl with the required fields.
+```
