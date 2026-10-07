@@ -95,3 +95,41 @@ ollama ps   # PROCESSOR column should read "100% CPU"
 
 # 5. Confirm every call above produced a line in logs/requests.jsonl with the required fields.
 ```
+
+---
+
+# Step 3 — Workload Model Task Record
+
+## Completed workflow
+
+- [x] Compute character/word-count statistics (min/max/mean/p50/p95/p99, bucketed histograms) over all 1,000 Team 8 narratives (`scripts/calculate_ticket_length_stats.py` → `analysis/ticket_length_statistics.json`).
+- [x] Model annual/monthly/weekly/daily submission and search volume from a cited public benchmark, with peak/off-peak rates that conserve the daily total (`scripts/build_workload_model.py` → `analysis/workload_model.json`).
+- [x] Write up the evidence, assumptions (each labelled with an ID and a stated reason), calculations, resulting test scenarios, and limitations/re-baseline triggers (`docs/workload_model.md`).
+- [x] Independently verify every cited public figure against the primary source, not just trust the reference draft — see "Verification" below.
+- [x] Regenerate both JSON artefacts from our actual repo data (`labelling/team8_rows_8000_8999.csv`) and confirm the numbers match.
+- [x] Run the generator's unit tests (`tests/test_build_workload_model.py`) against our code — all 4 pass.
+
+## Not yet done / left for later steps
+
+- [ ] These rates aren't yet used anywhere — Step 4 must derive testable response-time/throughput/accuracy requirements from this model, and Step 5's JMeter plans must use these submission/search rates (and this ticket-length distribution) for realistic-load scenarios.
+- [ ] The model has no day-of-week, holiday, campaign, incident, or seasonal effects (explicitly noted as a limitation in `docs/workload_model.md`).
+
+## Verification
+
+```bash
+# Regenerate both machine-readable artefacts and confirm they match what's committed:
+python3 scripts/calculate_ticket_length_stats.py
+python3 scripts/build_workload_model.py
+
+# Run the generator's unit tests:
+python3 -m unittest tests.test_build_workload_model -v
+```
+
+Every public figure cited in `docs/workload_model.md` was checked directly against its primary source during development (not just copied from a prior draft):
+
+| Citation | Verified against |
+| --- | --- |
+| "CFPB received approximately 3,187,900 complaints" in 2024 | Extracted text of the CFPB's 2024 Consumer Response Annual Report PDF, Section 1 — matched verbatim. |
+| "98% of complaints [submitted] by visiting the CFPB's website" | Same PDF, same section — matched verbatim. |
+| "sent approximately 2,829,400 (or 89%) to companies for review and response" | Same PDF, Section 2 — matched verbatim. |
+| Database "is not a statistical sample... not necessarily representative" | CFPB Consumer Complaint Database disclaimer page — matched near-verbatim. |

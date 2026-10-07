@@ -1,0 +1,85 @@
+{
+  "model_version": 1,
+  "basis": {
+    "source": "CFPB Consumer Response Annual Report 2024",
+    "source_url": "https://files.consumerfinance.gov/f/documents/cfpb_cr-annual-report_2025-05.pdf",
+    "benchmark_complaints": 3187900,
+    "days_per_year": 365
+  },
+  "assumptions": {
+    "client_market_share": 0.01,
+    "searches_per_submission": 0.2,
+    "peak_window": "09:00-17:00 local time",
+    "peak_start_hour": 9,
+    "peak_hours_per_day": 8,
+    "peak_multiplier": 2.0,
+    "off_peak_hours_per_day": 16,
+    "off_peak_multiplier": 0.5
+  },
+  "expected_volume": {
+    "submissions": {
+      "per_year": 31879.0,
+      "per_month": 2656.583333,
+      "per_week": 611.378082,
+      "per_day": 87.339726
+    },
+    "searches": {
+      "per_year": 6375.8,
+      "per_month": 531.316667,
+      "per_week": 122.275616,
+      "per_day": 17.467945
+    }
+  },
+  "expected_annual_submissions": 31879.0,
+  "expected_annual_searches": 6375.8,
+  "periods": {
+    "average": {
+      "hours_per_day": 24,
+      "multiplier": 1.0,
+      "submissions": {
+        "expected_per_window": 87.339726,
+        "per_hour": 3.639155,
+        "per_minute": 0.060653
+      },
+      "searches": {
+        "expected_per_window": 17.467945,
+        "per_hour": 0.727831,
+        "per_minute": 0.012131
+      },
+      "combined_per_hour": 4.366986,
+      "combined_per_minute": 0.072784
+    },
+    "peak": {
+      "hours_per_day": 8,
+      "multiplier": 2.0,
+      "submissions": {
+        "expected_per_window": 58.226484,
+        "per_hour": 7.278311,
+        "per_minute": 0.121305
+      },
+      "searches": {
+        "expected_per_window": 11.645297,
+        "per_hour": 1.455662,
+        "per_minute": 0.024261
+      },
+      "combined_per_hour": 8.733973,
+      "combined_per_minute": 0.145566
+    },
+    "off_peak": {
+      "hours_per_day": 16,
+      "multiplier": 0.5,
+      "submissions": {
+        "expected_per_window": 29.113242,
+        "per_hour": 1.819578,
+        "per_minute": 0.030326
+      },
+      "searches": {
+        "expected_per_window": 5.822648,
+        "per_hour": 0.363916,
+        "per_minute": 0.006065
+      },
+      "combined_per_hour": 2.183494,
+      "combined_per_minute": 0.036391
+    }
+  }
+}

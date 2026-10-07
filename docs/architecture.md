@@ -118,3 +118,50 @@ Every request produces exactly one line, success or failure (validation errors, 
 ## Boundary
 
 Step 2 excludes model selection/pinning (Step 4), workload modelling (Step 3), JMeter load/stress testing (Step 5), and the recommendation (Step 6). It also does not yet pull or pin any specific Ollama model — `OLLAMA_MODEL` in `.env.example` is a placeholder until Step 4 selects and pins the candidate set.
+
+---
+
+# Step 3 Workload Model Architecture
+
+## Overview
+
+Two independent, regenerable pipelines, both stdlib-only (no new dependencies): one turns Team 8's own narratives into a length distribution, the other turns a cited public benchmark plus explicit assumptions into arrival-rate estimates. Neither touches the service — this step produces planning inputs for Step 4's requirements and Step 5's JMeter plans, not code the service runs.
+
+```text
+labelling/team8_rows_8000_8999.csv (1,000 narratives)
+        |
+        v
+scripts/calculate_ticket_length_stats.py --> analysis/ticket_length_statistics.json
+                                                      |
+                                                      v (feeds "Ticket-length distribution" section)
+                                              docs/workload_model.md
+
+CFPB Consumer Response Annual Report 2024 (cited, verified against source PDF)
+        |
+        v
+scripts/build_workload_model.py (benchmark x assumptions A1-A8) --> analysis/workload_model.json
+                                                      |
+                                                      v (feeds rate/scenario sections)
+                                              docs/workload_model.md
+```
+
+## Components
+
+| Component | Responsibility |
+| --- | --- |
+| `scripts/calculate_ticket_length_stats.py` | Reads all 1,000 Team 8 narratives, computes character/word min/max/mean/p50/p95/p99 (nearest-rank) and bucketed histograms. Unicode-aware word matching. |
+| `analysis/ticket_length_statistics.json` | Machine-readable output of the above; regenerable, not hand-edited. |
+| `scripts/build_workload_model.py` | Takes the CFPB annual benchmark and eight explicit assumptions (market share, peak/off-peak hours and multipliers, search-to-submission ratio) as CLI args (with sane defaults), derives the off-peak multiplier so peak+off-peak conserves the daily total, and computes per-day/hour/minute submission and search rates for average/peak/off-peak periods. |
+| `analysis/workload_model.json` | Machine-readable output of the above; regenerable, not hand-edited. |
+| `tests/test_build_workload_model.py` | Unit tests: non-default peak windows compute correctly (including windows crossing midnight), non-finite CLI arguments are rejected without writing output, peak+off-peak volumes conserve the daily total, and the JSON output is strict (no NaN/Infinity). |
+| `docs/workload_model.md` | The narrative document: cited evidence, assumptions table (each with an ID and stated reason), calculations, resulting scenarios for Step 5, and stated limitations/re-baseline triggers. |
+
+## Evidence integrity
+
+Every cited figure in `docs/workload_model.md` was checked directly against the CFPB's own primary source text (the 2024 Consumer Response Annual Report PDF, and the Consumer Complaint Database's own disclaimer page) during development — not assumed correct because a prior draft cited it. All four cited figures (3,187,900 total complaints; 98% via website; 2,829,400/89% sent to companies; the "not a statistical sample" disclaimer) matched the source text verbatim or near-verbatim.
+
+Every assumption (market share, peak/off-peak hours, multipliers, search ratio) is explicitly labelled as an assumption with a stated reason, not presented as observed data — this is what lets `build_workload_model.py` accept CLI overrides for sensitivity checks without silently editing the documented baseline.
+
+## Boundary
+
+Step 3 does not set requirements (Step 4 derives testable response-time/throughput/accuracy requirements from this model) and does not touch the service or Ollama. It also does not yet reflect real client telemetry — the model explicitly states what would trigger a re-baseline once that exists.

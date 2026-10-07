@@ -1,0 +1,75 @@
+{
+  "input": "labelling/team8_rows_8000_8999.csv",
+  "ticket_count": 1000,
+  "percentile_method": "nearest-rank",
+  "character_count": {
+    "min": 200,
+    "max": 2006,
+    "mean": 880.848,
+    "p50": 779,
+    "p95": 1763,
+    "p99": 1947,
+    "distribution": [
+      {
+        "range": "0-499",
+        "count": 271,
+        "percent": 27.1
+      },
+      {
+        "range": "500-999",
+        "count": 348,
+        "percent": 34.8
+      },
+      {
+        "range": "1000-1499",
+        "count": 250,
+        "percent": 25.0
+      },
+      {
+        "range": "1500-1999",
+        "count": 129,
+        "percent": 12.9
+      },
+      {
+        "range": "2000+",
+        "count": 2,
+        "percent": 0.2
+      }
+    ]
+  },
+  "word_count": {
+    "min": 32,
+    "max": 395,
+    "mean": 156.818,
+    "p50": 141,
+    "p95": 310,
+    "p99": 354,
+    "distribution": [
+      {
+        "range": "0-99",
+        "count": 323,
+        "percent": 32.3
+      },
+      {
+        "range": "100-199",
+        "count": 378,
+        "percent": 37.8
+      },
+      {
+        "range": "200-299",
+        "count": 234,
+        "percent": 23.4
+      },
+      {
+        "range": "300-399",
+        "count": 65,
+        "percent": 6.5
+      },
+      {
+        "range": "400+",
+        "count": 0,
+        "percent": 0.0
+      }
+    ]
+  }
+}

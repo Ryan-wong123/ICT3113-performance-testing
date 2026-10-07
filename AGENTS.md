@@ -17,7 +17,11 @@ After every repository change, review and update `docs/prd.md` and `docs/archite
 - CPU-only inference only (`num_gpu: 0`); no public model API; the service calls only a local Ollama instance.
 - Do not pin or hardcode a specific candidate model in this branch — model selection and pinning by tag/digest belongs to Step 4.
 - Log every request the service handles (success and failure) with the fields listed in `docs/architecture.md` ("Logged fields", Step 2 Baseline Service Architecture).
-- Do not commit generated caches (e.g. `runtime/`), secrets, or benchmark/analysis artefacts that belong to later steps (Steps 3–6).
+- Do not commit generated caches (e.g. `runtime/`), secrets, or benchmark/analysis artefacts that belong to later steps (Steps 5–6).
+- Every public figure in the Step 3 workload model must have a cited, checkable source; every assumption must be labelled as an assumption with a stated reason. Never present an assumption as observed data.
+- The ticket-length distribution must be computed from all 1,000 Team 8 rows (`labelling/team8_rows_8000_8999.csv`), not just the 175-ticket golden set.
+- Peak/off-peak multipliers in the workload model must conserve the daily total volume, not inflate or shrink it.
+- Verify a cited external figure against its primary source before trusting or reusing it — do not carry forward an uncited or unverified number from a reference branch.
 
 ## Validation
 

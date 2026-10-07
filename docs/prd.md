@@ -75,3 +75,38 @@ Build the Ticket Triage Service exactly as specified in the assignment brief: a 
 - No two model calls run concurrently (verified: an explicit lock serialises every classification).
 - Every request — success or failure — produces one JSON log line with timestamp, request id, endpoint, model, ticket row (if supplied), start/end time, latency, HTTP status, predicted category, and error.
 - The service builds and runs under `docker compose up`, reaching a local Ollama instance on the host.
+
+---
+
+# Step 3 Workload Model PRD
+
+## Objective
+
+Quantitatively model the client's expected ticket-submission and search traffic, and the shape of the narratives themselves, so Step 4's requirements are derived from an explicit, sourced model rather than guessed.
+
+## Scope and constraints
+
+- Estimate `POST /tickets` volume (annual/monthly/weekly/daily, average/peak/off-peak) and `GET /search` volume, from a cited public source.
+- Cite every figure; separate observed public data from scenario assumptions. Do not present an assumption as an observed fact.
+- Compute the ticket-length distribution (character and word count: min, max, mean, p50, p95, p99, and bucketed histograms) from all 1,000 of Team 8's own narratives, not just the 175-ticket golden set.
+- Exclude `GET /stats` and `/health` from the modelled client workload — they're operational traffic, not complaint-processing demand.
+- Keep the model regenerable from source data and stated assumptions, not hand-edited.
+
+## Required evidence
+
+| Evidence | Location |
+| --- | --- |
+| Workload model document (evidence, assumptions, calculations, sources) | `docs/workload_model.md` |
+| Machine-readable workload model | `analysis/workload_model.json` |
+| Ticket-length statistics generator | `scripts/calculate_ticket_length_stats.py` |
+| Machine-readable ticket-length statistics | `analysis/ticket_length_statistics.json` |
+| Workload model generator | `scripts/build_workload_model.py` |
+| Unit tests for the generator | `tests/test_build_workload_model.py` |
+
+## Acceptance criteria
+
+- Every public figure has a cited, checkable source; every assumption is labelled as an assumption with a stated reason.
+- Peak and off-peak multipliers conserve the daily total (they don't inflate or shrink annual volume by introducing a peak).
+- The ticket-length distribution is computed from the full 1,000-row Team 8 extract (`labelling/team8_rows_8000_8999.csv`), reproducibly.
+- Both JSON artefacts regenerate byte-for-byte-equivalent numbers from the two scripts, and the generator's unit tests pass.
+- The model states its own limitations and what would trigger a re-baseline (e.g. real client telemetry becoming available).

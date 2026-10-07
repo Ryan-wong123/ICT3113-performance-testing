@@ -98,3 +98,30 @@ Built and run for real with `docker compose up --build` against a real local Oll
 - Input validation: empty narrative and an out-of-Team-8-range `ticket_row` both rejected with 422.
 - Failure path: Ollama unreachable → 502, logged with the error.
 - Every one of the above produced a correctly-shaped log line in `logs/requests.jsonl`.
+
+## Step 3 — Workload Model
+
+A quantitative model of the client's expected traffic and ticket shape, built from a cited public benchmark plus explicit, labelled assumptions — not from a real client's telemetry (there isn't one). See `docs/workload_model.md` for the full model, `docs/prd.md`/`docs/architecture.md` for scope and design.
+
+### Contents
+
+- `docs/workload_model.md` — evidence, assumptions (each with an ID and stated reason), calculated rates, and stated limitations.
+- `scripts/calculate_ticket_length_stats.py` → `analysis/ticket_length_statistics.json` — character/word-count distribution over all 1,000 Team 8 narratives.
+- `scripts/build_workload_model.py` → `analysis/workload_model.json` — annual/peak/off-peak submission and search rates.
+- `tests/test_build_workload_model.py` — unit tests for the generator.
+
+### Reproduce it
+
+```bash
+python3 scripts/calculate_ticket_length_stats.py
+python3 scripts/build_workload_model.py
+python3 -m unittest tests.test_build_workload_model -v
+```
+
+### Verified
+
+- Both scripts were run against the actual repo data (`labelling/team8_rows_8000_8999.csv`, all 1,000 rows) and regenerate the committed JSON exactly.
+- All 4 unit tests in `tests/test_build_workload_model.py` pass.
+- Every cited public figure in `docs/workload_model.md` was checked directly against the CFPB's own source text — not assumed correct from the prior draft. Confirmed verbatim/near-verbatim against the actual CFPB 2024 Consumer Response Annual Report PDF and the Consumer Complaint Database's disclaimer page: the 3,187,900 total-complaints figure, the 98%-via-website figure, the 2,829,400 (89%) sent-to-companies figure, and the "not a statistical sample" disclaimer.
+
+Not yet done: this model isn't wired into Step 4's requirements yet — that's the next step.
