@@ -125,3 +125,23 @@ python3 -m unittest tests.test_build_workload_model -v
 - Every cited public figure in `docs/workload_model.md` was checked directly against the CFPB's own source text — not assumed correct from the prior draft. Confirmed verbatim/near-verbatim against the actual CFPB 2024 Consumer Response Annual Report PDF and the Consumer Complaint Database's disclaimer page: the 3,187,900 total-complaints figure, the 98%-via-website figure, the 2,829,400 (89%) sent-to-companies figure, and the "not a statistical sample" disclaimer.
 
 Not yet done: this model isn't wired into Step 4's requirements yet — that's the next step.
+
+## Step 4 — Candidate Models, Requirements, Predictions
+
+Three candidate Ollama models pinned by tag and manifest digest, three testable requirements derived from the Step 3 workload model, and a frozen prediction record — all written before any candidate model is pulled or benchmarked. See `docs/candidate_models.md`, `docs/requirements.md`, `predictions/prediction_record.md`.
+
+### Contents
+
+- `docs/candidate_models.md` — `llama3.2:1b`, `llama3.2:3b`, `qwen2.5:7b`: tags, manifest digests, weights sizes, licences, and why this set.
+- `docs/requirements.md` — R1 (p95 `POST /tickets` < 10s at peak), R2 (≥8 tickets/hour sustained), R3 (≥85% overall accuracy, no category below 70%), each tied to a Step 3 figure.
+- `predictions/prediction_record.md` — frozen predictions: bottleneck, per-model accuracy/latency, hardest categories — must not be edited after Step 5's first benchmark run.
+
+### Verified
+
+- Every candidate's manifest digest was obtained from the Ollama registry API (not copied from memory or a reference branch) and cross-checked: the `llama3.2:3b` digest computed this way matched `ollama list`'s local model ID exactly (first 12 hex chars).
+- Every licence was read from the actual licence-text blob referenced in each model's manifest, not assumed: `llama3.2:1b`/`llama3.2:3b` carry Meta's custom Llama 3.2 Community License + Acceptable Use Policy; `qwen2.5:7b` carries Apache License 2.0.
+- No candidate model was pulled or run in this step — only small manifest/licence-text lookups (a few KB each), per the team's decision to defer the multi-GB pulls to Step 5.
+- Every requirement number traces to a specific figure in `analysis/workload_model.json` (Step 3) or an already-observed number in `logs/requests.jsonl` (Step 2) — none are invented.
+- Every prediction's reasoning method is disclosed in `predictions/prediction_record.md` (e.g. latency predictions are scaled from `llama3.2:3b`'s already-observed warm latency by weights-file-size ratio), so the prediction can be judged, not just trusted.
+
+Not yet done: nothing here has been tested against reality yet — that's Step 5 (pull the models, run the golden set through each, run JMeter, compare against these requirements and predictions).

@@ -165,3 +165,52 @@ Every assumption (market share, peak/off-peak hours, multipliers, search ratio) 
 ## Boundary
 
 Step 3 does not set requirements (Step 4 derives testable response-time/throughput/accuracy requirements from this model) and does not touch the service or Ollama. It also does not yet reflect real client telemetry — the model explicitly states what would trigger a re-baseline once that exists.
+
+---
+
+# Step 4 Architecture — Candidate Models, Requirements, Predictions
+
+## Overview
+
+This step is pure documentation and registry lookups — no code, no service changes, and critically, no candidate model is pulled or run. The one piece of "engineering" is how the candidate models' tags were pinned without downloading them:
+
+```text
+Ollama registry API (registry.ollama.ai)
+        |
+        v
+GET /v2/library/<name>/manifests/<tag>   (small JSON, no model weights downloaded)
+        |
+        +--> sha256sum of the exact response bytes = the manifest digest
+        |       (cross-checked against `ollama list`'s local ID for llama3.2:3b — matched)
+        |
+        v
+GET /v2/library/<name>/blobs/<licence-layer-digest>   (redirects to R2, small text file)
+        |
+        v
+docs/candidate_models.md (tags, digests, sizes, licences, justification)
+        |
+        v (combined with analysis/workload_model.json from Step 3)
+        v
+docs/requirements.md (R1 response time, R2 throughput, R3 accuracy)
+        |
+        v (combined with Step 2's observed logs/requests.jsonl latencies,
+        v  and Step 1's labelling/agreement_results.md disagreement evidence)
+        v
+predictions/prediction_record.md (frozen before any benchmark)
+```
+
+## Components
+
+| Component | Responsibility |
+| --- | --- |
+| `docs/candidate_models.md` | The 3 pinned candidates (tag, manifest digest, weights size, licence), how each digest/licence was obtained, and why this set demonstrates the required size/accuracy/latency trade-off. |
+| `docs/requirements.md` | R1 (response time), R2 (throughput), R3 (accuracy) — each a testable number tied to a specific Step 3 workload-model figure, plus non-workload justification. |
+| `predictions/prediction_record.md` | Frozen bottleneck/accuracy/latency/hardest-category predictions, each with its reasoning method disclosed. |
+
+## Why no model was pulled in this step
+
+The team chose to record each candidate's exact tag and manifest digest via the Ollama registry's manifest endpoint rather than pulling all three models (which would mean several GB of downloads) before Step 5. The manifest digest obtained this way is identical to what `ollama pull` would produce locally — verified directly: the digest computed for `llama3.2:3b` via this method reproduced `ollama list`'s local model ID exactly. This keeps Step 4 fast and focused on the paperwork the brief actually asks for (pin, justify, set requirements, predict), while deferring the real multi-gigabyte pulls to Step 5, immediately before benchmarking.
+
+## Boundary
+
+Step 4 does not benchmark, pull, or run any candidate model — that is Step 5. It also does not yet document the Step 5 test environment (separate machines for the load generator and the service, hardware/software versions) — the hardware referenced in `predictions/prediction_record.md` is this team's development machine, used only to make the prediction record concrete and falsifiable, not a claim about the eventual Step 5 test environment.

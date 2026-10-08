@@ -133,3 +133,36 @@ Every public figure cited in `docs/workload_model.md` was checked directly again
 | "98% of complaints [submitted] by visiting the CFPB's website" | Same PDF, same section — matched verbatim. |
 | "sent approximately 2,829,400 (or 89%) to companies for review and response" | Same PDF, Section 2 — matched verbatim. |
 | Database "is not a statistical sample... not necessarily representative" | CFPB Consumer Complaint Database disclaimer page — matched near-verbatim. |
+
+---
+
+# Step 4 — Candidate Models, Requirements, Predictions Task Record
+
+## Completed workflow
+
+- [x] Select 3 candidate models spanning 2 size classes: `llama3.2:1b` (small), `llama3.2:3b` (small, already tested in Step 2), `qwen2.5:7b` (large).
+- [x] Obtain each candidate's exact manifest digest via the Ollama registry API, without pulling the model, and cross-verify the method against `llama3.2:3b`'s already-known local ID (matched exactly).
+- [x] Obtain each candidate's actual licence text from its manifest's licence-layer blob (not from memory): Llama 3.2 Community License + Acceptable Use Policy for both `llama3.2` models, Apache License 2.0 for `qwen2.5:7b`.
+- [x] Write `docs/candidate_models.md`: pins, sizes, licences, and justification for the set.
+- [x] Derive R1 (response time), R2 (throughput), R3 (accuracy) in `docs/requirements.md`, each citing a specific `analysis/workload_model.json` figure plus non-workload justification (usability, misrouting cost, Step 1's disagreement evidence).
+- [x] Write `predictions/prediction_record.md`: bottleneck prediction, per-candidate accuracy/latency predictions (with reasoning method disclosed), and hardest-category predictions, grounded in Step 1's and Step 2's actual evidence rather than general reasoning.
+- [x] Confirm no candidate model was pulled, run, or benchmarked during this step.
+
+## Not yet done / left for later steps
+
+- [ ] Pull all 3 candidate models for real (Step 5, immediately before benchmarking).
+- [ ] Document the actual Step 5 test environment (may or may not be this same development machine; must confirm the JMeter load generator runs on a separate machine from the service).
+- [ ] Measure R1/R2/R3 against each candidate and compare against every prediction in `predictions/prediction_record.md` (Step 5/6) — the prediction record must not be edited once this starts.
+
+## Verification
+
+```bash
+# Recompute a candidate's manifest digest without pulling it, and confirm it against a locally-pulled model's ID (llama3.2:3b, already pulled in Step 2):
+curl -s -o /tmp/manifest_3b.json -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+  "https://registry.ollama.ai/v2/library/llama3.2/manifests/3b"
+sha256sum /tmp/manifest_3b.json   # first 12 hex chars must equal `ollama list`'s ID for llama3.2:3b
+
+# Confirm the requirement numbers trace to Step 3's workload model:
+python -c "import json; d=json.load(open('analysis/workload_model.json')); print(d['periods']['peak']['submissions']['per_hour'])"
+# must print 7.278311, matching docs/requirements.md's R1/R2 citations
+```

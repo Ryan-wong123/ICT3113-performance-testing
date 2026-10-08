@@ -110,3 +110,35 @@ Quantitatively model the client's expected ticket-submission and search traffic,
 - The ticket-length distribution is computed from the full 1,000-row Team 8 extract (`labelling/team8_rows_8000_8999.csv`), reproducibly.
 - Both JSON artefacts regenerate byte-for-byte-equivalent numbers from the two scripts, and the generator's unit tests pass.
 - The model states its own limitations and what would trigger a re-baseline (e.g. real client telemetry becoming available).
+
+---
+
+# Step 4 PRD — Candidate Models, Requirements, Predictions
+
+## Objective
+
+Choose the candidate model set, set testable performance/accuracy requirements derived from Step 3's workload model, and freeze a falsifiable prediction record — all before any candidate model is pulled, run against the golden set, or load-tested.
+
+## Scope and constraints
+
+- 3–5 candidate models, spanning at least two parameter-size classes, each pinned by exact Ollama tag and manifest digest.
+- At least one response-time requirement, one throughput requirement, and one accuracy requirement (overall + per-category), each a testable number/percentile/load-condition, justified from Step 3's workload model.
+- If the workload model implies peak periods, requirements must cater for the peak, not the average.
+- A prediction record covering: expected bottleneck and why; per-candidate expected accuracy and single-request latency; expected hardest categories and why — specific enough to be provably wrong.
+- The prediction record must be frozen (committed) before the first benchmark run and never revised afterward.
+- Do not pull, run, or benchmark any candidate model before this record is committed.
+
+## Required evidence
+
+| Evidence | Location |
+| --- | --- |
+| Candidate model selection, pins, licences, justification | `docs/candidate_models.md` |
+| Performance and accuracy requirements | `docs/requirements.md` |
+| Prediction record (frozen) | `predictions/prediction_record.md` |
+
+## Acceptance criteria
+
+- Each candidate model's tag and manifest digest is independently verifiable (not copied from memory) and its licence is quoted from the actual licence text, not assumed.
+- Every requirement cites the specific Step 3 workload-model figure it's derived from, plus non-workload justification (usability, misrouting cost) where relevant.
+- Every prediction is a specific number or named category, with its reasoning method disclosed, not a vague directional claim.
+- Nothing in this step touches a real candidate model — no pulls, no inference calls, no benchmark runs.
