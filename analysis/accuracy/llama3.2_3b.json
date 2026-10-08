@@ -1,0 +1,1526 @@
+{
+  "model": "llama3.2:3b",
+  "golden_set": "labelling/golden_test_set.csv",
+  "ticket_count": 175,
+  "overall_accuracy": 0.32,
+  "correct": 56,
+  "errors": 2,
+  "per_category_accuracy": {
+    "Bank account or service": {
+      "support": 28,
+      "correct": 25,
+      "accuracy": 0.8929
+    },
+    "Consumer loan": {
+      "support": 24,
+      "correct": 12,
+      "accuracy": 0.5
+    },
+    "Credit card": {
+      "support": 23,
+      "correct": 1,
+      "accuracy": 0.0435
+    },
+    "Credit reporting": {
+      "support": 38,
+      "correct": 10,
+      "accuracy": 0.2632
+    },
+    "Debt collection": {
+      "support": 14,
+      "correct": 4,
+      "accuracy": 0.2857
+    },
+    "Money transfer or service": {
+      "support": 24,
+      "correct": 3,
+      "accuracy": 0.125
+    },
+    "Mortgage": {
+      "support": 24,
+      "correct": 1,
+      "accuracy": 0.0417
+    }
+  },
+  "confusion_matrix": {
+    "Bank account or service": {
+      "Bank account or service": 25,
+      "Consumer loan": 1,
+      "Credit card": 1,
+      "Credit reporting": 0,
+      "Debt collection": 1,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Consumer loan": {
+      "Bank account or service": 9,
+      "Consumer loan": 12,
+      "Credit card": 0,
+      "Credit reporting": 1,
+      "Debt collection": 2,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Credit card": {
+      "Bank account or service": 18,
+      "Consumer loan": 1,
+      "Credit card": 1,
+      "Credit reporting": 0,
+      "Debt collection": 3,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Credit reporting": {
+      "Bank account or service": 17,
+      "Consumer loan": 3,
+      "Credit card": 1,
+      "Credit reporting": 10,
+      "Debt collection": 6,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 1
+    },
+    "Debt collection": {
+      "Bank account or service": 3,
+      "Consumer loan": 5,
+      "Credit card": 0,
+      "Credit reporting": 1,
+      "Debt collection": 4,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 1
+    },
+    "Money transfer or service": {
+      "Bank account or service": 16,
+      "Consumer loan": 4,
+      "Credit card": 0,
+      "Credit reporting": 0,
+      "Debt collection": 1,
+      "Money transfer or service": 3,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Mortgage": {
+      "Bank account or service": 10,
+      "Consumer loan": 7,
+      "Credit card": 0,
+      "Credit reporting": 3,
+      "Debt collection": 3,
+      "Money transfer or service": 0,
+      "Mortgage": 1,
+      "ERROR": 0
+    }
+  },
+  "warm_latency_seconds": {
+    "count": 173,
+    "min_s": 2.333,
+    "max_s": 72.109,
+    "mean_s": 8.21,
+    "p50_s": 6.719,
+    "p95_s": 13.991,
+    "p99_s": 70.211
+  },
+  "raw_results": [
+    {
+      "row": 8004,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 23.173102399996424
+    },
+    {
+      "row": 8016,
+      "true_label": "Credit reporting",
+      "ok": false,
+      "error": "HTTP 502: {\"detail\":\"Ollama returned an invalid category response: 'Unauthorized Credit Inquiries'\"}",
+      "latency_s": 4.914934100001119
+    },
+    {
+      "row": 8021,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 6.694717400001537
+    },
+    {
+      "row": 8025,
+      "true_label": "Debt collection",
+      "ok": false,
+      "error": "HTTP 502: {\"detail\":\"Ollama returned an invalid category response: 'Identity theft'\"}",
+      "latency_s": 5.097796999994898
+    },
+    {
+      "row": 8028,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Credit card",
+      "model": "llama3.2:3b",
+      "latency_s": 9.104812500001572
+    },
+    {
+      "row": 8032,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.5299594000025536
+    },
+    {
+      "row": 8037,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.819589200000337
+    },
+    {
+      "row": 8040,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 13.99055860000226
+    },
+    {
+      "row": 8054,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.957131600000139
+    },
+    {
+      "row": 8060,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 2.9863100000002305
+    },
+    {
+      "row": 8061,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 2.700092700004461
+    },
+    {
+      "row": 8068,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.3643157000042265
+    },
+    {
+      "row": 8076,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 7.31196180000552
+    },
+    {
+      "row": 8083,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 2.834229600004619
+    },
+    {
+      "row": 8095,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 11.396442500001285
+    },
+    {
+      "row": 8097,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 10.07871940000041
+    },
+    {
+      "row": 8098,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.909015099998214
+    },
+    {
+      "row": 8100,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 5.949589500000002
+    },
+    {
+      "row": 8103,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.512164500003564
+    },
+    {
+      "row": 8106,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 7.487411299996893
+    },
+    {
+      "row": 8109,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.064959499999532
+    },
+    {
+      "row": 8113,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.631989900000917
+    },
+    {
+      "row": 8120,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.346448199998122
+    },
+    {
+      "row": 8126,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 5.57262329999503
+    },
+    {
+      "row": 8143,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 14.356375499999558
+    },
+    {
+      "row": 8154,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.4012635000035516
+    },
+    {
+      "row": 8156,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 12.387668600000325
+    },
+    {
+      "row": 8158,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 7.427886799996486
+    },
+    {
+      "row": 8161,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 5.143551799999841
+    },
+    {
+      "row": 8163,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 12.23535190000257
+    },
+    {
+      "row": 8169,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 10.719574099995953
+    },
+    {
+      "row": 8176,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.208728300000075
+    },
+    {
+      "row": 8178,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.736978100001579
+    },
+    {
+      "row": 8179,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.874267200000759
+    },
+    {
+      "row": 8182,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 3.279757600001176
+    },
+    {
+      "row": 8187,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "llama3.2:3b",
+      "latency_s": 5.835935799994331
+    },
+    {
+      "row": 8190,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.215176599995175
+    },
+    {
+      "row": 8196,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.387814900001104
+    },
+    {
+      "row": 8203,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 4.4036000999985845
+    },
+    {
+      "row": 8206,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.329560600002878
+    },
+    {
+      "row": 8213,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.1779806000049575
+    },
+    {
+      "row": 8218,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.9488501000014367
+    },
+    {
+      "row": 8220,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 3.5270041999974637
+    },
+    {
+      "row": 8227,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.71887080000306
+    },
+    {
+      "row": 8239,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.173288600002707
+    },
+    {
+      "row": 8243,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 6.184431200003019
+    },
+    {
+      "row": 8245,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.258490199994412
+    },
+    {
+      "row": 8247,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.810371899999154
+    },
+    {
+      "row": 8248,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.302354599996761
+    },
+    {
+      "row": 8249,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 14.466180299998086
+    },
+    {
+      "row": 8250,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 13.80995239999902
+    },
+    {
+      "row": 8254,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.5815849999999045
+    },
+    {
+      "row": 8261,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.1542362999971374
+    },
+    {
+      "row": 8265,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 10.516641000001982
+    },
+    {
+      "row": 8275,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 10.006857599997602
+    },
+    {
+      "row": 8281,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 11.714936600001238
+    },
+    {
+      "row": 8299,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.4229324999978417
+    },
+    {
+      "row": 8300,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 10.592632699997921
+    },
+    {
+      "row": 8305,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 11.962831600001664
+    },
+    {
+      "row": 8306,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.896393099996203
+    },
+    {
+      "row": 8314,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.835874699994747
+    },
+    {
+      "row": 8316,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.9243258999995305
+    },
+    {
+      "row": 8323,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.7869767999945907
+    },
+    {
+      "row": 8326,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 8.177110900003754
+    },
+    {
+      "row": 8329,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 2.8356703000026755
+    },
+    {
+      "row": 8334,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.721822999999858
+    },
+    {
+      "row": 8343,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 8.50866600000154
+    },
+    {
+      "row": 8344,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 13.620923499998753
+    },
+    {
+      "row": 8356,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 11.254438300005859
+    },
+    {
+      "row": 8357,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 4.977758000000904
+    },
+    {
+      "row": 8361,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 6.912952099999529
+    },
+    {
+      "row": 8364,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.67769060000137
+    },
+    {
+      "row": 8366,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 4.282840799998667
+    },
+    {
+      "row": 8382,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 7.770059999995283
+    },
+    {
+      "row": 8384,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.577310699998634
+    },
+    {
+      "row": 8389,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.988633799999661
+    },
+    {
+      "row": 8401,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 2.332877799999551
+    },
+    {
+      "row": 8405,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 7.672034999995958
+    },
+    {
+      "row": 8417,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 2.6565279999995255
+    },
+    {
+      "row": 8419,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.979510099998151
+    },
+    {
+      "row": 8425,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.442668399999093
+    },
+    {
+      "row": 8440,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.818256299993664
+    },
+    {
+      "row": 8441,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 6.01438380000036
+    },
+    {
+      "row": 8456,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.930327000001853
+    },
+    {
+      "row": 8463,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.035746000001382
+    },
+    {
+      "row": 8469,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.938217799994163
+    },
+    {
+      "row": 8481,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 4.338375100000121
+    },
+    {
+      "row": 8483,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 8.555656500000623
+    },
+    {
+      "row": 8485,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 4.354141800002253
+    },
+    {
+      "row": 8490,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.3809279999986757
+    },
+    {
+      "row": 8495,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 7.0813254000022425
+    },
+    {
+      "row": 8499,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.146357500001614
+    },
+    {
+      "row": 8500,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 70.21128560000216
+    },
+    {
+      "row": 8503,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.0318352000031155
+    },
+    {
+      "row": 8506,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.573763799999142
+    },
+    {
+      "row": 8513,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.241025199997239
+    },
+    {
+      "row": 8514,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.083365899998171
+    },
+    {
+      "row": 8518,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 4.932466399994155
+    },
+    {
+      "row": 8520,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.2450634999986505
+    },
+    {
+      "row": 8527,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.119600599995465
+    },
+    {
+      "row": 8535,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 3.1530929999935324
+    },
+    {
+      "row": 8551,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.0860679000034
+    },
+    {
+      "row": 8561,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.855137400001695
+    },
+    {
+      "row": 8562,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 13.276154099999985
+    },
+    {
+      "row": 8569,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 15.098974300002737
+    },
+    {
+      "row": 8573,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.4354275000005146
+    },
+    {
+      "row": 8578,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 8.52732969999488
+    },
+    {
+      "row": 8580,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.090487599998596
+    },
+    {
+      "row": 8584,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.253683199996885
+    },
+    {
+      "row": 8589,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 10.196922299997823
+    },
+    {
+      "row": 8590,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.48326530000486
+    },
+    {
+      "row": 8605,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 13.245975400001043
+    },
+    {
+      "row": 8610,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.199584900001355
+    },
+    {
+      "row": 8614,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.700472600001376
+    },
+    {
+      "row": 8616,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 8.998572700002114
+    },
+    {
+      "row": 8625,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 8.100343499994779
+    },
+    {
+      "row": 8632,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 3.6319607999976142
+    },
+    {
+      "row": 8638,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 6.648442999998224
+    },
+    {
+      "row": 8646,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 2.757506599999033
+    },
+    {
+      "row": 8649,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.594367100005911
+    },
+    {
+      "row": 8655,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 5.913708400003088
+    },
+    {
+      "row": 8660,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.125139199997648
+    },
+    {
+      "row": 8666,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 3.070404599995527
+    },
+    {
+      "row": 8675,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 13.74876740000036
+    },
+    {
+      "row": 8683,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.981619399994088
+    },
+    {
+      "row": 8694,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 9.00501290000102
+    },
+    {
+      "row": 8695,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.960497800006124
+    },
+    {
+      "row": 8699,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.797294099997089
+    },
+    {
+      "row": 8707,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 13.495200400000613
+    },
+    {
+      "row": 8712,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 9.070215200001257
+    },
+    {
+      "row": 8715,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 6.244463399998494
+    },
+    {
+      "row": 8717,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 6.121671200002311
+    },
+    {
+      "row": 8722,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "llama3.2:3b",
+      "latency_s": 4.1976217000046745
+    },
+    {
+      "row": 8726,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 15.157867299996724
+    },
+    {
+      "row": 8736,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 72.10914670000057
+    },
+    {
+      "row": 8742,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 5.00045140000293
+    },
+    {
+      "row": 8751,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.510258800000884
+    },
+    {
+      "row": 8756,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.931529200002842
+    },
+    {
+      "row": 8757,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 10.407151200000953
+    },
+    {
+      "row": 8758,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 4.9285225000057835
+    },
+    {
+      "row": 8762,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.045695400003751
+    },
+    {
+      "row": 8784,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 10.0696650999962
+    },
+    {
+      "row": 8801,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 7.748509199998807
+    },
+    {
+      "row": 8805,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.719285699997272
+    },
+    {
+      "row": 8809,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 3.155684500001371
+    },
+    {
+      "row": 8811,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "llama3.2:3b",
+      "latency_s": 7.735736199996609
+    },
+    {
+      "row": 8825,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "llama3.2:3b",
+      "latency_s": 15.57084179999947
+    },
+    {
+      "row": 8830,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 10.51071590000356
+    },
+    {
+      "row": 8833,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 10.184114800002135
+    },
+    {
+      "row": 8835,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 4.601571800005331
+    },
+    {
+      "row": 8838,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.96314490000077
+    },
+    {
+      "row": 8846,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.842401100002462
+    },
+    {
+      "row": 8859,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 12.91460509999888
+    },
+    {
+      "row": 8860,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.880955499997071
+    },
+    {
+      "row": 8866,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 11.1740764999995
+    },
+    {
+      "row": 8868,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 11.920279999998456
+    },
+    {
+      "row": 8871,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 8.447755000001052
+    },
+    {
+      "row": 8874,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.600574399999459
+    },
+    {
+      "row": 8878,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.3786731999935
+    },
+    {
+      "row": 8897,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 11.319405800000823
+    },
+    {
+      "row": 8899,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.124272200002451
+    },
+    {
+      "row": 8900,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 8.42938989999675
+    },
+    {
+      "row": 8903,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.931997300001967
+    },
+    {
+      "row": 8907,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.0236321999982465
+    },
+    {
+      "row": 8909,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.217710999997507
+    },
+    {
+      "row": 8912,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 6.038828400000057
+    },
+    {
+      "row": 8922,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 5.918694799998775
+    },
+    {
+      "row": 8935,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit card",
+      "model": "llama3.2:3b",
+      "latency_s": 3.065884099996765
+    },
+    {
+      "row": 8939,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 8.668365099998482
+    },
+    {
+      "row": 8957,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.316262700005609
+    },
+    {
+      "row": 8964,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 9.923182200000156
+    },
+    {
+      "row": 8967,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.077476100006606
+    },
+    {
+      "row": 8970,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "llama3.2:3b",
+      "latency_s": 6.866713700001128
+    },
+    {
+      "row": 8974,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 3.490456499996071
+    },
+    {
+      "row": 8993,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "llama3.2:3b",
+      "latency_s": 4.722262600000249
+    }
+  ]
+}

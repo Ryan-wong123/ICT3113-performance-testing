@@ -1,0 +1,1528 @@
+{
+  "model": "qwen2.5:7b",
+  "golden_set": "labelling/golden_test_set.csv",
+  "ticket_count": 175,
+  "overall_accuracy": 0.7886,
+  "correct": 138,
+  "errors": 0,
+  "per_category_accuracy": {
+    "Bank account or service": {
+      "support": 28,
+      "correct": 25,
+      "accuracy": 0.8929
+    },
+    "Consumer loan": {
+      "support": 24,
+      "correct": 14,
+      "accuracy": 0.5833
+    },
+    "Credit card": {
+      "support": 23,
+      "correct": 17,
+      "accuracy": 0.7391
+    },
+    "Credit reporting": {
+      "support": 38,
+      "correct": 36,
+      "accuracy": 0.9474
+    },
+    "Debt collection": {
+      "support": 14,
+      "correct": 11,
+      "accuracy": 0.7857
+    },
+    "Money transfer or service": {
+      "support": 24,
+      "correct": 18,
+      "accuracy": 0.75
+    },
+    "Mortgage": {
+      "support": 24,
+      "correct": 17,
+      "accuracy": 0.7083
+    }
+  },
+  "confusion_matrix": {
+    "Bank account or service": {
+      "Bank account or service": 25,
+      "Consumer loan": 0,
+      "Credit card": 0,
+      "Credit reporting": 2,
+      "Debt collection": 0,
+      "Money transfer or service": 1,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Consumer loan": {
+      "Bank account or service": 2,
+      "Consumer loan": 14,
+      "Credit card": 2,
+      "Credit reporting": 6,
+      "Debt collection": 0,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Credit card": {
+      "Bank account or service": 3,
+      "Consumer loan": 0,
+      "Credit card": 17,
+      "Credit reporting": 1,
+      "Debt collection": 1,
+      "Money transfer or service": 1,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Credit reporting": {
+      "Bank account or service": 0,
+      "Consumer loan": 0,
+      "Credit card": 1,
+      "Credit reporting": 36,
+      "Debt collection": 1,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Debt collection": {
+      "Bank account or service": 0,
+      "Consumer loan": 0,
+      "Credit card": 0,
+      "Credit reporting": 3,
+      "Debt collection": 11,
+      "Money transfer or service": 0,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Money transfer or service": {
+      "Bank account or service": 4,
+      "Consumer loan": 0,
+      "Credit card": 1,
+      "Credit reporting": 1,
+      "Debt collection": 0,
+      "Money transfer or service": 18,
+      "Mortgage": 0,
+      "ERROR": 0
+    },
+    "Mortgage": {
+      "Bank account or service": 1,
+      "Consumer loan": 6,
+      "Credit card": 0,
+      "Credit reporting": 0,
+      "Debt collection": 0,
+      "Money transfer or service": 0,
+      "Mortgage": 17,
+      "ERROR": 0
+    }
+  },
+  "warm_latency_seconds": {
+    "count": 175,
+    "min_s": 5.689,
+    "max_s": 77.782,
+    "mean_s": 19.382,
+    "p50_s": 18.098,
+    "p95_s": 34.981,
+    "p99_s": 43.732
+  },
+  "raw_results": [
+    {
+      "row": 8004,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 77.78218700000434
+    },
+    {
+      "row": 8016,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.676671900000656
+    },
+    {
+      "row": 8021,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 17.289931400002388
+    },
+    {
+      "row": 8025,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.179949000004854
+    },
+    {
+      "row": 8028,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 24.977856800003792
+    },
+    {
+      "row": 8032,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.850777800005744
+    },
+    {
+      "row": 8037,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.060140599998704
+    },
+    {
+      "row": 8040,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.91434070000105
+    },
+    {
+      "row": 8054,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.935843100000056
+    },
+    {
+      "row": 8060,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 7.623113199995714
+    },
+    {
+      "row": 8061,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 7.5259550999981
+    },
+    {
+      "row": 8068,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.479807000003348
+    },
+    {
+      "row": 8076,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 20.68989429999783
+    },
+    {
+      "row": 8083,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 5.68876569999702
+    },
+    {
+      "row": 8095,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.05063170000358
+    },
+    {
+      "row": 8097,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 24.90100149999489
+    },
+    {
+      "row": 8098,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 27.39466640000319
+    },
+    {
+      "row": 8100,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 17.180452200002037
+    },
+    {
+      "row": 8103,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 25.177181899998686
+    },
+    {
+      "row": 8106,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.329579800003557
+    },
+    {
+      "row": 8109,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.590831599998637
+    },
+    {
+      "row": 8113,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.11498610000126
+    },
+    {
+      "row": 8120,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 21.576645699999062
+    },
+    {
+      "row": 8126,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.435384399999748
+    },
+    {
+      "row": 8143,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 38.74620580000192
+    },
+    {
+      "row": 8154,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.309522900002776
+    },
+    {
+      "row": 8156,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 34.694498299999395
+    },
+    {
+      "row": 8158,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 20.68721540000115
+    },
+    {
+      "row": 8161,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.55801970000175
+    },
+    {
+      "row": 8163,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 29.9346510999967
+    },
+    {
+      "row": 8169,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 28.448591000000306
+    },
+    {
+      "row": 8176,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 29.020647299999837
+    },
+    {
+      "row": 8178,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.303701699995145
+    },
+    {
+      "row": 8179,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 11.973084199998993
+    },
+    {
+      "row": 8182,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.093417100004444
+    },
+    {
+      "row": 8187,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.00979119999829
+    },
+    {
+      "row": 8190,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.554014900000766
+    },
+    {
+      "row": 8196,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 23.40759280000202
+    },
+    {
+      "row": 8203,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 11.937890699999116
+    },
+    {
+      "row": 8206,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.441760599998815
+    },
+    {
+      "row": 8213,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.906672199998866
+    },
+    {
+      "row": 8218,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 11.225917099996877
+    },
+    {
+      "row": 8220,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.70305169999483
+    },
+    {
+      "row": 8227,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.053030200004287
+    },
+    {
+      "row": 8239,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 20.45224170000438
+    },
+    {
+      "row": 8243,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.827963100004126
+    },
+    {
+      "row": 8245,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.21253109999816
+    },
+    {
+      "row": 8247,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.508707300003152
+    },
+    {
+      "row": 8248,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.789790199996787
+    },
+    {
+      "row": 8249,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 34.98126349999802
+    },
+    {
+      "row": 8250,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.92185819999577
+    },
+    {
+      "row": 8254,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.722351700002037
+    },
+    {
+      "row": 8261,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 7.181248399996548
+    },
+    {
+      "row": 8265,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 25.381035600003088
+    },
+    {
+      "row": 8275,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 24.6953624999951
+    },
+    {
+      "row": 8281,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 29.490804200002458
+    },
+    {
+      "row": 8299,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.447535699997388
+    },
+    {
+      "row": 8300,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 30.365833199997724
+    },
+    {
+      "row": 8305,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 31.474482800003898
+    },
+    {
+      "row": 8306,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.6859317999988
+    },
+    {
+      "row": 8314,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.221637700000429
+    },
+    {
+      "row": 8316,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.83013270000083
+    },
+    {
+      "row": 8323,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.811317300001974
+    },
+    {
+      "row": 8326,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 21.281069099997694
+    },
+    {
+      "row": 8329,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 7.213048999998136
+    },
+    {
+      "row": 8334,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.662166799993429
+    },
+    {
+      "row": 8343,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.551216799998656
+    },
+    {
+      "row": 8344,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 29.003089900004852
+    },
+    {
+      "row": 8356,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 26.68450540000049
+    },
+    {
+      "row": 8357,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 13.892299099999946
+    },
+    {
+      "row": 8361,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.414559799995914
+    },
+    {
+      "row": 8364,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.624874699999054
+    },
+    {
+      "row": 8366,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.828463300000294
+    },
+    {
+      "row": 8382,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.844235700002173
+    },
+    {
+      "row": 8384,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.35365279999678
+    },
+    {
+      "row": 8389,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.889133399999992
+    },
+    {
+      "row": 8401,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 6.546185499995772
+    },
+    {
+      "row": 8405,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.097699099998863
+    },
+    {
+      "row": 8417,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 6.3168533999996725
+    },
+    {
+      "row": 8419,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.725526200003515
+    },
+    {
+      "row": 8425,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.013031700000283
+    },
+    {
+      "row": 8440,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 23.93323640000017
+    },
+    {
+      "row": 8441,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.927934999999707
+    },
+    {
+      "row": 8456,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 24.71215900000243
+    },
+    {
+      "row": 8463,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 30.180290700001933
+    },
+    {
+      "row": 8469,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.924423100004788
+    },
+    {
+      "row": 8481,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.827749199997925
+    },
+    {
+      "row": 8483,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 21.551876400000765
+    },
+    {
+      "row": 8485,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 11.827585699997144
+    },
+    {
+      "row": 8490,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.044256000001042
+    },
+    {
+      "row": 8495,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.903172199999972
+    },
+    {
+      "row": 8499,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 31.102078800002346
+    },
+    {
+      "row": 8500,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.550530299995444
+    },
+    {
+      "row": 8503,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.008895999999368
+    },
+    {
+      "row": 8506,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 23.60528969999723
+    },
+    {
+      "row": 8513,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.760356500002672
+    },
+    {
+      "row": 8514,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.357149900002696
+    },
+    {
+      "row": 8518,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 13.919690700000501
+    },
+    {
+      "row": 8520,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.527164699997229
+    },
+    {
+      "row": 8527,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.030512200006342
+    },
+    {
+      "row": 8535,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.49532320000435
+    },
+    {
+      "row": 8551,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.290047800001048
+    },
+    {
+      "row": 8561,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.14568319999671
+    },
+    {
+      "row": 8562,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 36.090656899999885
+    },
+    {
+      "row": 8569,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 41.01404000000184
+    },
+    {
+      "row": 8573,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 11.558420499997737
+    },
+    {
+      "row": 8578,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 26.34517290000076
+    },
+    {
+      "row": 8580,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 11.220362400003069
+    },
+    {
+      "row": 8584,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.571561400000064
+    },
+    {
+      "row": 8589,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 27.49274140000489
+    },
+    {
+      "row": 8590,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.781497399999353
+    },
+    {
+      "row": 8605,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.218941600003745
+    },
+    {
+      "row": 8610,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.108526199997868
+    },
+    {
+      "row": 8614,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.851988100002927
+    },
+    {
+      "row": 8616,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 27.160352700004296
+    },
+    {
+      "row": 8625,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 25.198459100000036
+    },
+    {
+      "row": 8632,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.751261200006411
+    },
+    {
+      "row": 8638,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.21044389999588
+    },
+    {
+      "row": 8646,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 7.227394599998661
+    },
+    {
+      "row": 8649,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.502357199999096
+    },
+    {
+      "row": 8655,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.00613280000107
+    },
+    {
+      "row": 8660,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 17.98859409999568
+    },
+    {
+      "row": 8666,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.59136330000183
+    },
+    {
+      "row": 8675,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 38.197179199996754
+    },
+    {
+      "row": 8683,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.366830899998604
+    },
+    {
+      "row": 8694,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 27.2835860999985
+    },
+    {
+      "row": 8695,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 28.519502899995132
+    },
+    {
+      "row": 8699,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 14.012413099997502
+    },
+    {
+      "row": 8707,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 36.0834004999997
+    },
+    {
+      "row": 8712,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 26.78077160000248
+    },
+    {
+      "row": 8715,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 19.718408900000213
+    },
+    {
+      "row": 8717,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 17.821601399999054
+    },
+    {
+      "row": 8722,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.771148799998628
+    },
+    {
+      "row": 8726,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 43.73151559999678
+    },
+    {
+      "row": 8736,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 20.91879070000141
+    },
+    {
+      "row": 8742,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 13.75175119999767
+    },
+    {
+      "row": 8751,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.91530230000353
+    },
+    {
+      "row": 8756,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 9.68903429999773
+    },
+    {
+      "row": 8757,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 24.210157900000922
+    },
+    {
+      "row": 8758,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.129096700002265
+    },
+    {
+      "row": 8762,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 27.69462989999738
+    },
+    {
+      "row": 8784,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 21.301496700005373
+    },
+    {
+      "row": 8801,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 17.679704700000002
+    },
+    {
+      "row": 8805,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.26018230000045
+    },
+    {
+      "row": 8809,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 7.669456800002081
+    },
+    {
+      "row": 8811,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 20.31894060000195
+    },
+    {
+      "row": 8825,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 41.76609550000285
+    },
+    {
+      "row": 8830,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.624030799997854
+    },
+    {
+      "row": 8833,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 23.242917199997464
+    },
+    {
+      "row": 8835,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.802107800001977
+    },
+    {
+      "row": 8838,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Debt collection",
+      "model": "qwen2.5:7b",
+      "latency_s": 25.04079370000545
+    },
+    {
+      "row": 8846,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.095560699999623
+    },
+    {
+      "row": 8859,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 33.594323400000576
+    },
+    {
+      "row": 8860,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 25.919052199998987
+    },
+    {
+      "row": 8866,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Consumer loan",
+      "model": "qwen2.5:7b",
+      "latency_s": 27.141838800002006
+    },
+    {
+      "row": 8868,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 31.173645700000634
+    },
+    {
+      "row": 8871,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.73565249999956
+    },
+    {
+      "row": 8874,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 15.581209399999352
+    },
+    {
+      "row": 8878,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.752744099998381
+    },
+    {
+      "row": 8897,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 30.834320000001753
+    },
+    {
+      "row": 8899,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 16.629266799995094
+    },
+    {
+      "row": 8900,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 21.338784899999155
+    },
+    {
+      "row": 8903,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 26.296997999997984
+    },
+    {
+      "row": 8907,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 13.300235599999723
+    },
+    {
+      "row": 8909,
+      "true_label": "Money transfer or service",
+      "ok": true,
+      "category": "Money transfer or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 14.633963800006313
+    },
+    {
+      "row": 8912,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 14.852524199995969
+    },
+    {
+      "row": 8922,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 13.619049300003098
+    },
+    {
+      "row": 8935,
+      "true_label": "Credit reporting",
+      "ok": true,
+      "category": "Credit card",
+      "model": "qwen2.5:7b",
+      "latency_s": 6.867898299999069
+    },
+    {
+      "row": 8939,
+      "true_label": "Consumer loan",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 22.59435229999508
+    },
+    {
+      "row": 8957,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.046533600005205
+    },
+    {
+      "row": 8964,
+      "true_label": "Bank account or service",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 28.27120239999931
+    },
+    {
+      "row": 8967,
+      "true_label": "Credit card",
+      "ok": true,
+      "category": "Bank account or service",
+      "model": "qwen2.5:7b",
+      "latency_s": 10.556239699995785
+    },
+    {
+      "row": 8970,
+      "true_label": "Debt collection",
+      "ok": true,
+      "category": "Credit reporting",
+      "model": "qwen2.5:7b",
+      "latency_s": 18.88279650000186
+    },
+    {
+      "row": 8974,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 8.741439100005664
+    },
+    {
+      "row": 8993,
+      "true_label": "Mortgage",
+      "ok": true,
+      "category": "Mortgage",
+      "model": "qwen2.5:7b",
+      "latency_s": 12.239524100004928
+    }
+  ]
+}

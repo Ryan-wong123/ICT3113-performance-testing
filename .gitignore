@@ -7,3 +7,8 @@ __pycache__/
 .pytest_cache/
 .venv/
 .env
+
+# JVM/JMeter debug artefacts, not test evidence
+*.hprof
+jmeter.log
+jmeter/results/*.jmeter.log

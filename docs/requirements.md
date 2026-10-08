@@ -32,7 +32,8 @@ Each requirement below is a number, a percentile (where relevant), and a load co
 
 All three requirements are explicitly anchored to the **peak** period from Step 3's workload model, not the 24-hour average, per the brief's instruction that "If your model implies peak periods, your requirements must cater for the peak." R1 and R2 use `periods.peak...` values from `analysis/workload_model.json`; R3 has no time-of-day dimension (accuracy is measured once per candidate against the static golden set) so it isn't peak/off-peak-conditional by nature.
 
-## Not yet done
+## Step 5 outcome
 
-- These requirements are not yet measured against any candidate — that's Step 5.
-- No requirement yet exists for `GET /search` latency specifically (the brief allows either `POST /tickets` or `GET /search` latency as the response-time requirement; this team chose `POST /tickets` since it's the higher-stakes, model-dependent path — `GET /search` is a plain SQLite substring query and was already observed to complete in 16–22ms in Step 2 testing, an order of magnitude faster than any plausible requirement would need to guard against).
+Step 5 measured all three requirements against every candidate. All candidates passed R1 and R2 in the final separate-machine environment and failed R3; consequently, no candidate met all three requirements. The measured values and raw-evidence links are in `docs/load_test_results.md` and `docs/accuracy_results.md`.
+
+No separate requirement exists for `GET /search` latency. The brief allows either `POST /tickets` or `GET /search` latency as the response-time requirement; this team chose `POST /tickets` because it is the higher-stakes, model-dependent path. `GET /search` is a plain SQLite substring query and was observed to complete in 16–22ms during Step 2 testing.

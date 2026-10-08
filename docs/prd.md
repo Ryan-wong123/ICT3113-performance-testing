@@ -142,3 +142,42 @@ Choose the candidate model set, set testable performance/accuracy requirements d
 - Every requirement cites the specific Step 3 workload-model figure it's derived from, plus non-workload justification (usability, misrouting cost) where relevant.
 - Every prediction is a specific number or named category, with its reasoning method disclosed, not a vague directional claim.
 - Nothing in this step touches a real candidate model — no pulls, no inference calls, no benchmark runs.
+
+---
+
+# Step 5 PRD — Test and Measure
+
+## Objective
+
+Actually pull, run, and measure all three frozen candidates against the frozen golden set and open-loop JMeter load, to test the Step 4 requirements and predictions against reality.
+
+## Scope and constraints
+
+- Describe the test environment (hardware, software, network path, and factors that could make results unrepresentative) before reporting any numbers. Final load/stress evidence must use a separate JMeter Machine B and service/Ollama Machine A; co-located files may remain only as clearly labelled historical pipeline-validation evidence.
+- Accuracy: every golden-set ticket through the real `POST /tickets` endpoint, per candidate, never bypassing the service.
+- Load: JMeter, open-loop only (`PreciseThroughputTimer` or Open Model Thread Group — never closed-loop), at multiple arrival rates, 3 repeats per configuration, reporting p50/p95/p99/completed throughput/successful throughput/error rate. Offered arrivals must not be mislabeled as achieved throughput; queued drain time after arrivals stop remains part of the throughput measurement. Raw `.jtl` files are kept in the repository.
+- Repeated-load reporting: retain the per-run values and report the arithmetic mean plus observed minimum–maximum spread across the three repeats; pooled percentiles may be shown additionally but do not replace this repeatability view.
+- Stress: at least one test that finds a genuine limit (unbounded latency growth, saturating throughput, or rising errors) for at least one candidate.
+- Diagnose the bottleneck with evidence, not assertion.
+- Every reported number must reconcile with a kept `.jtl` file or `analysis/accuracy/*.json` file.
+- Explain how the environment-specific measurements can and cannot scale to the client's deployment; do not extrapolate linearly from CPU core count.
+
+## Required evidence
+
+| Evidence | Location |
+| --- | --- |
+| Test environment description and known limitations | `docs/test_environment.md` |
+| Test playbooks (accuracy, load, stress) | `docs/test_playbook.md` |
+| Accuracy results, per-category, confusion matrices | `docs/accuracy_results.md`, `analysis/accuracy/*.json` |
+| Load/stress results, requirement reconciliation, bottleneck diagnosis | `docs/load_test_results.md` |
+| Raw JMeter samples | `jmeter/results/*_remote.jtl` (final separate-machine evidence); older non-remote files retained for comparison |
+| JMeter test plan and load-test narrative pool | `jmeter/test_plans/` |
+
+## Acceptance criteria
+
+- Every candidate model is pulled and actually run (not just referenced by digest, as in Step 4).
+- Every requirement from `docs/requirements.md` (R1–R3) is explicitly checked against measured data for every candidate, with a clear pass/fail.
+- The stress test's "limit" claim is supported by a genuine, visible divergence in the data (not asserted without evidence).
+- The 40/min and 60/min stress configurations each have three retained runs, with per-run and across-run reporting. The conclusion must preserve the observed variance: 40/min was consistently stable, while 60/min was unreliable rather than universally failing.
+- Any place a candidate fails a requirement is noted plainly, with a diagnosis, not hidden or glossed over.
+- The prediction record (`predictions/prediction_record.md`) is not edited — divergences between prediction and actual result are recorded in the results docs, not by rewriting the prediction.

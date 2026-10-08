@@ -124,7 +124,7 @@ python3 -m unittest tests.test_build_workload_model -v
 - All 4 unit tests in `tests/test_build_workload_model.py` pass.
 - Every cited public figure in `docs/workload_model.md` was checked directly against the CFPB's own source text — not assumed correct from the prior draft. Confirmed verbatim/near-verbatim against the actual CFPB 2024 Consumer Response Annual Report PDF and the Consumer Complaint Database's disclaimer page: the 3,187,900 total-complaints figure, the 98%-via-website figure, the 2,829,400 (89%) sent-to-companies figure, and the "not a statistical sample" disclaimer.
 
-Not yet done: this model isn't wired into Step 4's requirements yet — that's the next step.
+Downstream use: Step 4 derived R1/R2 from this workload model, and Step 5 used the derived peak rate as the reference point for its deliberately accelerated test rates.
 
 ## Step 4 — Candidate Models, Requirements, Predictions
 
@@ -144,4 +144,36 @@ Three candidate Ollama models pinned by tag and manifest digest, three testable 
 - Every requirement number traces to a specific figure in `analysis/workload_model.json` (Step 3) or an already-observed number in `logs/requests.jsonl` (Step 2) — none are invented.
 - Every prediction's reasoning method is disclosed in `predictions/prediction_record.md` (e.g. latency predictions are scaled from `llama3.2:3b`'s already-observed warm latency by weights-file-size ratio), so the prediction can be judged, not just trusted.
 
-Not yet done: nothing here has been tested against reality yet — that's Step 5 (pull the models, run the golden set through each, run JMeter, compare against these requirements and predictions).
+Step 5 subsequently pulled and verified all three pinned models, measured R1–R3, and preserved the frozen prediction record unchanged.
+
+## Step 5 — Test and Measure
+
+All three candidates pulled and actually run: 175 golden-set tickets each through the real `POST /tickets` endpoint, plus an open-loop JMeter matrix and stress test with 3 repeats per reported rate. Final load was generated from separate Machine B against service/Ollama Machine A. See `docs/test_environment.md`, `docs/test_playbook.md`, `docs/accuracy_results.md`, `docs/load_test_results.md`.
+
+### Headline result
+
+**No candidate meets all three Step 4 requirements.**
+
+| Requirement | `llama3.2:1b` | `llama3.2:3b` | `qwen2.5:7b` |
+| --- | --- | --- | --- |
+| R1 — p95 latency < 10s | PASS (2.067s) | PASS (2.498s) | PASS (4.840s; n=9 caveat) |
+| R2 — ≥8 tickets/hour | PASS | PASS | PASS |
+| R3 — ≥85% accuracy, no category <70% | FAIL (28.0%) | FAIL (32.0%) | FAIL (78.9%) |
+
+`qwen2.5:7b` is the clear accuracy leader (78.9% vs 28–32% for the two smaller models) but the clear latency laggard; the reverse is true of `llama3.2:1b`. Full per-category breakdowns and confusion matrices are in `docs/accuracy_results.md`.
+
+### An unplanned but important finding
+
+The baseline never sets a `temperature` or `seed` on its Ollama calls. Replaying the exact same prompt against the same model twice produced two different valid-format answers — genuine non-determinism, not a bug. This is disclosed in `docs/accuracy_results.md` since it means a repeat accuracy run would likely not reproduce the exact same percentage (though the large gap between candidates is expected to be robust to this).
+
+### Bottleneck (confirmed, matching the Step 4 prediction made before any of this data existed)
+
+Ollama's CPU-bound inference time, serialised behind the service's single classification lock. On the final i9-14900HX Machine A, all three `llama3.2:1b` runs at 40/min were stable. At 60/min, one run collapsed with 154/181 failures, a second developed a 66.8-second p95 tail, and a third remained stable. The supported conclusion is therefore a reliability boundary between 40 and 60/min—not that 60/min fails identically on every run.
+
+### Verified, not just run once and trusted
+
+- A first version of the JMeter test plan crashed every run; root-caused by inspecting JMeter's own bundled javadoc for the real timer property schema (not guessed again), fixed, and smoke-tested before collecting any real data.
+- Every reported number traces to a raw `.jtl` file in `jmeter/results/` or a JSON file in `analysis/accuracy/` — see `docs/load_test_results.md` and `docs/accuracy_results.md` for the reconciliation.
+- `docs/test_environment.md` records both machines' exact hardware/software, the routed network topology, and the distinction between final `_remote.jtl` evidence and older co-located pipeline-validation files.
+
+Not yet done: `predictions/prediction_record.md` has not been touched (correctly — it's frozen); the formal predictions-vs-actual comparison and the final recommendation are Step 6.

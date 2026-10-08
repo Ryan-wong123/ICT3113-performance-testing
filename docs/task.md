@@ -68,12 +68,12 @@ Labelling is fully manual and inter-human: two team members each independently l
 - [x] Confirm the Ollama-unreachable failure path: 502, logged with the error, against both a stub and (incidentally, before Ollama was started) the real container.
 - [x] Confirm every request (success, validation failure, and Ollama failure) produces one log line in `logs/requests.jsonl` with the required fields, reconciling exactly with what happened.
 
-## Not yet done / left for later steps
+## Follow-up status
 
-- [ ] Pin and pull real candidate Ollama models (Step 4); `.env.example`'s `OLLAMA_MODEL` is a placeholder with no recorded digest yet.
+- [x] Pin the candidate tags/digests in Step 4 and pull/verify all three candidates in Step 5; the service itself remains environment-driven through `OLLAMA_MODEL`.
 - [ ] Automated tests for the service (none exist yet; validation so far was manual curl-based smoke testing).
-- [ ] The malformed/off-format model output path (`categories.parse_category` raising on a non-matching reply → 502) has never actually fired against a real model — it's implemented but unexercised, since the model has so far always replied with an exact category.
-- [ ] `logs/requests.jsonl` currently holds this development smoke-test traffic (a handful of tickets, a couple of induced failures) — clear it before the first real benchmark run in Step 5 so dev noise doesn't mix with reported evidence.
+- [x] Exercise the malformed/off-format model-output path against real candidates; these responses produced documented HTTP 502s in both accuracy and load testing.
+- [x] Preserve the append-only request log instead of deleting historical evidence, and explicitly reconcile the historical block, warm-ups, remote samples that reached FastAPI, and connection timeouts that did not (`docs/load_test_results.md`).
 
 ## Verification
 
@@ -109,9 +109,9 @@ ollama ps   # PROCESSOR column should read "100% CPU"
 - [x] Regenerate both JSON artefacts from our actual repo data (`labelling/team8_rows_8000_8999.csv`) and confirm the numbers match.
 - [x] Run the generator's unit tests (`tests/test_build_workload_model.py`) against our code — all 4 pass.
 
-## Not yet done / left for later steps
+## Follow-up status
 
-- [ ] These rates aren't yet used anywhere — Step 4 must derive testable response-time/throughput/accuracy requirements from this model, and Step 5's JMeter plans must use these submission/search rates (and this ticket-length distribution) for realistic-load scenarios.
+- [x] Use the workload figures to derive Step 4 requirements and anchor Step 5's test-rate rationale. The short JMeter runs use disclosed accelerated rates because the realistic peak would produce too few samples for useful percentiles.
 - [ ] The model has no day-of-week, holiday, campaign, incident, or seasonal effects (explicitly noted as a limitation in `docs/workload_model.md`).
 
 ## Verification
@@ -148,11 +148,12 @@ Every public figure cited in `docs/workload_model.md` was checked directly again
 - [x] Write `predictions/prediction_record.md`: bottleneck prediction, per-candidate accuracy/latency predictions (with reasoning method disclosed), and hardest-category predictions, grounded in Step 1's and Step 2's actual evidence rather than general reasoning.
 - [x] Confirm no candidate model was pulled, run, or benchmarked during this step.
 
-## Not yet done / left for later steps
+## Follow-up status
 
-- [ ] Pull all 3 candidate models for real (Step 5, immediately before benchmarking).
-- [ ] Document the actual Step 5 test environment (may or may not be this same development machine; must confirm the JMeter load generator runs on a separate machine from the service).
-- [ ] Measure R1/R2/R3 against each candidate and compare against every prediction in `predictions/prediction_record.md` (Step 5/6) — the prediction record must not be edited once this starts.
+- [x] Pull all three candidates in Step 5 and verify their local IDs against the frozen digests.
+- [x] Document the actual Step 5 environment, including the separate JMeter Machine B and service/Ollama Machine A.
+- [x] Measure R1/R2/R3 against every candidate without editing `predictions/prediction_record.md`.
+- [ ] Complete the formal prediction-by-prediction comparison and recommendation in Step 6.
 
 ## Verification
 
@@ -165,4 +166,45 @@ sha256sum /tmp/manifest_3b.json   # first 12 hex chars must equal `ollama list`'
 # Confirm the requirement numbers trace to Step 3's workload model:
 python -c "import json; d=json.load(open('analysis/workload_model.json')); print(d['periods']['peak']['submissions']['per_hour'])"
 # must print 7.278311, matching docs/requirements.md's R1/R2 citations
+```
+
+---
+
+# Step 5 — Test and Measure Task Record
+
+## Completed workflow
+
+- [x] Document the original co-located environment and its limitation, then re-run the full load/stress workload with JMeter on separate Machine B and service/Ollama on Machine A.
+- [x] Pull all 3 candidate models for real; confirm each local model ID matches the digest recorded in `docs/candidate_models.md` in Step 4 (all three matched).
+- [x] Run the accuracy test (`scripts/run_accuracy_test.py`) for all 3 candidates against the real, running Docker container — every golden-set ticket through `POST /tickets`, never bypassed.
+- [x] Discover and diagnose a genuine non-determinism finding (identical prompt/model replayed twice produced two different valid answers) — documented in `docs/accuracy_results.md`, not hidden.
+- [x] Build and debug the JMeter open-loop test plan (`jmeter/test_plans/ticket_triage_load_test.jmx`); found and fixed a real bug (missing `throughputPeriod` property causing an `OutOfMemoryError`) by reading JMeter's own bundled javadoc, then smoke-tested before trusting it.
+- [x] Run the load test matrix: 3 models × 2 accelerated low/high rates × 3 repeats = 18 JMeter runs, all open-loop. The rates were selected from latency on the older i7 environment and are not described as below/above the faster final i9 Machine A's capacity.
+- [x] Report the arithmetic mean and observed range across the three repeats for latency percentiles, completed throughput, successful throughput, and error rate; keep offered arrivals separate and include queued drain time in the throughput denominator.
+- [x] Run three remote `llama3.2:1b` stress repeats at both 40/min and 60/min. All 40/min runs were stable; at 60/min, one run collapsed, one developed severe late-window queueing, and one remained stable. The demonstrated reliability boundary is therefore 40–60/min on this environment.
+- [x] Import and preserve 24 separate-machine JTL files (18 matrix runs plus six stress runs), then reconcile all 1,197 samples with `logs/requests.jsonl`.
+- [x] Reconcile every requirement (R1, R2, R3) against measured data for every candidate — result: no candidate meets all three.
+- [x] Diagnose the bottleneck with evidence (Ollama CPU-bound inference behind the single lock, confirmed matching the Step 4 prediction).
+- [x] Confirm `predictions/prediction_record.md` was not edited.
+
+## Remaining work and disclosed limitations
+
+- [ ] Formal predictions-vs-actual comparison table and final recommendation (Step 6).
+- [x] Apply the “three runs per reported configuration” rule to stress as well: three retained runs at 40/min and three at 60/min, with per-run, pooled, mean, and spread reporting.
+- [ ] A genuine multi-hour realistic-rate test was not run. The matrix uses short, accelerated rates because the real peak (~7.28/hour) would produce too few samples for stable percentiles; this is a disclosed limitation rather than omitted evidence.
+- [x] Record Machine B's exact environment: Acer Nitro AN515-54, Intel i7-9750H (6 cores / 12 logical processors), 15.85 GiB RAM, Windows 11 Home build 22631, JMeter 5.6.3, and Microsoft OpenJDK 21.0.12.101.
+- [x] State how the environment-specific results can and cannot scale to client hardware; do not extrapolate linearly from core count.
+- [x] Correct `scripts/summarize_jtl.py` to measure through the final completion, add an arrival-window floor for sparse tests, and distinguish completed from successful throughput.
+
+## Verification
+
+```bash
+# Re-summarise any raw .jtl file:
+python3 scripts/summarize_jtl.py jmeter/results/<file>.jtl --arrival-window-seconds <configured-duration>
+
+# Re-run the accuracy scorer against a running container (see docs/test_playbook.md for full steps):
+python3 scripts/run_accuracy_test.py --model-label <tag>
+
+# Confirm a candidate's locally-pulled model ID still matches its Step 4 digest:
+ollama list   # first 12 hex chars of each ID must match docs/candidate_models.md
 ```

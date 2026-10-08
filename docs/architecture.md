@@ -214,3 +214,67 @@ The team chose to record each candidate's exact tag and manifest digest via the 
 ## Boundary
 
 Step 4 does not benchmark, pull, or run any candidate model — that is Step 5. It also does not yet document the Step 5 test environment (separate machines for the load generator and the service, hardware/software versions) — the hardware referenced in `predictions/prediction_record.md` is this team's development machine, used only to make the prediction record concrete and falsifiable, not a claim about the eventual Step 5 test environment.
+
+---
+
+# Step 5 Architecture — Test and Measure
+
+## Overview
+
+Three independent measurement pipelines drive the real Docker container (never bypassing it), sharing the same container/Ollama pair one candidate model at a time (switched via `docker compose down && OLLAMA_MODEL=<tag> docker compose up -d`). For the final load/stress pipeline, JMeter runs on separate Machine B and reaches the container on Machine A over TCP 8000; it is not co-located with Ollama:
+
+```text
+labelling/golden_test_set.csv (175 tickets)
+        |
+        v
+scripts/run_accuracy_test.py --model-label <tag>
+        |  (POST /tickets, one at a time, per ticket)
+        v
+analysis/accuracy/<tag>.json (overall/per-category accuracy, confusion matrix, warm latency)
+        |
+        v (feeds R1, R3)
+docs/accuracy_results.md
+
+jmeter/test_plans/load_test_narratives.csv (825 non-golden-set rows)
+        |
+        v
+jmeter/test_plans/ticket_triage_load_test.jmx (PreciseThroughputTimer, open-loop)
+        |  (Machine B, 3 repeats per rate; direct non-GUI invocation)
+        v
+Machine A POST /tickets -> synchronous classifier lock -> CPU-only Ollama
+        v
+jmeter/results/*_remote.jtl
+        |
+        v
+scripts/summarize_jtl.py (p50/p95/p99, completed/successful throughput, error rate)
+        |
+        v (feeds R2, stress-test limit, bottleneck diagnosis)
+docs/load_test_results.md
+```
+
+## Components
+
+| Component | Responsibility |
+| --- | --- |
+| `scripts/run_accuracy_test.py` | Sends every golden-set narrative through the real `POST /tickets` endpoint (never a bulk/bypass path), scores overall/per-category accuracy and a confusion matrix, and records warm single-request latency percentiles. |
+| `jmeter/test_plans/ticket_triage_load_test.jmx` | One parameterised JMeter plan (rate, duration, host/port, narrative CSV all via `-J` properties) covering every load/stress configuration — no per-run XML editing. Uses JMeter core's `PreciseThroughputTimer` (Poisson-process open-loop pacing, not a plugin) and a `JSR223PreProcessor` (Groovy `JsonOutput.toJson`) to safely build the JSON body regardless of quotes/newlines in a narrative. |
+| `jmeter/test_plans/load_test_narratives.csv` | The 825 Team 8 rows *not* in the golden set — load-test traffic never touches the frozen accuracy-evaluation data. |
+| `scripts/run_jmeter_test.sh` | Thin wrapper: one call = one (model, rate, duration, run number) → one `.jtl` file under `jmeter/results/`. |
+| `scripts/summarize_jtl.py` | Turns a raw `.jtl` into p50/p95/p99 latency, completed throughput, successful throughput, offered arrival rate, and error rate/codes. Its measurement window is the longer of the configured arrival window and first-sample-to-final-completion time, so sparse traffic is not overstated and queued drain time is retained. |
+| `docs/test_environment.md` | Hardware/software and network roles for separate Machine A (service/Ollama) and Machine B (JMeter), remaining environment limitations, and the explicit boundary on scaling these measurements to client hardware. |
+| `docs/test_playbook.md` | Step-by-step reproduction instructions for all three test types. |
+| `docs/accuracy_results.md`, `docs/load_test_results.md` | Results, three-run mean/range and pooled load summaries, requirement reconciliation (R1–R3 per candidate), and bottleneck diagnosis. |
+
+## A real implementation bug found and fixed during this step
+
+The first version of `ticket_triage_load_test.jmx` crashed every run (`OutOfMemoryError: Requested array size exceeds VM limit`) because the `PreciseThroughputTimer` element was missing its required `throughputPeriod` property (and carried a stray empty `randomSeed`) — both fabricated from memory rather than the actual bean schema. This was found by inspecting JMeter's own bundled javadoc (`docs/api/.../PreciseThroughputTimer.html`) for the real property list, rather than guessing again, and confirmed fixed with a small smoke test before any real data was collected on it.
+
+The final remote stress runs establish an environment-specific reliability boundary rather than a universal constant. `llama3.2:1b` sustained 40 arrivals/minute in all three 180-second repeats. At 60/minute, one repeat saturated the sequential path and request/socket backlog (152 connect timeouts plus one 300-second read timeout), a second developed a 66.8-second p95 latency tail, and a third remained stable. The supported claim is therefore that 60/min is not repeatably sustainable on the recorded Machine A and the reliability transition lies between 40 and 60/min—not that every 60/min run must fail.
+
+Both the normal matrix and stress rates have three repeats and report per-run values, pooled values, and arithmetic mean with minimum–maximum spread.
+
+Offered arrivals, completed throughput, and successful throughput are kept distinct. This is essential for the 60/min stress runs: one run needed almost six minutes to finish a three-minute arrival window, and another drained for roughly four minutes. Dividing only by the configured arrival period would mislabel queued work as achieved capacity.
+
+## Boundary
+
+Step 5 measures the frozen candidates and requirements; it does not choose a different candidate set, does not revise `predictions/prediction_record.md`, and does not make the final recommendation — that is Step 6, which compares this step's actual results against Step 4's predictions and requirements.

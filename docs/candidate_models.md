@@ -2,7 +2,7 @@
 
 ## Selection
 
-Three candidate models, spanning two parameter-size classes, all runnable CPU-only on this team's development hardware (Intel Core i7-9750H, 6 cores / 12 threads, 15.9 GB RAM — see `predictions/prediction_record.md` for the full hardware note; Step 5 will add formal test-environment documentation, which may or may not use this same machine).
+Three candidate models, spanning two parameter-size classes, were selected as runnable CPU-only on the team's original development hardware (Intel Core i7-9750H, 6 cores / 12 threads, 15.9 GB RAM — see `predictions/prediction_record.md`). Step 5 subsequently used that Acer machine for JMeter and a separate i9-14900HX Machine A for the service/Ollama load tests; the final environment is recorded in `docs/test_environment.md`.
 
 | Model | Ollama tag | Size class | Manifest digest | Model weights size | Licence |
 | --- | --- | --- | --- | --- | --- |
@@ -27,7 +27,6 @@ These were not pulled (downloaded) to this machine to obtain this information �
 - **All three are practical for this team's hardware.** `llama3.2:3b` was already run successfully, CPU-only, on this exact machine in Step 2 (verified: `ollama ps` reported `100% CPU`, warm single-request latency ≈2.8s — see below). `llama3.2:1b`'s smaller footprint should comfortably fit within the 15.9 GB RAM available even for CPU-only inference; `qwen2.5:7b`'s ~4.36 GiB of weights is the upper bound this team is prepared to run without a GPU, chosen deliberately to be large enough to show the trade-off without being infeasible on this hardware.
 - **Only 3, not 4–5, candidates.** The team decided 3 is sufficient to demonstrate the required trade-off (2 size classes, both directions of the family/architecture comparison) while keeping Step 5's benchmarking matrix (3 models × JMeter load/stress runs × golden-set accuracy runs, 3 repeats each) tractable on a single CPU-only development machine.
 
-## Not yet done
+## Step 5 verification
 
-- The models are **not yet pulled** to any machine — only their manifests and licence text have been fetched (see above). Pulling and running them is Step 5's job, immediately before benchmarking.
-- Test-environment hardware documentation (`docs/test_environment.md` or equivalent, per Step 5's brief requirement) does not exist yet; the hardware referenced above is provisional (this development machine), and the team must confirm before Step 5 whether benchmarking will run on this same machine or different hardware, and that the JMeter load generator runs on a **separate** machine from the service, per the brief's requirement.
+All three models were pulled and run in Step 5. Each local model ID matched the first 12 hexadecimal characters of the frozen manifest digest above, and `ollama ps` reported `100% CPU` for every candidate. The final load generator and system under test ran on separate machines; see `docs/test_environment.md` for hardware, software, network path, and limitations.
