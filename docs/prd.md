@@ -181,3 +181,36 @@ Actually pull, run, and measure all three frozen candidates against the frozen g
 - The 40/min and 60/min stress configurations each have three retained runs, with per-run and across-run reporting. The conclusion must preserve the observed variance: 40/min was consistently stable, while 60/min was unreliable rather than universally failing.
 - Any place a candidate fails a requirement is noted plainly, with a diagnosis, not hidden or glossed over.
 - The prediction record (`predictions/prediction_record.md`) is not edited — divergences between prediction and actual result are recorded in the results docs, not by rewriting the prediction.
+
+---
+
+# Step 6 PRD — Recommendation
+
+## Objective
+
+Answer the client's question — given CPU-only hardware and no public model API, what should they deploy and what service quality can be promised — with a recommendation that follows from this team's own requirements and measurements, plus a prediction-by-prediction account of where Step 4 was wrong.
+
+## Scope and constraints
+
+- The recommendation must hold against R1–R3 as written in `docs/requirements.md`; requirements are not adjusted after the fact, and a finding that no candidate meets them is reported plainly.
+- Take an explicit position on whether a misrouted ticket or a slow triage costs the client more, grounded in the workload model and measurements.
+- Every figure must come from committed evidence (`analysis/accuracy/*.json`, `jmeter/results/*_remote.jtl`, `logs/requests.jsonl`, `analysis/workload_model.json`) via a regenerable script. Measurements combined with workload assumptions are labelled as derived estimates; analysis not run through the service is labelled offline.
+- Compare latency predictions on the hardware they were made for (the i7 accuracy-run measurements); the prediction record forbids using the later hardware change to excuse a miss.
+- `source_label` may be scored against the frozen golden labels as a status-quo baseline, never used as ground truth.
+- No service, golden-set, prediction-record, or requirement changes.
+
+## Required evidence
+
+| Evidence | Location |
+| --- | --- |
+| Recommendation, position, requirement defence, predictions vs actual, account of errors, conditions | `docs/recommendation.md` |
+| Machine-readable Step 6 figures | `analysis/step6_analysis.json` |
+| Generator | `scripts/build_step6_analysis.py` |
+| Unit tests for its statistics | `tests/test_build_step6_analysis.py` |
+
+## Acceptance criteria
+
+- Every number in `docs/recommendation.md` appears in `analysis/step6_analysis.json` or the Step 5 results documents, and the JSON regenerates unchanged from the committed inputs.
+- Every frozen prediction has an actual value and a right/partly right/wrong verdict with an evidence-based explanation.
+- Every unmet requirement is stated plainly per candidate.
+- Uncertainty is quantified (confidence intervals, paired significance test) and every limit of the recommended pilot is disclosed.

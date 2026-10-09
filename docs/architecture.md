@@ -278,3 +278,34 @@ Offered arrivals, completed throughput, and successful throughput are kept disti
 ## Boundary
 
 Step 5 measures the frozen candidates and requirements; it does not choose a different candidate set, does not revise `predictions/prediction_record.md`, and does not make the final recommendation — that is Step 6, which compares this step's actual results against Step 4's predictions and requirements.
+
+---
+
+# Step 6 Architecture — Recommendation
+
+## Overview
+
+One stdlib-only, regenerable script turns the frozen Step 1–5 evidence into every figure the recommendation uses. It reads only committed files and never calls the service or Ollama.
+
+```text
+analysis/accuracy/*.json ─┐
+labelling/golden_test_set.csv ─┤
+labelling/team8_rows_8000_8999.csv (source_label, post-freeze baseline only) ─┤
+analysis/workload_model.json ─┼─> scripts/build_step6_analysis.py ─> analysis/step6_analysis.json ─> docs/recommendation.md
+logs/requests.jsonl ─┤          (reuses summarize_jtl.nearest_rank)
+jmeter/results/*_remote.jtl ─┤
+predictions/prediction_record.md (values copied into PREDICTIONS) ─┘
+```
+
+## Components
+
+| Component | Responsibility |
+| --- | --- |
+| `scripts/build_step6_analysis.py` | Wilson 95% intervals for overall/per-category accuracy; consumer self-label baseline; paired exact McNemar test of each model vs the self-label; stratum-weighted accuracy over all 1,000 Team 8 rows; offline agreement-gate analysis; derived misroutes/day from the Step 3 volume; latency-vs-prediction ratios and narrative-length Spearman correlation; first request after each model switch from the request log; pooled and worst-run p95 from the remote JTLs. |
+| `analysis/step6_analysis.json` | Machine-readable output of the above; regenerable, not hand-edited. |
+| `tests/test_build_step6_analysis.py` | Unit tests for the Wilson interval, exact McNemar test, tie-aware ranking, and Spearman correlation. |
+| `docs/recommendation.md` | The client recommendation, the misrouting-vs-latency position, requirement defence, predictions vs actual, account of where and why predictions failed, and conditions. |
+
+## Boundary
+
+Step 6 changes no service code, golden label, requirement threshold, or prediction. The agreement-gated pilot it recommends would require a service change (accepting the consumer-selected label) and is therefore Assignment 2 work, not part of this baseline.

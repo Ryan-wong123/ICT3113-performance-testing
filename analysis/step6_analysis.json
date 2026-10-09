@@ -1,0 +1,664 @@
+{
+  "generated_by": "scripts/build_step6_analysis.py",
+  "inputs": [
+    "analysis/accuracy/*.json",
+    "labelling/golden_test_set.csv",
+    "labelling/team8_rows_8000_8999.csv (source_label, used only after the golden set was frozen)",
+    "analysis/workload_model.json",
+    "logs/requests.jsonl",
+    "jmeter/results/*_remote.jtl",
+    "predictions/prediction_record.md (values copied into PREDICTIONS)"
+  ],
+  "requirements": {
+    "r1_p95_limit_ms": 10000,
+    "r3_overall_pct": 85.0,
+    "r3_per_category_pct": 70.0
+  },
+  "accuracy": {
+    "llama3.2:1b": {
+      "correct": 49,
+      "n": 175,
+      "overall_accuracy_pct": 28.0,
+      "wilson95_pct": [
+        21.88,
+        35.07
+      ],
+      "r3_overall_failure_statistically_clear": true,
+      "output_contract_errors": 5,
+      "valid_but_wrong": 121,
+      "predicted_label_totals": {
+        "Consumer loan": 68,
+        "Credit reporting": 55,
+        "Bank account or service": 16,
+        "Debt collection": 14,
+        "Mortgage": 11,
+        "Money transfer or service": 6,
+        "ERROR": 5,
+        "Credit card": 0
+      },
+      "categories_weakest_first": [
+        "Credit card",
+        "Debt collection",
+        "Money transfer or service",
+        "Mortgage",
+        "Bank account or service",
+        "Credit reporting",
+        "Consumer loan"
+      ],
+      "per_category": {
+        "Bank account or service": {
+          "correct": 10,
+          "support": 28,
+          "accuracy_pct": 35.71,
+          "wilson95_pct": [
+            20.71,
+            54.17
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Consumer loan": {
+          "correct": 11,
+          "support": 24,
+          "accuracy_pct": 45.83,
+          "wilson95_pct": [
+            27.89,
+            64.93
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Credit card": {
+          "correct": 0,
+          "support": 23,
+          "accuracy_pct": 0.0,
+          "wilson95_pct": [
+            0.0,
+            14.31
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Credit reporting": {
+          "correct": 16,
+          "support": 38,
+          "accuracy_pct": 42.11,
+          "wilson95_pct": [
+            27.85,
+            57.81
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Debt collection": {
+          "correct": 1,
+          "support": 14,
+          "accuracy_pct": 7.14,
+          "wilson95_pct": [
+            1.27,
+            31.47
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Money transfer or service": {
+          "correct": 5,
+          "support": 24,
+          "accuracy_pct": 20.83,
+          "wilson95_pct": [
+            9.24,
+            40.47
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Mortgage": {
+          "correct": 6,
+          "support": 24,
+          "accuracy_pct": 25.0,
+          "wilson95_pct": [
+            12.0,
+            44.9
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        }
+      }
+    },
+    "llama3.2:3b": {
+      "correct": 56,
+      "n": 175,
+      "overall_accuracy_pct": 32.0,
+      "wilson95_pct": [
+        25.54,
+        39.23
+      ],
+      "r3_overall_failure_statistically_clear": true,
+      "output_contract_errors": 2,
+      "valid_but_wrong": 117,
+      "predicted_label_totals": {
+        "Bank account or service": 98,
+        "Consumer loan": 33,
+        "Debt collection": 20,
+        "Credit reporting": 15,
+        "Credit card": 3,
+        "Money transfer or service": 3,
+        "ERROR": 2,
+        "Mortgage": 1
+      },
+      "categories_weakest_first": [
+        "Mortgage",
+        "Credit card",
+        "Money transfer or service",
+        "Credit reporting",
+        "Debt collection",
+        "Consumer loan",
+        "Bank account or service"
+      ],
+      "per_category": {
+        "Bank account or service": {
+          "correct": 25,
+          "support": 28,
+          "accuracy_pct": 89.29,
+          "wilson95_pct": [
+            72.8,
+            96.29
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        },
+        "Consumer loan": {
+          "correct": 12,
+          "support": 24,
+          "accuracy_pct": 50.0,
+          "wilson95_pct": [
+            31.43,
+            68.57
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Credit card": {
+          "correct": 1,
+          "support": 23,
+          "accuracy_pct": 4.35,
+          "wilson95_pct": [
+            0.77,
+            20.99
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Credit reporting": {
+          "correct": 10,
+          "support": 38,
+          "accuracy_pct": 26.32,
+          "wilson95_pct": [
+            14.97,
+            42.01
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Debt collection": {
+          "correct": 4,
+          "support": 14,
+          "accuracy_pct": 28.57,
+          "wilson95_pct": [
+            11.72,
+            54.65
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Money transfer or service": {
+          "correct": 3,
+          "support": 24,
+          "accuracy_pct": 12.5,
+          "wilson95_pct": [
+            4.34,
+            31.0
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        },
+        "Mortgage": {
+          "correct": 1,
+          "support": 24,
+          "accuracy_pct": 4.17,
+          "wilson95_pct": [
+            0.74,
+            20.24
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": true
+        }
+      }
+    },
+    "qwen2.5:7b": {
+      "correct": 138,
+      "n": 175,
+      "overall_accuracy_pct": 78.86,
+      "wilson95_pct": [
+        72.22,
+        84.25
+      ],
+      "r3_overall_failure_statistically_clear": true,
+      "output_contract_errors": 0,
+      "valid_but_wrong": 37,
+      "predicted_label_totals": {
+        "Credit reporting": 49,
+        "Bank account or service": 35,
+        "Credit card": 21,
+        "Consumer loan": 20,
+        "Money transfer or service": 20,
+        "Mortgage": 17,
+        "Debt collection": 13,
+        "ERROR": 0
+      },
+      "categories_weakest_first": [
+        "Consumer loan",
+        "Mortgage",
+        "Credit card",
+        "Money transfer or service",
+        "Debt collection",
+        "Bank account or service",
+        "Credit reporting"
+      ],
+      "per_category": {
+        "Bank account or service": {
+          "correct": 25,
+          "support": 28,
+          "accuracy_pct": 89.29,
+          "wilson95_pct": [
+            72.8,
+            96.29
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        },
+        "Consumer loan": {
+          "correct": 14,
+          "support": 24,
+          "accuracy_pct": 58.33,
+          "wilson95_pct": [
+            38.83,
+            75.53
+          ],
+          "below_r3_floor": true,
+          "floor_failure_statistically_clear": false
+        },
+        "Credit card": {
+          "correct": 17,
+          "support": 23,
+          "accuracy_pct": 73.91,
+          "wilson95_pct": [
+            53.53,
+            87.45
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        },
+        "Credit reporting": {
+          "correct": 36,
+          "support": 38,
+          "accuracy_pct": 94.74,
+          "wilson95_pct": [
+            82.71,
+            98.54
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        },
+        "Debt collection": {
+          "correct": 11,
+          "support": 14,
+          "accuracy_pct": 78.57,
+          "wilson95_pct": [
+            52.41,
+            92.43
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        },
+        "Money transfer or service": {
+          "correct": 18,
+          "support": 24,
+          "accuracy_pct": 75.0,
+          "wilson95_pct": [
+            55.1,
+            88.0
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        },
+        "Mortgage": {
+          "correct": 17,
+          "support": 24,
+          "accuracy_pct": 70.83,
+          "wilson95_pct": [
+            50.83,
+            85.09
+          ],
+          "below_r3_floor": false,
+          "floor_failure_statistically_clear": false
+        }
+      }
+    }
+  },
+  "accuracy_prediction_scorecard": {
+    "llama3.2:1b": {
+      "predicted_accuracy_pct": 72.0,
+      "measured_accuracy_pct": 28.0,
+      "error_points": -44.0,
+      "predicted_passes_r3": false,
+      "measured_passes_r3": false,
+      "r3_direction_correct": true
+    },
+    "llama3.2:3b": {
+      "predicted_accuracy_pct": 83.0,
+      "measured_accuracy_pct": 32.0,
+      "error_points": -51.0,
+      "predicted_passes_r3": false,
+      "measured_passes_r3": false,
+      "r3_direction_correct": true
+    },
+    "qwen2.5:7b": {
+      "predicted_accuracy_pct": 90.0,
+      "measured_accuracy_pct": 78.86,
+      "error_points": -11.14,
+      "predicted_passes_r3": true,
+      "measured_passes_r3": false,
+      "r3_direction_correct": false
+    }
+  },
+  "consumer_self_label_baseline": {
+    "description": "Consumer-selected source_label scored against the frozen golden labels after labelling was complete. The golden set was sampled using source_label as a stratification aid, so this is a same-sample comparison, not a population estimate.",
+    "correct": 149,
+    "n": 175,
+    "overall_accuracy_pct": 85.14,
+    "wilson95_pct": [
+      79.12,
+      89.65
+    ],
+    "per_category": {
+      "Bank account or service": {
+        "correct": 23,
+        "support": 28,
+        "accuracy_pct": 82.14
+      },
+      "Consumer loan": {
+        "correct": 21,
+        "support": 24,
+        "accuracy_pct": 87.5
+      },
+      "Credit card": {
+        "correct": 21,
+        "support": 23,
+        "accuracy_pct": 91.3
+      },
+      "Credit reporting": {
+        "correct": 25,
+        "support": 38,
+        "accuracy_pct": 65.79
+      },
+      "Debt collection": {
+        "correct": 14,
+        "support": 14,
+        "accuracy_pct": 100.0
+      },
+      "Money transfer or service": {
+        "correct": 21,
+        "support": 24,
+        "accuracy_pct": 87.5
+      },
+      "Mortgage": {
+        "correct": 24,
+        "support": 24,
+        "accuracy_pct": 100.0
+      }
+    }
+  },
+  "model_vs_self_label": {
+    "llama3.2:1b": {
+      "model_correct_self_label_wrong": 12,
+      "model_wrong_self_label_correct": 112,
+      "mcnemar_exact_p": 0.0,
+      "agreement_gate": {
+        "description": "Post-hoc, offline: auto-route only when the model's answer equals the consumer-selected label; send every other ticket to a human router. Not implemented or tested through the service.",
+        "auto_routed": 40,
+        "auto_routed_share_pct": 22.86,
+        "auto_routed_correct": 37,
+        "auto_routed_accuracy_pct": 92.5,
+        "auto_routed_accuracy_wilson95_pct": [
+          80.14,
+          97.42
+        ],
+        "sent_to_human": 135,
+        "sent_to_human_share_pct": 77.14
+      }
+    },
+    "llama3.2:3b": {
+      "model_correct_self_label_wrong": 10,
+      "model_wrong_self_label_correct": 103,
+      "mcnemar_exact_p": 0.0,
+      "agreement_gate": {
+        "description": "Post-hoc, offline: auto-route only when the model's answer equals the consumer-selected label; send every other ticket to a human router. Not implemented or tested through the service.",
+        "auto_routed": 50,
+        "auto_routed_share_pct": 28.57,
+        "auto_routed_correct": 46,
+        "auto_routed_accuracy_pct": 92.0,
+        "auto_routed_accuracy_wilson95_pct": [
+          81.16,
+          96.85
+        ],
+        "sent_to_human": 125,
+        "sent_to_human_share_pct": 71.43
+      }
+    },
+    "qwen2.5:7b": {
+      "model_correct_self_label_wrong": 19,
+      "model_wrong_self_label_correct": 30,
+      "mcnemar_exact_p": 0.15241,
+      "agreement_gate": {
+        "description": "Post-hoc, offline: auto-route only when the model's answer equals the consumer-selected label; send every other ticket to a human router. Not implemented or tested through the service.",
+        "auto_routed": 122,
+        "auto_routed_share_pct": 69.71,
+        "auto_routed_correct": 119,
+        "auto_routed_accuracy_pct": 97.54,
+        "auto_routed_accuracy_wilson95_pct": [
+          93.02,
+          99.16
+        ],
+        "sent_to_human": 53,
+        "sent_to_human_share_pct": 30.29
+      }
+    }
+  },
+  "stratum_weighted_accuracy": {
+    "label": "Golden set = 25 tickets per source_label stratum. Re-weighting each stratum by its share of the 1,000 Team 8 rows corrects the stratum proportions only; how tickets were chosen within a stratum is not recorded, so this is not a guaranteed-unbiased population estimate.",
+    "golden_per_stratum": {
+      "Bank account or service": 25,
+      "Consumer loan": 25,
+      "Credit card": 25,
+      "Credit reporting": 25,
+      "Debt collection": 25,
+      "Money transfer or service": 25,
+      "Mortgage": 25
+    },
+    "population_per_stratum": {
+      "Bank account or service": 108,
+      "Consumer loan": 144,
+      "Credit card": 150,
+      "Credit reporting": 150,
+      "Debt collection": 132,
+      "Money transfer or service": 150,
+      "Mortgage": 166
+    },
+    "weighted_accuracy_pct": {
+      "llama3.2:1b": 27.78,
+      "llama3.2:3b": 29.39,
+      "qwen2.5:7b": 78.36,
+      "consumer_self_label": 85.56
+    }
+  },
+  "workload_implications": {
+    "label": "DERIVED ESTIMATE: measured golden-set error rates multiplied by the Step 3 modelled volume. Assumes the golden-set mix transfers to the client's real ticket mix, which the stratified sample does not guarantee.",
+    "submissions_per_day": 87.339726,
+    "peak_submissions_per_hour": 7.278311,
+    "peak_mean_inter_arrival_minutes": 8.24,
+    "misrouted_per_day_if_fully_automatic": {
+      "llama3.2:1b": 62.9,
+      "llama3.2:3b": 59.4,
+      "qwen2.5:7b": 18.5,
+      "consumer_self_label": 13.0
+    },
+    "qwen_agreement_gate_per_day": {
+      "auto_routed": 60.9,
+      "auto_routed_misrouted": 1.5,
+      "sent_to_human": 26.5
+    }
+  },
+  "latency_vs_prediction": {
+    "environment": "Original i7-9750H environment (the hardware the prediction record was written for), sequential single-request accuracy run, Ollama 0.34.4.",
+    "golden_set_mean_words": 152.68,
+    "per_model": {
+      "llama3.2:1b": {
+        "predicted_warm_s": 1.3,
+        "measured_mean_s": 3.994,
+        "measured_p50_s": 3.48,
+        "measured_p95_s": 7.347,
+        "mean_over_predicted": 3.07,
+        "predicted_ratio_to_3b": 0.464,
+        "measured_mean_ratio_to_3b": 0.486,
+        "spearman_words_vs_latency": 0.944,
+        "median_latency_under_100_words_s": 2.12,
+        "median_latency_200_plus_words_s": 6.23,
+        "n_under_100_words": 56,
+        "n_200_plus_words": 47
+      },
+      "llama3.2:3b": {
+        "predicted_warm_s": 2.8,
+        "measured_mean_s": 8.21,
+        "measured_p50_s": 6.719,
+        "measured_p95_s": 13.991,
+        "mean_over_predicted": 2.93,
+        "predicted_ratio_to_3b": 1.0,
+        "measured_mean_ratio_to_3b": 1.0,
+        "spearman_words_vs_latency": 0.915,
+        "median_latency_under_100_words_s": 3.95,
+        "median_latency_200_plus_words_s": 11.56,
+        "n_under_100_words": 55,
+        "n_200_plus_words": 48
+      },
+      "qwen2.5:7b": {
+        "predicted_warm_s": 8.0,
+        "measured_mean_s": 19.382,
+        "measured_p50_s": 18.098,
+        "measured_p95_s": 34.981,
+        "mean_over_predicted": 2.42,
+        "predicted_ratio_to_3b": 2.857,
+        "measured_mean_ratio_to_3b": 2.361,
+        "spearman_words_vs_latency": 0.943,
+        "median_latency_under_100_words_s": 10.01,
+        "median_latency_200_plus_words_s": 29.26,
+        "n_under_100_words": 57,
+        "n_200_plus_words": 48
+      }
+    }
+  },
+  "first_request_after_model_switch": {
+    "label": "Single observation per model: the first logged POST /tickets after switching to that model (the start of each model's accuracy run). Ollama load_duration is not logged, so this is evidence of first-request cost, not a controlled cold-start measurement.",
+    "per_model": {
+      "llama3.2:1b": {
+        "predicted_cold_s": 42.0,
+        "timestamp": "2026-09-26T15:55:00.345670+00:00",
+        "ticket_row": 8004,
+        "server_latency_s": 13.22
+      },
+      "llama3.2:3b": {
+        "predicted_cold_s": 67.0,
+        "timestamp": "2026-09-26T16:07:29.916792+00:00",
+        "ticket_row": 8004,
+        "server_latency_s": 23.12
+      },
+      "qwen2.5:7b": {
+        "predicted_cold_s": 150.0,
+        "timestamp": "2026-09-26T16:34:05.443496+00:00",
+        "ticket_row": 8004,
+        "server_latency_s": 77.58
+      }
+    }
+  },
+  "remote_load_r1_evidence": {
+    "environment": "Final separate-machine environment: i9-14900HX Machine A, JMeter on Machine B.",
+    "per_model": {
+      "llama3.2:1b": {
+        "7/min": {
+          "runs": 3,
+          "n": 42,
+          "errors": 2,
+          "pooled_p95_ms": 2067.0,
+          "pooled_p99_ms": 2112.0,
+          "max_ms": 2112.0,
+          "worst_run_p95_ms": 2112.0,
+          "every_run_p95_below_r1": true
+        },
+        "22/min": {
+          "runs": 3,
+          "n": 132,
+          "errors": 5,
+          "pooled_p95_ms": 1868.0,
+          "pooled_p99_ms": 2747.0,
+          "max_ms": 2785.0,
+          "worst_run_p95_ms": 1961.0,
+          "every_run_p95_below_r1": true
+        }
+      },
+      "llama3.2:3b": {
+        "3.5/min": {
+          "runs": 3,
+          "n": 22,
+          "errors": 0,
+          "pooled_p95_ms": 2498.0,
+          "pooled_p99_ms": 2854.0,
+          "max_ms": 2854.0,
+          "worst_run_p95_ms": 2854.0,
+          "every_run_p95_below_r1": true
+        },
+        "11/min": {
+          "runs": 3,
+          "n": 66,
+          "errors": 0,
+          "pooled_p95_ms": 3059.0,
+          "pooled_p99_ms": 4031.0,
+          "max_ms": 4031.0,
+          "worst_run_p95_ms": 3159.0,
+          "every_run_p95_below_r1": true
+        }
+      },
+      "qwen2.5:7b": {
+        "1.5/min": {
+          "runs": 3,
+          "n": 9,
+          "errors": 0,
+          "pooled_p95_ms": 4840.0,
+          "pooled_p99_ms": 4840.0,
+          "max_ms": 4840.0,
+          "worst_run_p95_ms": 4840.0,
+          "every_run_p95_below_r1": true
+        },
+        "5/min": {
+          "runs": 3,
+          "n": 24,
+          "errors": 0,
+          "pooled_p95_ms": 6404.0,
+          "pooled_p99_ms": 9196.0,
+          "max_ms": 9196.0,
+          "worst_run_p95_ms": 9196.0,
+          "every_run_p95_below_r1": true
+        }
+      }
+    }
+  }
+}

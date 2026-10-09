@@ -189,7 +189,7 @@ python -c "import json; d=json.load(open('analysis/workload_model.json')); print
 
 ## Remaining work and disclosed limitations
 
-- [ ] Formal predictions-vs-actual comparison table and final recommendation (Step 6).
+- [x] Formal predictions-vs-actual comparison table and final recommendation (Step 6 — see below).
 - [x] Apply the “three runs per reported configuration” rule to stress as well: three retained runs at 40/min and three at 60/min, with per-run, pooled, mean, and spread reporting.
 - [ ] A genuine multi-hour realistic-rate test was not run. The matrix uses short, accelerated rates because the real peak (~7.28/hour) would produce too few samples for stable percentiles; this is a disclosed limitation rather than omitted evidence.
 - [x] Record Machine B's exact environment: Acer Nitro AN515-54, Intel i7-9750H (6 cores / 12 logical processors), 15.85 GiB RAM, Windows 11 Home build 22631, JMeter 5.6.3, and Microsoft OpenJDK 21.0.12.101.
@@ -207,4 +207,37 @@ python3 scripts/run_accuracy_test.py --model-label <tag>
 
 # Confirm a candidate's locally-pulled model ID still matches its Step 4 digest:
 ollama list   # first 12 hex chars of each ID must match docs/candidate_models.md
+```
+
+---
+
+# Step 6 — Recommendation Task Record
+
+## Completed workflow
+
+- [x] Derive every Step 6 figure from committed evidence with `scripts/build_step6_analysis.py` → `analysis/step6_analysis.json` (accuracy JSONs, golden set, `source_label`, workload model, request log, remote JTLs) — no hand-typed numbers.
+- [x] Add 95% Wilson intervals to every overall and per-category accuracy, and state which R3 failures are statistically clear (all three overall failures; `qwen2.5:7b`'s `Consumer loan` floor failure is measured but not conclusive at n=24).
+- [x] Measure the status-quo baseline the client already has — the consumer-selected `source_label`, scored against the frozen golden labels after the freeze — and compare it with each model, paired on the same tickets (exact McNemar) and re-weighted by `source_label` stratum to all 1,000 Team 8 rows.
+- [x] Take the brief's required position (misrouting costs more than slow triage at the modelled volume) and quantify it as a labelled derived estimate (measured error rate × Step 3 daily volume).
+- [x] Compare every frozen prediction with the actual result, on the hardware the prediction was made for (i7 accuracy-run latency), and explain each miss with evidence: narrative length vs latency (Spearman 0.915–0.944), default-category collapse in the confusion matrices, first-request-after-switch latencies from `logs/requests.jsonl`.
+- [x] Write the recommendation and its defence against R1–R3 (`docs/recommendation.md`): no candidate is recommended for automatic routing; `qwen2.5:7b` is the only candidate carried forward, as an agreement-gated pilot whose limits are stated.
+- [x] Unit-test the new statistics helpers (`tests/test_build_step6_analysis.py`).
+- [x] Confirm `predictions/prediction_record.md`, `docs/requirements.md`'s R1–R3 thresholds, `src/app/`, and the golden set were not edited.
+
+## Remaining work and disclosed limitations
+
+- [ ] The PowerPoint deck (12 slides) is not in this branch.
+- [ ] The agreement-gated pilot is an offline, post-hoc analysis on the same 175 tickets it was discovered on; it needs a fresh labelled validation sample, a service change (Assignment 2), and its own requirement before any go-live claim.
+- [ ] Accuracy was measured once per model on the older i7 / Ollama 0.34.4 environment with `temperature`/`seed` unpinned; it has not been re-measured on the final i9 Machine A.
+- [ ] `qwen2.5:7b`'s own overload point was not stress-tested (the stress test used `llama3.2:1b`); it is measured only up to 5/min.
+
+## Verification
+
+```bash
+# Regenerate the Step 6 figures and confirm the committed JSON is unchanged:
+python3 scripts/build_step6_analysis.py
+git diff --exit-code analysis/step6_analysis.json
+
+# Unit tests (on a machine where a pip package shadows the repo's tests/ folder, add -s):
+python3 -m unittest tests.test_build_step6_analysis tests.test_summarize_jtl tests.test_build_workload_model -v
 ```

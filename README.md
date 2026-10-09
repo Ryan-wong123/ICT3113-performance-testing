@@ -176,4 +176,33 @@ Ollama's CPU-bound inference time, serialised behind the service's single classi
 - Every reported number traces to a raw `.jtl` file in `jmeter/results/` or a JSON file in `analysis/accuracy/` — see `docs/load_test_results.md` and `docs/accuracy_results.md` for the reconciliation.
 - `docs/test_environment.md` records both machines' exact hardware/software, the routed network topology, and the distinction between final `_remote.jtl` evidence and older co-located pipeline-validation files.
 
-Not yet done: `predictions/prediction_record.md` has not been touched (correctly — it's frozen); the formal predictions-vs-actual comparison and the final recommendation are Step 6.
+`predictions/prediction_record.md` has not been touched (correctly — it's frozen). The predictions-vs-actual comparison and the recommendation are in Step 6 below.
+
+## Step 6 — Recommendation
+
+See `docs/recommendation.md`. Every figure is regenerated from committed evidence by `scripts/build_step6_analysis.py` into `analysis/step6_analysis.json`.
+
+### Recommendation
+
+**Do not deploy any candidate as an automatic router.** None meets R3, and at the modelled volume (87.34 tickets/day, a ticket every 8.24 minutes at peak) accuracy, not latency, is what separates them: every candidate answers in seconds, while each misroute costs a human re-route. `qwen2.5:7b` is the only candidate carried forward — as an agreement-gated pilot under human review, not as a measured deployment.
+
+| | `llama3.2:1b` | `llama3.2:3b` | `qwen2.5:7b` |
+| --- | --- | --- | --- |
+| Overall accuracy (95% Wilson interval) | 28.00% (21.88–35.07) | 32.00% (25.54–39.23) | 78.86% (72.22–84.25) |
+| Derived misroutes/day if fully automatic | 62.9 | 59.4 | 18.5 |
+
+### Two findings that shape it
+
+- **The consumer's own label is the baseline to beat, and no model beats it.** Scored against the golden labels after the freeze, the consumer-selected `source_label` is 85.14% accurate (85.56% re-weighted to all 1,000 rows). `qwen2.5:7b` is not significantly different (exact McNemar p = 0.152); both small models are significantly worse.
+- **Agreement gating looks promising offline.** Where `qwen2.5:7b` agrees with the consumer's label (69.71% of tickets), the shared label is 97.54% correct. This is post-hoc on the same 175 tickets, so it is a pilot proposal for Assignment 2, not a result.
+
+### Predictions vs actual (summary)
+
+The bottleneck prediction was right. Every accuracy prediction was too optimistic (by 44.0, 51.0 and 11.14 points), and `qwen2.5:7b` was wrongly predicted to pass R3. Warm latency was underestimated 2.4–3.1× because the anchor came from short hand-written smoke-test tickets (latency vs word count: Spearman 0.915–0.944). The hardest-category prediction, derived from five human disagreements, did not match where the models actually fail.
+
+### Reproduce it
+
+```bash
+python3 scripts/build_step6_analysis.py
+python3 -m unittest tests.test_build_step6_analysis -v
+```

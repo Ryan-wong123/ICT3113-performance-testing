@@ -37,3 +37,7 @@ All three requirements are explicitly anchored to the **peak** period from Step 
 Step 5 measured all three requirements against every candidate. All candidates passed R1 and R2 in the final separate-machine environment and failed R3; consequently, no candidate met all three requirements. The measured values and raw-evidence links are in `docs/load_test_results.md` and `docs/accuracy_results.md`.
 
 No separate requirement exists for `GET /search` latency. The brief allows either `POST /tickets` or `GET /search` latency as the response-time requirement; this team chose `POST /tickets` because it is the higher-stakes, model-dependent path. `GET /search` is a plain SQLite substring query and was observed to complete in 16–22ms during Step 2 testing.
+
+## Step 6 note (thresholds unchanged)
+
+R3's justification above sets 85% as "materially better than noisy self-reported labels". Step 6 measured that baseline after the golden set was frozen: the consumer-selected `source_label` is 85.14% accurate on the golden set (`analysis/step6_analysis.json`, `consumer_self_label_baseline`). A model meeting R3 exactly would therefore only match the self-labels. R3 is **not** revised after the fact; every candidate is still judged against it as written. See `docs/recommendation.md`, Section 4.
