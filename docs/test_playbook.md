@@ -70,3 +70,27 @@ done
 - **Every run's raw `.jtl` file is kept in `jmeter/results/`** — do not trust a number in `docs/load_test_results.md` or `docs/accuracy_results.md` that doesn't trace to a file there or in `analysis/accuracy/`.
 - **Reset `runtime/tickets.db` between model switches** (`rm -f runtime/tickets.db` before `docker compose up`) — otherwise `GET /stats` mixes tickets from different candidate models, though this does not affect the `.jtl`/accuracy-JSON evidence itself, which is self-contained per run.
 - **Final load/stress evidence uses separate machines.** Files ending `_remote.jtl` are the final dataset. Files without `_remote` are the older co-located pipeline-validation dataset and must not be mixed into final pooled percentiles.
+
+---
+
+# Assignment 2 Playbook (planned)
+
+Not yet executed. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for steps 1–6 and for all single-model work; **on only for steps 7 and the cascade speed runs in step 9**, and confirm it before each such run. Follow the order below; commit the items marked **(commit first)** before running anything later in the list.
+
+1. **Split the golden set (commit first).** Odd rows = tuning, even rows = test; write `analysis/a2/golden_split.csv`.
+2. **Memory check.** Start the service with Ollama; load the large and small model; run a few tickets through each; run `ollama ps` in the Ollama container and confirm both are listed and stay listed. Save the output. If they do not both stay loaded, try a smaller pair; if none fits, stop and report that a cascade is not feasible.
+3. **Record the environment.** Versions, digests, Ollama settings (see `docs/test_environment.md`, Assignment 2 section).
+4. **Single-model test-set accuracy.** For the top model and each other model, send every even-row ticket through `POST /tickets`; score overall, per-category (with counts) and a confusion matrix into `analysis/a2/accuracy/<config>.json`. Derive the limits in `docs/a2_accuracy_limits.md` from the top model.
+5. **Design the rule on the tuning set only.** Pick the approach and two settings; write `docs/a2_escalation_rule.md`.
+6. **Predictions (commit first).** Commit `predictions/a2_prediction_record.md` and `docs/a2_escalation_rule.md` before any cascade benchmark.
+7. **Cascade accuracy.** Test-set run at both settings, with escalated count, and accuracy of escalated vs non-escalated tickets.
+8. **Pick the speed-test parameters.** Restart Ollama and warm up; send three different typical-length tickets one at a time to the top model; S = the middle time. Rate = one ticket per 2×S seconds. Run length = S minutes (minimum 5). Same for every configuration. Choose and commit the fixed ordered workload rows (outside the golden set, some typical and some long) in `analysis/a2/speed_test_rows.csv`.
+9. **Each speed run (three per configuration).**
+   1. Restart the Ollama container; check `GET /health` or `ollama ps`.
+   2. Send the same three fixed warm-up tickets one at a time; discard timings. For the cascade, make sure both models are loaded (warm-up tickets that the rule escalates, or one sent directly to the large model); confirm both in `ollama ps`.
+   3. Call `GET /stats` and note the total.
+   4. Run JMeter (open-loop; Open Model Thread Group or `PreciseThroughputTimer`) on the separate machine at the chosen rate and length. HTTP response timeout = max(10×S s, 5 min); the trailing pause is longer than the timeout by at least one minute (for S = 6, `rate(5/min) random_arrivals(6 min) pause(6 min)` with a 5-minute timeout).
+   5. Call `GET /stats` again; the increase is the number of requests completed and stored.
+   6. Keep the raw `.jtl` as `jmeter/results/a2_<config>_run<n>.jtl` and the segment of the service log for the run.
+10. **Report per run:** sent, completed, errored, unfinished; p50 (mean and spread across the three runs); p95 pooled over the three runs (state the sample count); throughput; error rate; cascade escalation fraction from the service log. No p99. Compare the test rate with the client's peak from `analysis/workload_model.json`. Do not reuse Assignment 1 speed figures.
+11. **Reconcile and recommend.** Every figure must trace to a `.jtl`, log or JSON in the repository; compare the recommendation, predictions and outcomes in `docs/a2_results.md`.

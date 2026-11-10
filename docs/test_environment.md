@@ -72,3 +72,24 @@ These limits are disclosed rather than used to adjust requirements or discard un
 The measured capacity values apply to this exact single-instance, CPU-only i9-14900HX configuration. They must not be scaled linearly by core count: Ollama inference performance also depends on CPU architecture, memory bandwidth, model quantisation, runtime version, operating-system/container overhead, and sustained thermal behaviour. A target commodity CPU server should therefore be qualified by repeating this repository's playbook on that server rather than multiplying the laptop result by a nominal hardware ratio.
 
 For planning, the tested machine has substantial performance headroom over the modelled peak of 7.278311 tickets/hour: every candidate sustained at least 120 successful tickets/hour in the regular matrix. That comparison supports capacity feasibility for one similar host, not a universal server-sizing promise. Additional hardware can improve capacity but cannot correct the measured accuracy failures; accuracy must be addressed separately when making the Step 6 recommendation.
+
+---
+
+# Assignment 2 Test Environment
+
+Status: **not yet measured.** Assignment 2 uses the Assignment 1 machine (no extra CPU or RAM). The final Assignment 1 machine roles above (Machine A service/Ollama, Machine B JMeter) are the intended Assignment 2 roles; if they change, the change and its reason are recorded here.
+
+To record before the first Assignment 2 run (and re-check before each configuration):
+
+| Item | Value |
+| --- | --- |
+| Machine A / B hardware, OS, Docker and RAM given to Docker/Ollama | (refer to the Assignment 1 tables above if unchanged) |
+| Ollama version | |
+| Docker / service image versions | |
+| JMeter and JDK versions (Machine B) | |
+| Model digests (must match `docs/candidate_models.md`) | |
+| Ollama inference settings (threads, parallelism, context length, `num_gpu: 0`), recorded once and held constant | |
+| `ollama ps` output with both cascade models resident | |
+| Speed-test S, three timings and ticket row numbers, arrival rate, run length | |
+
+Known mismatch to resolve: the Assignment 1 accuracy JSONs were produced on the i7 / Ollama 0.34.4 environment, while the final load results are from the i9 / Ollama 0.35.1 Machine A. The Assignment 2 brief permits reusing Assignment 1 single-model accuracy only if the digest, prompt, Ollama version and machine are unchanged, so the default is to re-run test-set accuracy on the final Machine A. The service does not currently pin `temperature` or `seed`; any change to inference options must be recorded and held constant across configurations.

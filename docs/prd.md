@@ -214,3 +214,49 @@ Answer the client's question — given CPU-only hardware and no public model API
 - Every frozen prediction has an actual value and a right/partly right/wrong verdict with an evidence-based explanation.
 - Every unmet requirement is stated plainly per candidate.
 - Uncertainty is quantified (confidence intervals, paired significance test) and every limit of the recommended pilot is disclosed.
+
+---
+
+# Assignment 2 PRD — Fast Triage Within an Accuracy Floor
+
+Status: **planned.** Nothing in this section has been implemented or measured yet. The Assignment 1 baseline above (Steps 1–6) is preserved unchanged; Assignment 2 is added on top of it on branch `assignment-2`. The brief is recorded in `docs/PROJECT_CONTEXT.md` Section 26.
+
+## Objective
+
+Identify the fastest triage configuration that satisfies the client's revised accuracy limits (overall ≥ top-model test-set accuracy − 10 points; each category ≥ top-model category accuracy − 15 points), measured with the Assignment 1 method on the same CPU-only machine. Configurations: the top model alone (`qwen2.5:7b`), each other Assignment 1 model alone, and one cascade (small model first, a rule decides whether to escalate to a larger model) at two settings.
+
+## Scope and constraints
+
+- Fixed: candidate tags/digests (no new models), classification prompt and seven categories, golden set and labels, `POST /tickets` / `GET /search` / `GET /stats` behaviour, CPU-only Ollama, open-loop JMeter with three runs per configuration, the test machine and its CPU/RAM.
+- May change: the `POST /tickets` implementation (one model, a rule, a second model where required), the escalation rule and its inputs, and the model pairing (Assignment 1 candidates only).
+- Not permitted: caching classification results, changing Ollama inference settings between configurations, fine-tuning, extra classifiers or retrieval.
+- The Assignment 1 baseline stays reproducible: with the cascade switch off (default) the service behaves exactly as in Assignment 1.
+- Both cascade models must be resident together (`ollama ps` lists both) before any cascade test; otherwise try a smaller pair, and if none fits report that a cascade is not feasible and recommend a single model.
+- The cascade lives inside `POST /tickets`; callers cannot tell which model answered; the log records the final model and whether escalation occurred.
+- Split the golden set by row number (odd = tuning, even = test) and commit the split first. Tune on the tuning set only; report and decide on the test set only.
+- Commit the prediction record and escalation rule before the first Assignment 2 benchmark run.
+- Speed tests: rate = one ticket per 2×S seconds, run length S minutes (≥ 5), same for every configuration, three runs each, JMeter on a separate machine, response timeout ≥ max(10×S s, 5 min) with a longer trailing pause; report p50 per run with spread, p95 pooled over the three runs, throughput, error rate, unfinished requests, and (cascade) the escalation fraction from logs. No p99; no reuse of Assignment 1 speed figures.
+
+## Required evidence (planned paths)
+
+| Evidence | Location |
+| --- | --- |
+| Accuracy limits and golden-set split | `docs/a2_accuracy_limits.md`, `analysis/a2/golden_split.csv` |
+| Written escalation rule (committed before first benchmark) | `docs/a2_escalation_rule.md` |
+| Prediction record (committed before first benchmark; frozen) | `predictions/a2_prediction_record.md` |
+| Memory check evidence (`ollama ps` with both models) | `docs/test_environment.md` (Assignment 2 section) |
+| Speed-test workload row numbers | `analysis/a2/speed_test_rows.csv` |
+| Test-set accuracy per configuration | `analysis/a2/accuracy/*.json` |
+| Raw JMeter results and service logs per run | `jmeter/results/a2_*.jtl`, A2 request logs |
+| Speed summaries | `analysis/a2/speed/*.json` |
+| Assignment 2 results and recommendation | `docs/a2_results.md` |
+| Assignment 2 deck (≤ 8 slides) | `GroupNum_A2.pptx` (submitted via xSiTe; not committed until final) |
+
+## Acceptance criteria
+
+- The odd/even split is committed before any other Assignment 2 work, and limits are derived from the top model's test-set results.
+- The escalation rule is documented so another team could implement it, with exactly two settings tested.
+- Every configuration has test-set accuracy with counts, per-category accuracy against the per-category limit, and a confusion matrix; the cascade also reports escalated vs non-escalated counts and accuracy.
+- Every qualifying configuration and the cascade have three open-loop speed runs; every reported figure reconciles with a kept `.jtl` file, log or JSON.
+- The recommendation is the fastest configuration that passes both limits by the team's own measurements, with speed gain and accuracy cost stated, and a plain statement if the cascade did not help or no configuration beat the top model.
+- Predictions are compared with outcomes without editing the prediction record; any failure of a prediction or requirement is stated plainly.

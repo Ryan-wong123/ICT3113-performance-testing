@@ -224,12 +224,6 @@ ollama list   # first 12 hex chars of each ID must match docs/candidate_models.m
 - [x] Unit-test the new statistics helpers (`tests/test_build_step6_analysis.py`).
 - [x] Confirm `predictions/prediction_record.md`, `docs/requirements.md`'s R1–R3 thresholds, `src/app/`, and the golden set were not edited.
 
-## Remaining work and disclosed limitations
-
-- [ ] The PowerPoint deck (12 slides) is not in this branch.
-- [ ] The agreement-gated pilot is an offline, post-hoc analysis on the same 175 tickets it was discovered on; it needs a fresh labelled validation sample, a service change (Assignment 2), and its own requirement before any go-live claim.
-- [ ] Accuracy was measured once per model on the older i7 / Ollama 0.34.4 environment with `temperature`/`seed` unpinned; it has not been re-measured on the final i9 Machine A.
-- [ ] `qwen2.5:7b`'s own overload point was not stress-tested (the stress test used `llama3.2:1b`); it is measured only up to 5/min.
 
 ## Verification
 
@@ -240,4 +234,172 @@ git diff --exit-code analysis/step6_analysis.json
 
 # Unit tests (on a machine where a pip package shadows the repo's tests/ folder, add -s):
 python3 -m unittest tests.test_build_step6_analysis tests.test_summarize_jtl tests.test_build_workload_model -v
+```
+
+---
+
+# Assignment 2 — Fast Triage Within an Accuracy Floor Task Record
+
+The Assignment 1 baseline (Steps 1–6 above) is preserved. Assignment 2 is added on branch `assignment-2`. Brief: `docs/PROJECT_CONTEXT.md` Section 26. Due 2359, Friday 27 November. The steps below follow the brief's own Steps 1–5 and Deliverables. Order matters: items marked **(commit first)** must be committed before the later work they gate.
+
+Legend for the cascade switch (not yet implemented): **off** = Assignment 1 single-model path (`OLLAMA_MODEL`); **on** = cascade.
+
+## Execution plan by machine
+
+Every unchecked item below states the machine it needs and its workstream (`WS1`–`WS5`, owners in the table):
+
+- `[machine: any]` — code, scripts, docs and commit-gated lists; no real model runs (a stub Ollama is fine).
+- `[machine: any, after i9 data]` — analysis or writing that can be done on any computer once the relevant i9 outputs are committed.
+- `[machine: i9]` — runs the service and a model on the final Machine A (memory check, accuracy runs, timing S). No load generator needed.
+- `[machine: i9 + JMeter machine]` — speed runs: the service and Ollama on Machine A, and JMeter 5.6.3 plus a JDK on a separate load-generator machine (the Assignment 1 Machine B, or another computer whose hardware is recorded). Both must be available and set up.
+
+Only the i9 operator does the two `i9` kinds, and commits the raw outputs (`analysis/a2/accuracy/*.json`, `.jtl` files, logs) so others can pull them. Every configuration must be measured on one machine, so do not run real models on another computer for evidence.
+
+Step-by-step prompts for running the remaining work in order on the i9 (one fresh session per prompt): `docs/a2_handoff_prompts.md`.
+
+### Workstreams and owners
+
+| WS | Workstream | Machine | Owner | Items |
+| --- | --- | --- | --- | --- |
+| WS1 | Service code: cascade switch, pluggable rule, log fields, `/health`, unit tests, baseline unchanged | any machine | TBD | Step 2 implementation items |
+| WS2 | Scripts and data lists: split script, accuracy runner, speed helpers, speed-test row list | any machine | TBD | Step 1 split, Step 4 runner, speed rows |
+| WS3 | i9 operator: memory check, all accuracy and speed runs, environment record, committing raw outputs | i9 for accuracy/S timing; i9 + JMeter machine for speed runs | TBD | all `[machine: i9]` and `[machine: i9 + JMeter machine]` items |
+| WS4 | Analysis and design: limits, rule choice and write-up, predictions, accuracy/speed analysis, results doc, recommendation | any machine, after WS3 data | TBD | all `[machine: any, after i9 data · WS4]` items |
+| WS5 | Deck, references, licences, AI declaration, final traceability check | any machine | TBD | Deliverables |
+
+Fill in the Owner column when the team agrees the split. Hand-offs are by commits on `assignment-2`; keep the commit gates in order (split → rule → predictions → speed runs) and freeze the service code before the first benchmark.
+
+**Phase A — any computer, in this order**
+1. Split script and commit `analysis/a2/golden_split.csv` (nothing else is committed before this).
+2. Cascade implementation behind the off-by-default switch, with the rule as a pluggable function/config (thresholds chosen later), the new log fields and `/health` cascade mode; unit tests against a stub; baseline (switch off) unchanged.
+3. Accuracy runner and speed-run helpers (tested against a stub).
+4. Commit `analysis/a2/speed_test_rows.csv`: about 30 workload rows outside the golden set (typical and long), plus three timing tickets for S and three warm-up tickets, all disjoint.
+5. Deck skeleton, acknowledgements and AI-declaration drafts; keep `docs/prd.md`, `docs/architecture.md` and this file current.
+
+**Phase B — i9 (Machine A), in this order**
+1. `git pull`; record the code commit hash; do the memory check (ideally before Phase A step 2 if the i9 is reachable first, because the brief says to check it before building).
+2. Top-model test-set accuracy, then derive the limits.
+3. Single-model runs for the tuning set; choose the rule approach and two settings; write and commit `docs/a2_escalation_rule.md`.
+4. Write and commit `predictions/a2_prediction_record.md` (before any further benchmark).
+5. Cascade and remaining single-model test-set accuracy; time S; set the rate; three speed runs per configuration on the separate JMeter machine.
+
+**Phase C — finalise (i9 results in hand)**: reconcile every figure, recommendation, `docs/a2_results.md`, fill the deck.
+
+## When to turn the cascade switch on
+
+The switch is off by default so the Assignment 1 baseline stays reproducible. Turn it **on only for cascade runs**, from the cascade accuracy test onwards; everything before that, and every single-model configuration, runs with it off.
+
+| Work | Switch |
+| --- | --- |
+| Step 1: split, top-model test-set accuracy, limits | off |
+| Step 2: memory check (`ollama ps` with both models), rule design on the tuning set | off |
+| Step 3: predictions | n/a |
+| Step 4: single-model accuracy (each other model) | off |
+| Step 4: **cascade accuracy, setting A and B** | **on** |
+| Step 4: speed set-up (timing S on the top model) | off |
+| Step 4: speed runs, single models | off |
+| Step 4: **speed runs, cascade setting A and B** | **on** |
+
+How (names are a proposal until the switch is implemented): the switch is an environment setting read when the container starts, so recreate the container for every configuration.
+
+```bash
+# Single model (cascade off):
+docker compose down && OLLAMA_MODEL=<tag> docker compose up -d
+
+# Cascade (on), once for rule setting A and once for B:
+docker compose down && CASCADE_ENABLED=true OLLAMA_SMALL_MODEL=<small tag> \
+  OLLAMA_LARGE_MODEL=<large tag> CASCADE_RULE_SETTING=A docker compose up -d
+```
+
+Before every cascade run, confirm: `GET /health` reports cascade on with the intended models and setting; `ollama ps` lists both models; and the first log lines show `cascade_mode=on` with some `escalated=true`. A "cascade" run with no escalations and `cascade_mode=off` is a mislabelled single-model run and its numbers must not be used.
+
+## Setup — brief, guardrails and planning docs (done)
+
+- [x] Record the Assignment 2 brief, scope (fixed / may change / not permitted), steps, deliverables and assessment in `docs/PROJECT_CONTEXT.md` Section 26.
+- [x] Add Assignment 2 guardrails to `AGENTS.md`; scope the Assignment 1 rules that Assignment 2 deliberately changes.
+- [x] Document the Assignment 2 PRD (`docs/prd.md`), cascade architecture design (`docs/architecture.md`), test-environment additions (`docs/test_environment.md`), speed-test playbook (`docs/test_playbook.md`) and the accuracy-limit method (`docs/a2_accuracy_limits.md`).
+- [x] Preserve the Assignment 1 baseline on branch `main`; develop Assignment 2 on `assignment-2`.
+
+## Step 1 — Define the accuracy limits (switch: off)
+
+- [ ] `[machine: any · WS2]` **(commit first)** Write the split script and commit the odd/even split of the 175 golden tickets (odd rows = tuning, even rows = test) to `analysis/a2/golden_split.csv`; record the tuning/test counts.
+- [ ] `[machine: i9 · WS3]` Run the top model (`qwen2.5:7b`) on the test set through `POST /tickets` on the final machine; save `analysis/a2/accuracy/qwen2.5_7b.json`. (Assignment 1 accuracy was recorded on the older i7 / Ollama 0.34.4; reuse is only valid if digest, prompt, Ollama version and machine are unchanged.)
+- [ ] `[machine: any, after i9 data · WS4]` Derive the overall limit (test-set accuracy − 10 points) and each per-category limit (category accuracy − 15 points); fill the table in `docs/a2_accuracy_limits.md`.
+- [ ] `[machine: any, after i9 data · WS4]` Show right/wrong counts beside every percentage; flag categories too small for a fair per-category test.
+- [ ] `[machine: any · WS4]` State the caveat that the test set is not new data (all models ran on the full golden set in Assignment 1).
+
+## Step 2 — Design the cascade
+
+- [ ] `[machine: i9 · WS3]` **Memory check first (switch: off / Ollama only):** load both models of each candidate pair, run a few tickets through each, confirm `ollama ps` lists both and they stay loaded; save the output in `docs/test_environment.md` (Assignment 2 section). If no pair fits, record that a cascade is not feasible and recommend a single model.
+- [ ] `[machine: any, after i9 data · WS4]` Choose the escalation approach on the tuning set only (category-based, agreement, self-reported confidence, ticket length, or a custom rule); justify the choice.
+- [ ] `[machine: any, after i9 data · WS4]` Choose exactly two settings of the rule on the tuning set.
+- [ ] `[machine: any, after i9 data · WS4]` Write `docs/a2_escalation_rule.md` so another team could implement it from the description. **(commit before the first benchmark run)**
+- [ ] `[machine: any · WS1]` Implement the cascade inside `POST /tickets` behind an off-by-default, environment-driven switch (small model, large model, rule setting); no hardcoded model in `src/app/`; the response gives no hint which model answered.
+- [ ] `[machine: any · WS1]` Keep the baseline intact: with the switch off, behaviour is exactly Assignment 1 (synchronous, sequential, no caching/queue/batching/workers; `num_gpu: 0`).
+- [ ] `[machine: any · WS1]` Extend the request log with the Assignment 2 fields (`cascade_mode`, `rule_setting`, `small_model`, `large_model`, `small_category`, `final_model`, `escalated`) and report cascade mode in `GET /health`.
+- [ ] `[machine: any · WS1]` Unit-test the rule and the split; update `docs/architecture.md` / `docs/prd.md` to match the code as built.
+
+## Step 3 — Record predictions **(commit before any Assignment 2 benchmark; never edit afterwards)**
+
+- [ ] `[machine: any, after i9 data · WS4]` Predict which configuration will be the fastest that satisfies the limits, with reasons.
+- [ ] `[machine: any, after i9 data · WS4]` For the cascade at each setting: predict the escalation fraction, accuracy and median latency.
+- [ ] `[machine: any, after i9 data · WS4]` Predict which categories lose the most accuracy when the small model's answer is accepted.
+- [ ] `[machine: any, after i9 data · WS4]` Commit `predictions/a2_prediction_record.md` (specific enough to be shown wrong). Leave `predictions/prediction_record.md` untouched.
+
+## Step 4 — Test and measure
+
+### Accuracy test (test set only, through `POST /tickets`, once per configuration)
+
+- [ ] `[machine: any · WS2]` Write the Assignment 2 accuracy runner (test set only, through `POST /tickets`) and the speed-run helpers; test them against a stub, not real models. Finish and commit the service code before the first benchmark and record the commit hash with the results.
+- [ ] `[machine: i9 · WS3]` Each other single model alone (`llama3.2:3b`, `llama3.2:1b`) — switch: off.
+- [ ] `[machine: i9 · WS3]` Cascade at setting A and at setting B — switch: **on**.
+- [ ] `[machine: any, after i9 data · WS4]` Report overall accuracy (count and percentage), per-category accuracy against the per-category limit, and a confusion matrix for every configuration.
+- [ ] `[machine: any, after i9 data · WS4]` For the cascade: number escalated, and accuracy of escalated vs non-escalated tickets.
+- [ ] `[machine: any, after i9 data · WS4]` Mark which configurations pass both limits; optionally show tuning-set results, but only test-set results decide pass/fail.
+- [ ] `[machine: any, after i9 data · WS4]` If any Assignment 1 single-model records are reused, score only test-set rows and say so in the report.
+
+### Speed test — set-up (switch: off for S)
+
+- [ ] `[machine: i9 · WS3]` Restart Ollama, warm up, send three different typical-length tickets one at a time to the top model; S = the middle time; record the three timings and ticket row numbers.
+- [ ] `[machine: any, after i9 data · WS4]` Arrival rate = one ticket every 2×S seconds; run length = S minutes (minimum 5); same for every configuration.
+- [ ] `[machine: any · WS2]` **(commit)** Fixed ordered workload (rows outside the golden set, typical and long) in `analysis/a2/speed_test_rows.csv`.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration.
+- [ ] `[machine: any, after i9 data · WS4]` Compare the test rate with the client's peak from `analysis/workload_model.json` and note which side it is on.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Use a separate load-generator machine (Machine B).
+
+### Speed test — runs (three runs per configuration; switch: off for single models, **on** for the cascade)
+
+- [ ] `[machine: i9 + JMeter machine · WS3]` Top model alone (required).
+- [ ] `[machine: i9 + JMeter machine · WS3]` Each single model that passes both limits.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Cascade at both settings (tested whether or not it passes; mark "not passing accuracy" if it fails).
+- [ ] `[machine: i9 + JMeter machine · WS3]` Each run: restart Ollama and confirm up; three fixed warm-up tickets (timings discarded); for the cascade warm both models and confirm both in `ollama ps`; note `GET /stats`; JMeter open-loop at the chosen rate and length; response timeout = max(10×S s, 5 min); trailing pause longer than the timeout by ≥ 1 min; note `GET /stats` again.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Keep every raw `.jtl` as `jmeter/results/a2_<config>_run<n>.jtl` and the service-log segment for each run.
+- [ ] `[machine: any, after i9 data · WS4]` Report per run: requests sent, completed, errored, unfinished; p50 with mean and spread across runs; p95 pooled over the three runs (state the sample count); throughput and error rate; for the cascade the escalation fraction from the service logs (explain any large gap from the accuracy-test figure). No p99; no reuse of Assignment 1 speed figures.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Describe the test environment (or refer to Assignment 1 if unchanged) and any change from Assignment 1; disclose limitations plainly.
+
+## Step 5 — Recommendation
+
+- [ ] `[machine: any, after i9 data · WS4]` Recommend one configuration that passes both limits on the test set and is the fastest of those that do, by the team's own measurements at the chosen rate.
+- [ ] `[machine: any, after i9 data · WS4]` State how much faster it is than the top model and how much accuracy it gives up, overall and by category.
+- [ ] `[machine: any, after i9 data · WS4]` If the cascade was not the fastest qualifying configuration, say so and explain with the measured escalation fraction and latencies; if nothing but the top model qualifies, recommend it and describe what was tried and what it cost.
+- [ ] `[machine: any, after i9 data · WS4]` Compare predictions with outcomes and explain differences without editing the prediction record.
+- [ ] `[machine: any, after i9 data · WS4]` Write `docs/a2_results.md`; every figure must reconcile with a `.jtl`, log or JSON in the repository.
+
+## Deliverables
+
+- [ ] `[machine: any (skeleton now; fill results after i9 data) · WS5]` `GroupNum_A2.pptx` (e.g. `Group08_A2.pptx`), at most 8 slides: cover; cascade design; test environment and method; accuracy results; speed results; trade-off chart (accuracy vs latency, overall limit as a line); predictions, recommendation, defence; limitations, references, model licences, AI declaration.
+- [ ] `[machine: any, after i9 data · WS4]` Supporting files committed: prediction record, written escalation rule, speed-test row list.
+- [ ] `[machine: any, after i9 data · WS4]` Prediction record and escalation rule committed before the first Assignment 2 benchmark run.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Raw `.jtl` files and service logs for every reported run retained in the repository.
+- [ ] `[machine: any, after i9 data · WS5]` Every figure on slides 4–7 traces to a log or `.jtl` file.
+- [ ] `[machine: any · WS5]` Acknowledge the Consumer Complaint Database, Ollama and model licences; AI declaration states what the tools produced and what the team did.
+
+## Verification
+
+```bash
+# Assignment 1 evidence is unchanged on this branch:
+git diff --exit-code main -- analysis/accuracy predictions/prediction_record.md docs/requirements.md docs/recommendation.md src/app
+
+# With the cascade switch off (default), the Assignment 1 baseline commands in README.md and above must still work unchanged.
+# Assignment 2 verification commands will be added here as each script is implemented.
 ```

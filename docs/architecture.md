@@ -309,3 +309,78 @@ predictions/prediction_record.md (values copied into PREDICTIONS) ─┘
 ## Boundary
 
 Step 6 changes no service code, golden label, requirement threshold, or prediction. The agreement-gated pilot it recommends would require a service change (accepting the consumer-selected label) and is therefore Assignment 2 work, not part of this baseline.
+
+---
+
+# Assignment 2 Architecture — Cascade Triage
+
+Status: **design only; not yet implemented.** Assignment 1's Steps 1–6 above describe the preserved baseline and are unchanged. With the cascade switch off (the default) the service is exactly the Step 2 baseline.
+
+## Overview
+
+The cascade is added inside `POST /tickets`. Every ticket is classified by a small model; a rule decides whether to accept that answer or pass the ticket to a large model whose answer is final. The endpoint still accepts one ticket and returns one category, and the response does not reveal which model answered.
+
+```text
+POST /tickets
+        |
+        v
+small model classify (num_gpu=0, same prompt)  --> small_category
+        |
+        v
+escalation rule (documented in docs/a2_escalation_rule.md; setting A or B)
+        |-- accept --> final = small_category, final_model = small
+        |
+        +-- escalate --> large model classify (same prompt) --> final = large_category, final_model = large
+        |
+        v
+TicketStore.insert() --> SQLite
+        |
+        v
+request log line (final_model, escalated, ...) --> logs/requests.jsonl
+```
+
+## Planned components and changes
+
+| Component | Change |
+| --- | --- |
+| `src/app/config.py` | Add cascade settings, all environment-driven: a cascade switch (default off), small model, large model, and the rule setting. `OLLAMA_MODEL` stays the single-model setting; no model is hardcoded in `src/app/`. |
+| `src/app/ollama_client.py` | Allow the existing lock-serialised classifier to be called for a named model; inference options (`num_gpu: 0`, threads, context length) are unchanged and identical for every model and configuration. Still no caching, queue, batching or background workers. |
+| `src/app/main.py` | `POST /tickets` applies the rule when the cascade switch is on; response schema unchanged. |
+| `src/app/request_logging.py` | Add the Assignment 2 logged fields below. |
+| `scripts/` | Golden-set split script, an A2 accuracy runner (test set only, through `POST /tickets`), and A2 speed-run helpers reusing `summarize_jtl.py`; p99 is not reported for A2 runs. |
+| `tests/` | Unit tests for the escalation rule and the split. |
+
+## Assignment 2 logged fields
+
+In addition to the Step 2 "Logged fields" above, every request logs (null when the cascade is off):
+
+```text
+cascade_mode        (off | on)
+rule_setting        (A | B)
+small_model
+large_model
+small_category
+final_model         (the model that produced the returned category)
+escalated           (true | false)
+```
+
+The escalation fraction is `count(escalated = true) / count(successful POST /tickets)` derived from `logs/requests.jsonl`; for load runs the log is segmented per run so it reconciles with the run's `.jtl` and the `GET /stats` delta.
+
+## Memory constraint
+
+Both models must stay loaded simultaneously on the unchanged test machine. Before any cascade is built or tested, load both candidates, run a few tickets through each and confirm `ollama ps` lists both. If a pair does not stay resident, try a smaller pair; if none does, a cascade is not feasible, the evidence is reported, and a single model is recommended. A cascade is never tested with models being swapped in and out (that measures loading, not cascading).
+
+## Evidence flow
+
+```text
+labelling/golden_test_set.csv --split--> tuning (odd rows) + test (even rows) --> analysis/a2/golden_split.csv
+tuning set --> design/tune escalation rule --> docs/a2_escalation_rule.md  (committed before first benchmark)
+predictions/a2_prediction_record.md                                         (committed before first benchmark)
+test set --> POST /tickets per configuration --> analysis/a2/accuracy/*.json --> limit check (docs/a2_accuracy_limits.md)
+speed workload rows + JMeter (separate machine) --> jmeter/results/a2_*.jtl + service logs --> analysis/a2/speed/*.json
+all of the above --> docs/a2_results.md --> recommendation
+```
+
+## Boundary
+
+Assignment 2 does not add models, change the classification prompt or categories, change the golden set, cache results, retune Ollama between configurations, or edit any Assignment 1 evidence or prediction. It does not claim improvement before measurement.
