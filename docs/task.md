@@ -322,7 +322,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 ## Step 1 — Define the accuracy limits (switch: off)
 
-- [ ] `[machine: any · WS2]` **(commit first)** Write the split script and commit the odd/even split of the 175 golden tickets (odd rows = tuning, even rows = test) to `analysis/a2/golden_split.csv`; record the tuning/test counts.
+- [x] `[machine: any · WS2]` **(commit first)** Write the split script and commit the odd/even split of the 175 golden tickets (odd rows = tuning, even rows = test) to `analysis/a2/golden_split.csv`; record the tuning/test counts. Done: `scripts/split_golden_set.py` → `analysis/a2/golden_split.csv` (175 = 90 tuning / 85 test; odd `row` value = tuning, even = test); tests in `tests/test_split_golden_set.py`.
 - [ ] `[machine: i9 · WS3]` Run the top model (`qwen2.5:7b`) on the test set through `POST /tickets` on the final machine; save `analysis/a2/accuracy/qwen2.5_7b.json`. (Assignment 1 accuracy was recorded on the older i7 / Ollama 0.34.4; reuse is only valid if digest, prompt, Ollama version and machine are unchanged.)
 - [ ] `[machine: any, after i9 data · WS4]` Derive the overall limit (test-set accuracy − 10 points) and each per-category limit (category accuracy − 15 points); fill the table in `docs/a2_accuracy_limits.md`.
 - [ ] `[machine: any, after i9 data · WS4]` Show right/wrong counts beside every percentage; flag categories too small for a fair per-category test.
@@ -401,5 +401,8 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 git diff --exit-code main -- analysis/accuracy predictions/prediction_record.md docs/requirements.md docs/recommendation.md src/app
 
 # With the cascade switch off (default), the Assignment 1 baseline commands in README.md and above must still work unchanged.
-# Assignment 2 verification commands will be added here as each script is implemented.
+# Assignment 2 golden-set split (implemented):
+python3 scripts/split_golden_set.py --check
+python3 -m unittest tests.test_split_golden_set -v
+# Further Assignment 2 verification commands will be added here as each script is implemented.
 ```

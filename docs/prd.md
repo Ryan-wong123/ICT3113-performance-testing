@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **planned.** Nothing in this section has been implemented or measured yet. The Assignment 1 baseline above (Steps 1–6) is preserved unchanged; Assignment 2 is added on top of it on branch `assignment-2`. The brief is recorded in `docs/PROJECT_CONTEXT.md` Section 26.
+Status: **in progress.** Implemented so far: the golden-set split (`scripts/split_golden_set.py` → `analysis/a2/golden_split.csv`, odd `row` value = tuning, even = test; 90 tuning / 85 test). Nothing else in this section has been implemented, and nothing has been measured. The Assignment 1 baseline above (Steps 1–6) is preserved unchanged; Assignment 2 is added on top of it on branch `assignment-2`. The brief is recorded in `docs/PROJECT_CONTEXT.md` Section 26.
 
 ## Objective
 

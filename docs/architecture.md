@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **design only; not yet implemented.** Assignment 1's Steps 1–6 above describe the preserved baseline and are unchanged. With the cascade switch off (the default) the service is exactly the Step 2 baseline.
+Status: **design, with the golden-set split implemented** (`scripts/split_golden_set.py`, a stdlib-only script that writes `analysis/a2/golden_split.csv` with `row,final_label,split`; odd `row` value = tuning, even = test; `--check` verifies the committed file; no model is run). The cascade itself is not yet implemented. Assignment 1's Steps 1–6 above describe the preserved baseline and are unchanged. With the cascade switch off (the default) the service is exactly the Step 2 baseline.
 
 ## Overview
 
@@ -347,7 +347,7 @@ request log line (final_model, escalated, ...) --> logs/requests.jsonl
 | `src/app/ollama_client.py` | Allow the existing lock-serialised classifier to be called for a named model; inference options (`num_gpu: 0`, threads, context length) are unchanged and identical for every model and configuration. Still no caching, queue, batching or background workers. |
 | `src/app/main.py` | `POST /tickets` applies the rule when the cascade switch is on; response schema unchanged. |
 | `src/app/request_logging.py` | Add the Assignment 2 logged fields below. |
-| `scripts/` | Golden-set split script, an A2 accuracy runner (test set only, through `POST /tickets`), and A2 speed-run helpers reusing `summarize_jtl.py`; p99 is not reported for A2 runs. |
+| `scripts/` | `split_golden_set.py` (implemented), an A2 accuracy runner (test set only, through `POST /tickets`), and A2 speed-run helpers reusing `summarize_jtl.py`; p99 is not reported for A2 runs. |
 | `tests/` | Unit tests for the escalation rule and the split. |
 
 ## Assignment 2 logged fields
@@ -373,7 +373,7 @@ Both models must stay loaded simultaneously on the unchanged test machine. Befor
 ## Evidence flow
 
 ```text
-labelling/golden_test_set.csv --split--> tuning (odd rows) + test (even rows) --> analysis/a2/golden_split.csv
+labelling/golden_test_set.csv --scripts/split_golden_set.py--> tuning (odd row value) + test (even row value) --> analysis/a2/golden_split.csv
 tuning set --> design/tune escalation rule --> docs/a2_escalation_rule.md  (committed before first benchmark)
 predictions/a2_prediction_record.md                                         (committed before first benchmark)
 test set --> POST /tickets per configuration --> analysis/a2/accuracy/*.json --> limit check (docs/a2_accuracy_limits.md)

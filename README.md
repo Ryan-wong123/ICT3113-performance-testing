@@ -212,6 +212,13 @@ python3 -m unittest tests.test_build_step6_analysis -v
 # Assignment 2 — Fast Triage Within an Accuracy Floor
 The brief is recorded in `docs/PROJECT_CONTEXT.md` Section 26; the task checklist is in `docs/task.md`.
 
-**Status: planned — no Assignment 2 measurement has been run yet.** With the cascade switch off (the future default) the service behaves exactly as the Assignment 1 baseline, and all Assignment 1 reproducibility commands above are unchanged.
+**Status: in progress — the golden-set split is done; no Assignment 2 measurement has been run yet.** With the cascade switch off (the future default) the service behaves exactly as the Assignment 1 baseline, and all Assignment 1 reproducibility commands above are unchanged.
 
 Planned artefacts: `docs/a2_accuracy_limits.md`, `docs/a2_escalation_rule.md`, `predictions/a2_prediction_record.md`, `analysis/a2/`, `jmeter/results/a2_*`, `docs/a2_results.md`, and `GroupNum_A2.pptx` (≤ 8 slides, due 2359 Friday 27 November).
+
+Reproduce / verify the Assignment 2 golden-set split (odd `row` value = tuning, even = test; 90 tuning / 85 test):
+
+```bash
+python3 scripts/split_golden_set.py --check          # exits non-zero if analysis/a2/golden_split.csv differs
+python3 -m unittest tests.test_split_golden_set -v
+```
