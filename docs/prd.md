@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; accuracy complete.** Qwen (66/85, 77.65%) and cascade Setting A (69/85, 81.18%) pass the overall and all category limits. Both small models fail overall. Setting B scores 67/85 (78.82%) but fails Money transfer or service by one ticket (7/13 = 53.85% vs 54.23%), so it is not a qualifying configuration. Speed set-up and runs remain pending; both cascade settings must still be speed-tested.
+Status: **in progress; ready for Machine B speed runs.** Accuracy is complete: Qwen and cascade A qualify; both small models and cascade B do not. Machine A timing fixed S at 2.666 s, giving 11.253 arrivals/minute for a 5-minute window, 300-second timeout and 360-second trailing pause. Three open-loop runs each for Qwen, cascade A and cascade B remain pending on separate Machine B.
 
 ## Objective
 

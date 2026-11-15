@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **accuracy measurement complete; speed pending.** All five test-set JSON files are preserved in `analysis/a2/accuracy/`. Qwen and cascade A qualify; both small models fail overall, and cascade B fails one category floor. The log-derived cascade evidence records 79/84 successful Setting A decisions escalated and 71/84 Setting B decisions escalated; each run also had one invalid-category HTTP 502 excluded from the successful-decision denominator. Speed set-up and all JMeter evidence remain pending.
+Status: **speed execution pending.** Accuracy is complete and the common speed parameters are frozen from `analysis/a2/timing/qwen_s.json`: 11.253 arrivals/minute, 300-second arrival window, 300-second timeout and 360-second trailing pause. Machine B must now run three open-loop repeats each for Qwen, cascade A and cascade B against Machine A.
 
 ## Overview
 

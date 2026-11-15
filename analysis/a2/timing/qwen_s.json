@@ -1,0 +1,30 @@
+{
+  "measured_at": "2026-11-15",
+  "machine": "Machine A",
+  "model": "qwen2.5:7b",
+  "cascade_mode": "off",
+  "ollama_version": "0.35.1",
+  "ollama_restarted_before_warmup": true,
+  "processor_confirmation": "ollama ps reported 100% CPU and context 4096",
+  "warmup": [
+    {"row": 8875, "character_count": 780, "elapsed_seconds": 11.672},
+    {"row": 8511, "character_count": 777, "elapsed_seconds": 2.432},
+    {"row": 8631, "character_count": 1762, "elapsed_seconds": 5.319}
+  ],
+  "timing": [
+    {"row": 8685, "character_count": 779, "elapsed_seconds": 2.404},
+    {"row": 8242, "character_count": 780, "elapsed_seconds": 2.979},
+    {"row": 8345, "character_count": 778, "elapsed_seconds": 2.666}
+  ],
+  "s_seconds": 2.666,
+  "arrival_interval_seconds": 5.332,
+  "offered_rate_per_minute": 11.253,
+  "arrival_window_minutes": 5,
+  "arrival_window_seconds": 300,
+  "http_response_timeout_seconds": 300,
+  "trailing_pause_seconds": 360,
+  "client_peak_submission_rate_per_minute": 0.121305,
+  "offered_to_client_peak_submission_ratio": 92.77,
+  "client_peak_combined_rate_per_minute": 0.145566,
+  "offered_to_client_peak_combined_ratio": 77.31
+}

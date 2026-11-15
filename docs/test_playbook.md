@@ -73,9 +73,9 @@ done
 
 ---
 
-# Assignment 2 Playbook (planned)
+# Assignment 2 Playbook (in progress)
 
-Not yet executed. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for steps 1–6 and for all single-model work; **on only for steps 7 and the cascade speed runs in step 9**, and confirm it before each such run. Follow the order below; commit the items marked **(commit first)** before running anything later in the list.
+Steps 1–8 are complete; speed runs in step 9 are next. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for single-model work; on only for cascade work, confirmed before each run. Fixed speed parameters are 11.253 arrivals/minute for 5 minutes, a 300-second timeout, and a 360-second trailing pause.
 
 1. **Split the golden set (commit first).** Odd rows = tuning, even rows = test; write `analysis/a2/golden_split.csv`.
 2. **Memory check.** Start the service with Ollama; load the large and small model; run a few tickets through each; run `ollama ps` in the Ollama container and confirm both are listed and stay listed. Save the output. If they do not both stay loaded, try a smaller pair; if none fits, stop and report that a cascade is not feasible.

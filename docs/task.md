@@ -360,11 +360,11 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 ### Speed test — set-up (switch: off for S)
 
-- [ ] `[machine: i9 · WS3]` Restart Ollama, warm up, send three different typical-length tickets one at a time to the top model; S = the middle time; record the three timings and ticket row numbers.
-- [ ] `[machine: any, after i9 data · WS4]` Arrival rate = one ticket every 2×S seconds; run length = S minutes (minimum 5); same for every configuration.
+- [x] `[machine: i9 · WS3]` Restart Ollama, warm up, then time Qwen on rows 8685 (2.404 s), 8242 (2.979 s), and 8345 (2.666 s). **S = 2.666 s**; evidence: `analysis/a2/timing/qwen_s.json`.
+- [x] `[machine: any, after i9 data · WS4]` Common parameters fixed: one ticket every 5.332 s = 11.253/min; 5-minute arrival window; 300-second timeout; 360-second trailing pause.
 - [x] `[machine: any · WS2]` **(commit)** Fixed ordered workload in `analysis/a2/speed_test_rows.csv`: 3 timing + 3 warm-up + 30 ordered workload tickets, all distinct and outside the golden set; workload tickets alternate near-p50 and near-p95 lengths.
 - [ ] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration.
-- [ ] `[machine: any, after i9 data · WS4]` Compare the test rate with the client's peak from `analysis/workload_model.json` and note which side it is on.
+- [x] `[machine: any, after i9 data · WS4]` Test rate 11.253 submissions/min is above the client's 0.121305/min peak submission rate by 92.77× (and above the 0.145566/min combined peak by 77.31×).
 - [ ] `[machine: i9 + JMeter machine · WS3]` Use a separate load-generator machine (Machine B).
 
 ### Speed test — runs (three runs per configuration; switch: off for single models, **on** for the cascade)

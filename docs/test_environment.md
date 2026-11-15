@@ -77,7 +77,7 @@ For planning, the tested machine has substantial performance headroom over the m
 
 # Assignment 2 Test Environment
 
-Status: **memory feasibility verified on 15 November 2026; accuracy and speed measurements have not started.**
+Status: **memory and accuracy complete; speed parameters fixed on 15 November 2026.** Speed runs have not started.
 
 Assignment 2 retains the Assignment 1 machines and hardware. Machine A runs the service and native CPU-only Ollama; Machine B will run JMeter separately during the speed tests.
 
@@ -114,6 +114,25 @@ Raw environment evidence:
 - `analysis/a2/environment/memory_qwen7b_llama1b.txt`
 - `analysis/a2/environment/memory_qwen7b_llama3b.txt`
 
-The Ollama thread and parallelism settings must be recorded and held constant before the first Assignment 2 benchmark. The speed-test value `S`, timing rows, arrival rate and run length will also be added before the speed runs.
+Ollama inference options were held constant for all measured configurations: the service explicitly sends `num_gpu: 0`; `num_ctx`, `num_thread` and server parallelism are not overridden and therefore use the same Ollama 0.35.1 defaults throughout. Runtime `ollama ps` showed context 4096 and 100% CPU. The absence of an explicit effective thread/parallel count is a test-environment limitation; those defaults must not be changed for the remaining speed runs.
 
 Known mismatch to resolve: the Assignment 1 accuracy JSONs were produced on the i7 / Ollama 0.34.4 environment, while the final load results are from the i9 / Ollama 0.35.1 Machine A. The Assignment 2 brief permits reusing Assignment 1 single-model accuracy only if the digest, prompt, Ollama version and machine are unchanged, so the default is to re-run test-set accuracy on the final Machine A. The service does not currently pin `temperature` or `seed`; any change to inference options must be recorded and held constant across configurations.
+
+## Assignment 2 speed parameters
+
+After restarting native Ollama, Machine A ran the three committed warm-up rows through Qwen with the cascade off. `ollama ps` reported Qwen at 100% CPU, context 4096. The three typical timing tickets were then sent one at a time through `POST /tickets`:
+
+| Row | Characters | Elapsed |
+| ---: | ---: | ---: |
+| 8685 | 779 | 2.404 s |
+| 8242 | 780 | 2.979 s |
+| 8345 | 778 | 2.666 s |
+
+The middle value is **S = 2.666 seconds**. Therefore every configuration uses:
+
+- one arrival every **5.332 seconds** (`2 × S`), equivalent to **11.253 tickets/minute**;
+- a **5-minute** arrival window (the brief's minimum exceeds S minutes);
+- a **300-second** HTTP response timeout (`max(10 × S, 300 s)`);
+- a **360-second** trailing pause, one minute longer than the timeout.
+
+The offered POST rate is 92.77 times the client's modelled peak submission rate (11.253 vs 0.121305/min). For context it is 77.31 times the workload model's combined peak submission-plus-search rate (0.145566/min). Raw timing evidence is `analysis/a2/timing/qwen_s.json`; rows and narratives are fixed in `analysis/a2/speed_test_rows.csv`.
