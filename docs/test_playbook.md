@@ -75,7 +75,7 @@ done
 
 # Assignment 2 Playbook (in progress)
 
-Steps 1–8 are complete; speed runs in step 9 are next. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for single-model work; on only for cascade work, confirmed before each run. Fixed speed parameters are 11.253 arrivals/minute for 5 minutes, a 300-second timeout, and a 360-second trailing pause. Machine B uses `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` and its 70-row projection `jmeter/test_plans/a2_speed_narratives.csv`; the projection is derived in order from the `workload` rows in `analysis/a2/speed_test_rows.csv`.
+Steps 1–9 are complete (speed runs finished 15 November 2026); reporting in steps 10–11 is next. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for single-model work; on only for cascade work, confirmed before each run. Fixed speed parameters are 11.253 arrivals/minute for 5 minutes, a 300-second timeout, and a 360-second trailing pause. Machine B uses `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` and its 70-row projection `jmeter/test_plans/a2_speed_narratives.csv`; the projection is derived in order from the `workload` rows in `analysis/a2/speed_test_rows.csv`.
 
 1. **Split the golden set (commit first).** Odd rows = tuning, even rows = test; write `analysis/a2/golden_split.csv`.
 2. **Memory check.** Start the service with Ollama; load the large and small model; run a few tickets through each; run `ollama ps` in the Ollama container and confirm both are listed and stay listed. Save the output. If they do not both stay loaded, try a smaller pair; if none fits, stop and report that a cascade is not feasible.

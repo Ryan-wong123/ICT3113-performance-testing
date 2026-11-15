@@ -187,4 +187,4 @@ $record = [ordered]@{
 }
 Write-Utf8NoBom $runFile ($record | ConvertTo-Json -Depth 5)
 Write-Host "Wrote $runFile and $segment. Stored during run: $($statsAfter - $statsBefore)." -ForegroundColor Green
-if ($afterProblem) { Write-Warning "After the run: $afterProblem. A model was unloaded during the run; report this, do not hide it." }
+if ($afterProblem) { Write-Warning "At recording time: $afterProblem. This check runs after the 6-minute drain, when Ollama's 5-minute keep-alive has usually expired, so it does not by itself show an unload during the run; check service times or Ollama's server.log." }

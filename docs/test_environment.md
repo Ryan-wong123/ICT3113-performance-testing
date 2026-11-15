@@ -77,7 +77,7 @@ For planning, the tested machine has substantial performance headroom over the m
 
 # Assignment 2 Test Environment
 
-Status: **memory and accuracy complete; speed parameters fixed on 15 November 2026.** Speed runs have not started.
+Status: **memory, accuracy and speed runs complete (15 November 2026).** Nine valid speed runs (three each for Qwen, cascade A and cascade B) are retained; see "Assignment 2 speed-run execution record" below.
 
 Assignment 2 retains the Assignment 1 machines and hardware. Machine A runs the service and native CPU-only Ollama; Machine B will run JMeter separately during the speed tests.
 
@@ -85,6 +85,7 @@ Assignment 2 retains the Assignment 1 machines and hardware. Machine A runs the 
 | --- | --- |
 | Machine A | ASUS TUF Gaming F16 FX607JIR; Intel Core i9-14900HX; 24 cores / 32 logical processors; approximately 15.62 GiB physical RAM |
 | Machine B | Acer Nitro AN515-54; Intel Core i7-9750H; 6 cores / 12 logical processors; 15.85 GiB RAM; used only for JMeter |
+| Machine B re-check (15 Nov 2026, before speed runs) | Same hardware re-confirmed (Acer Nitro AN515-54, i7-9750H 6/12, 15.85 GiB, Windows 11 Home build 22631). JMeter was not on the PATH or at the Assignment 1 path, so Apache JMeter 5.6.3 was reinstalled from the Apache archive (SHA-512 verified) under `%LOCALAPPDATA%\Programs\Apache\apache-jmeter-5.6.3`: same version as Assignment 1, different install folder. Java version: _to record from `java -version`_. |
 | Docker | Engine 29.5.3; Compose v5.1.4 |
 | Docker allocation | 32 logical CPUs; 8,121,454,592 bytes, approximately 7.56 GiB |
 | Ollama | Native Windows Ollama 0.35.1 on Machine A |
@@ -140,3 +141,30 @@ The offered POST rate is 92.77 times the client's modelled peak submission rate 
 **Workload size (changed before any speed run).** At 11.253/min for 5 minutes each run offers about 56 arrivals, but the first committed workload had only 30 rows and the JMeter CSV recycles, so about 26 tickets would have been sent twice per run (the brief warns that Ollama caches prompts it has seen). Before any speed run the workload was extended to 70 rows (35 near p50, 35 near p95, still interleaved, all outside the golden set) with `scripts/build_a2_speed_rows.py`. The selection is deterministic and only appends: the three timing rows that produced S, the three warm-up rows and the first 30 workload rows are unchanged. `scripts/a2_jmeter_run.ps1` warns, and `scripts/summarize_a2_speed.py` reports duplicate ticket rows, if a run ever exceeds 70 arrivals.
 
 **Expected load.** The workload alternates ~780- and ~1,760-character tickets, whereas S was timed on ~780-character tickets only. The 1,762-character warm-up ticket took 5.319 s on Qwen, so Qwen's mean service time on this workload is likely near 4 s against a 5.332 s mean gap, and the cascade's is higher. Some queueing is therefore expected even though the rate follows the brief; unfinished requests and any growth in latency across a run must be reported, not removed.
+
+## Assignment 2 speed-run execution record
+
+All runs used the committed plan unchanged (`rate(11.253/min) random_arrivals(5 min) pause(360 sec)`, seed 8, 300 s timeout, 70-row ordered workload) and the per-run procedure in `docs/test_playbook.md` (`scripts/a2_speed_run.ps1` on Machine A, `scripts/a2_jmeter_run.ps1` on Machine B). Every run offered 56 requests, so no workload ticket repeated within a run (the service-log segments contain no duplicate rows).
+
+| Evidence | Location |
+| --- | --- |
+| Raw JMeter results | `jmeter/results/a2_<config>_run<n>.jtl` (9 files) |
+| Run records (Ollama restart/warm-up/READY times, `/stats` before/after, log line range, `ollama ps`) | `analysis/a2/speed/runs/<config>_run<n>.json` |
+| Service-log segment per run | `analysis/a2/speed/logs/<config>_run<n>.jsonl` (copied from the append-only `logs/requests.jsonl`) |
+| Environment snapshot per run (Ollama version, model IDs, `OLLAMA_*`, git commit) | `analysis/a2/speed/environment/<config>_run<n>.txt` |
+| Summaries | `analysis/a2/speed/{qwen2.5_7b,cascade_a,cascade_b}.json` (`scripts/summarize_a2_speed.py`), `analysis/a2/speed/service_times.json` (`scripts/a2_service_times.py`) |
+
+Every snapshot shows Ollama 0.35.1, unchanged model IDs (`qwen2.5:7b` 845dbda0ea48, `llama3.2:3b` a80c4f17acd5, `llama3.2:1b` baf6a787fdff) and no `OLLAMA_*` overrides, so inference settings were held constant across configurations.
+
+**Network path.** Machine B reached Machine A (house Wi-Fi, 192.168.68.59) through a phone: Machine B → USB tethering → phone on the house Wi-Fi → Machine A. This matches the Assignment 1 arrangement. It adds a small, common latency to every request, and it is the likely cause of the four `ConnectTimeoutException` errors in Qwen run 1: those requests are absent from the service log (52 logged tickets = 52 successful samples), so they never reached the service. They are reported as errors, not removed.
+
+**Excluded rehearsal run.** The first Qwen JMeter run was started before `a2_speed_run.ps1` had restarted Ollama, sent the warm-up tickets or recorded `/stats`, so the model was cold and no run record exists. It does not meet the brief's per-run procedure and is retained, unreported, as `jmeter/results/a2_qwen2.5_7b_run0_invalid_no_warmup.jtl`; its requests remain in `logs/requests.jsonl`. Qwen runs 1–3 were then repeated with the full procedure.
+
+**Late run record (cascade B run 3).** Enter was pressed on Machine A about 23 minutes after this run drained instead of immediately. No request reached the service in between (log line 3115, the run's last ticket, is followed only by the recording script's own `/stats` call), so its `/stats` delta (56) and log range (lines 3059–3116) are unaffected.
+
+**`models_still_resident_after` is not a during-run check.** The run script ran `ollama ps` when Enter was pressed, after JMeter's 6-minute drain pause. By then Ollama's default 5-minute keep-alive had normally expired, so every record shows `false`. This does not mean a model unloaded during a run. The per-request service times in `analysis/a2/speed/service_times.json` show no reload-sized step during the arrival windows (all service times are ≤ 9.7 s except the two outliers below).
+
+**Two long single requests.** Row 8772 in Qwen run 2 took 70.5 s of service and row 8568 in cascade A run 2 took 76.0 s; every other request in all nine runs took ≤ 9.7 s. Both answered with HTTP 201 and a valid category. The cause was not captured (Ollama output length is not logged); a model reload is unlikely because a cold Qwen load took about 11 s in the warm-up. Each delayed the requests queued behind it, so those two runs have the highest p50 within their configuration. They are kept and must be reported.
+
+**Utilisation.** With 56 arrivals in 300 s the mean offered gap is 5.357 s. Mean service time per run was 3.92–5.34 s for Qwen (utilisation 0.73–1.00), 5.55–6.82 s for cascade A (1.04–1.27) and 5.30–5.51 s for cascade B (0.99–1.03). At utilisation near or above 1 the queue grows for the whole arrival window, so the cascade p50 values partly reflect the 5-minute run length rather than a settled latency; this is a property of the cascade at the brief-mandated rate and must be stated with the results.
+

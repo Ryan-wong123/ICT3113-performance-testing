@@ -367,19 +367,19 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 - [x] `[machine: any · WS2]` Workload enlarged from 30 to 70 ordered rows before any speed run (≈56 arrivals per run would otherwise recycle ≈26 tickets); timing, warm-up and the first 30 workload rows unchanged (`python3 scripts/build_a2_speed_rows.py --check`).
 - [x] `[machine: any · WS2]` Speed summariser corrected before any speed data exists: p50/p95 from successful requests only (brief wording), throughput per second as well as per hour, escalation fraction over successful cascade decisions, duplicate-row detection; added `scripts/extract_a2_log_segment.py`. Analysis tooling only — `src/app/` is unchanged since the code freeze.
 - [x] `[machine: any · WS2]` Run helpers: `scripts/a2_start_service.ps1` and `scripts/a2_speed_run.ps1` (Machine A), `scripts/a2_jmeter_run.ps1` (Machine B); procedure in `docs/test_playbook.md`.
-- [ ] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration (`a2_speed_run.ps1` writes `analysis/a2/speed/environment/<config>_run<n>.txt` and stops if a model ID changes).
+- [x] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration (`a2_speed_run.ps1` writes `analysis/a2/speed/environment/<config>_run<n>.txt` and stops if a model ID changes).
 - [x] `[machine: any, after i9 data · WS4]` Test rate 11.253 submissions/min is above the client's 0.121305/min peak submission rate by 92.77× (and above the 0.145566/min combined peak by 77.31×).
-- [ ] `[machine: i9 + JMeter machine · WS3]` Use a separate load-generator machine (Machine B).
+- [x] `[machine: i9 + JMeter machine · WS3]` Use a separate load-generator machine (Machine B, same i7 as Assignment 1).
 
 ### Speed test — runs (three runs per configuration; switch: off for single models, **on** for the cascade)
 
-- [ ] `[machine: i9 + JMeter machine · WS3]` Top model alone (required).
-- [ ] `[machine: i9 + JMeter machine · WS3]` Each single model that passes both limits.
-- [ ] `[machine: i9 + JMeter machine · WS3]` Cascade at both settings (tested whether or not it passes; mark "not passing accuracy" if it fails).
-- [ ] `[machine: i9 + JMeter machine · WS3]` Each run: restart Ollama and confirm up; three fixed warm-up tickets (timings discarded); for the cascade warm both models and confirm both in `ollama ps`; note `GET /stats`; JMeter open-loop at the chosen rate and length; response timeout = max(10×S s, 5 min); trailing pause longer than the timeout by ≥ 1 min; note `GET /stats` again.
-- [ ] `[machine: i9 + JMeter machine · WS3]` Keep every raw `.jtl` as `jmeter/results/a2_<config>_run<n>.jtl` and the service-log segment for each run.
-- [ ] `[machine: any, after i9 data · WS4]` Report per run: requests sent, completed, errored, unfinished; p50 with mean and spread across runs; p95 pooled over the three runs (state the sample count); throughput and error rate; for the cascade the escalation fraction from the service logs (explain any large gap from the accuracy-test figure). No p99; no reuse of Assignment 1 speed figures.
-- [ ] `[machine: i9 + JMeter machine · WS3]` Describe the test environment (or refer to Assignment 1 if unchanged) and any change from Assignment 1; disclose limitations plainly.
+- [x] `[machine: i9 + JMeter machine · WS3]` Top model alone (required): `qwen2.5_7b` runs 1–3 (56 sent each; run 1 had 4 connect timeouts that never reached the service). One earlier rehearsal without warm-up is retained as `a2_qwen2.5_7b_run0_invalid_no_warmup.jtl` and excluded.
+- [x] `[machine: i9 + JMeter machine · WS3]` Each single model that passes both limits: none besides Qwen (1B and 3B fail accuracy).
+- [x] `[machine: i9 + JMeter machine · WS3]` Cascade at both settings: `cascade_a` and `cascade_b` runs 1–3, 56 sent each, 0 errors (cascade B is marked "not passing accuracy").
+- [x] `[machine: i9 + JMeter machine · WS3]` Each run: restart Ollama and confirm up; three fixed warm-up tickets (timings discarded); for the cascade warm both models and confirm both in `ollama ps`; note `GET /stats`; JMeter open-loop at the chosen rate and length; response timeout = max(10×S s, 5 min); trailing pause longer than the timeout by ≥ 1 min; note `GET /stats` again.
+- [x] `[machine: i9 + JMeter machine · WS3]` Keep every raw `.jtl` as `jmeter/results/a2_<config>_run<n>.jtl` and the service-log segment for each run (`analysis/a2/speed/logs/`), with run records and environment snapshots.
+- [x] `[machine: any, after i9 data · WS4]` Summaries computed in `analysis/a2/speed/{qwen2.5_7b,cascade_a,cascade_b}.json` and `service_times.json`; to be written up in `docs/a2_results.md`. Report per run: requests sent, completed, errored, unfinished; p50 with mean and spread across runs; p95 pooled over the three runs (state the sample count); throughput and error rate; for the cascade the escalation fraction from the service logs (explain any large gap from the accuracy-test figure). No p99; no reuse of Assignment 1 speed figures.
+- [x] `[machine: i9 + JMeter machine · WS3]` Describe the test environment (or refer to Assignment 1 if unchanged) and any change from Assignment 1; disclose limitations plainly (`docs/test_environment.md`, "Assignment 2 speed-run execution record").
 
 ## Step 5 — Recommendation
 
@@ -394,7 +394,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 - [ ] `[machine: any (skeleton now; fill results after i9 data) · WS5]` `GroupNum_A2.pptx` (e.g. `Group08_A2.pptx`), at most 8 slides: cover; cascade design; test environment and method; accuracy results; speed results; trade-off chart (accuracy vs latency, overall limit as a line); predictions, recommendation, defence; limitations, references, model licences, AI declaration.
 - [x] `[machine: any, after i9 data · WS4]` Supporting files committed: prediction record, written escalation rule, speed-test row list.
 - [x] `[machine: any, after i9 data · WS4]` Prediction record and escalation rule committed before the first Assignment 2 benchmark run.
-- [ ] `[machine: i9 + JMeter machine · WS3]` Raw `.jtl` files and service logs for every reported run retained in the repository.
+- [x] `[machine: i9 + JMeter machine · WS3]` Raw `.jtl` files and service logs for every reported run retained in the repository.
 - [ ] `[machine: any, after i9 data · WS5]` Every figure on slides 4–7 traces to a log or `.jtl` file.
 - [ ] `[machine: any · WS5]` Acknowledge the Consumer Complaint Database, Ollama and model licences; AI declaration states what the tools produced and what the team did.
 
@@ -409,7 +409,11 @@ git diff --exit-code main -- analysis/accuracy predictions/prediction_record.md 
 python3 scripts/split_golden_set.py --check
 python3 -m unittest tests.test_split_golden_set -v
 python3 scripts/build_a2_speed_rows.py --check
-python3 -m unittest tests.test_a2_cascade tests.test_a2_accuracy tests.test_a2_speed tests.test_build_a2_speed_rows -v
+python3 -m unittest tests.test_a2_cascade tests.test_a2_accuracy tests.test_a2_speed tests.test_build_a2_speed_rows tests.test_a2_service_times -v
+# Re-derive the speed summaries from the raw evidence (output must match the committed JSON):
+for c in qwen2.5_7b cascade_a cascade_b; do L=""; [ $c != qwen2.5_7b ] && L="--service-log analysis/a2/speed/logs/${c}_run1.jsonl --service-log analysis/a2/speed/logs/${c}_run2.jsonl --service-log analysis/a2/speed/logs/${c}_run3.jsonl"; python3 scripts/summarize_a2_speed.py --jtl jmeter/results/a2_${c}_run1.jtl --jtl jmeter/results/a2_${c}_run2.jtl --jtl jmeter/results/a2_${c}_run3.jtl $L --expected-sent 56 --arrival-window-seconds 300 --output analysis/a2/speed/$c.json; done
+python3 scripts/a2_service_times.py
+git diff --exit-code analysis/a2/speed
 git diff --exit-code 3752b350984145462dbfc724c2a6d9969f324dd5 -- src/app   # service code unchanged since the freeze
 python3 -m compileall -q src scripts tests
 

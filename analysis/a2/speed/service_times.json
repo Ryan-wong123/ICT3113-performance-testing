@@ -1,0 +1,209 @@
+{
+  "method": "Per-request service time and offered load for the Assignment 2 speed runs.",
+  "arrival_window_s": 300.0,
+  "outlier_threshold_s": 30.0,
+  "configs": {
+    "qwen2.5_7b": [
+      {
+        "run": 1,
+        "service_log": "analysis/a2/speed/logs/qwen2.5_7b_run1.jsonl",
+        "jtl": "jmeter/results/a2_qwen2.5_7b_run1.jtl",
+        "tickets_in_log": 52,
+        "service_s": {
+          "mean": 3.92,
+          "p50": 3.267,
+          "max": 6.674
+        },
+        "wait_s": {
+          "mean": 3.289,
+          "p50": 1.343,
+          "max": 16.015
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 0.732,
+        "outliers": []
+      },
+      {
+        "run": 2,
+        "service_log": "analysis/a2/speed/logs/qwen2.5_7b_run2.jsonl",
+        "jtl": "jmeter/results/a2_qwen2.5_7b_run2.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 5.344,
+          "p50": 3.824,
+          "max": 70.501
+        },
+        "wait_s": {
+          "mean": 12.285,
+          "p50": 3.767,
+          "max": 73.626
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 0.998,
+        "outliers": [
+          {
+            "ticket_row": 8772,
+            "escalated": null,
+            "http_status": 201,
+            "service_s": 70.501,
+            "wait_s": 5.222
+          }
+        ]
+      },
+      {
+        "run": 3,
+        "service_log": "analysis/a2/speed/logs/qwen2.5_7b_run3.jsonl",
+        "jtl": "jmeter/results/a2_qwen2.5_7b_run3.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 4.501,
+          "p50": 4.196,
+          "max": 7.383
+        },
+        "wait_s": {
+          "mean": 5.838,
+          "p50": 4.729,
+          "max": 22.776
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 0.84,
+        "outliers": []
+      }
+    ],
+    "cascade_a": [
+      {
+        "run": 1,
+        "service_log": "analysis/a2/speed/logs/cascade_a_run1.jsonl",
+        "jtl": "jmeter/results/a2_cascade_a_run1.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 5.928,
+          "p50": 6.067,
+          "max": 9.537
+        },
+        "wait_s": {
+          "mean": 35.043,
+          "p50": 27.144,
+          "max": 148.397
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 1.107,
+        "outliers": []
+      },
+      {
+        "run": 2,
+        "service_log": "analysis/a2/speed/logs/cascade_a_run2.jsonl",
+        "jtl": "jmeter/results/a2_cascade_a_run2.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 6.818,
+          "p50": 5.195,
+          "max": 76.044
+        },
+        "wait_s": {
+          "mean": 61.022,
+          "p50": 49.14,
+          "max": 210.734
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 1.273,
+        "outliers": [
+          {
+            "ticket_row": 8568,
+            "escalated": true,
+            "http_status": 201,
+            "service_s": 76.044,
+            "wait_s": 20.483
+          }
+        ]
+      },
+      {
+        "run": 3,
+        "service_log": "analysis/a2/speed/logs/cascade_a_run3.jsonl",
+        "jtl": "jmeter/results/a2_cascade_a_run3.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 5.55,
+          "p50": 5.316,
+          "max": 9.468
+        },
+        "wait_s": {
+          "mean": 23.661,
+          "p50": 17.604,
+          "max": 82.908
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 1.036,
+        "outliers": []
+      }
+    ],
+    "cascade_b": [
+      {
+        "run": 1,
+        "service_log": "analysis/a2/speed/logs/cascade_b_run1.jsonl",
+        "jtl": "jmeter/results/a2_cascade_b_run1.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 5.299,
+          "p50": 4.928,
+          "max": 9.65
+        },
+        "wait_s": {
+          "mean": 18.407,
+          "p50": 12.066,
+          "max": 79.364
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 0.989,
+        "outliers": []
+      },
+      {
+        "run": 2,
+        "service_log": "analysis/a2/speed/logs/cascade_b_run2.jsonl",
+        "jtl": "jmeter/results/a2_cascade_b_run2.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 5.44,
+          "p50": 4.692,
+          "max": 9.615
+        },
+        "wait_s": {
+          "mean": 21.716,
+          "p50": 17.051,
+          "max": 70.159
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 1.015,
+        "outliers": []
+      },
+      {
+        "run": 3,
+        "service_log": "analysis/a2/speed/logs/cascade_b_run3.jsonl",
+        "jtl": "jmeter/results/a2_cascade_b_run3.jtl",
+        "tickets_in_log": 56,
+        "service_s": {
+          "mean": 5.511,
+          "p50": 4.583,
+          "max": 9.388
+        },
+        "wait_s": {
+          "mean": 31.45,
+          "p50": 22.936,
+          "max": 97.561
+        },
+        "requests_sent": 56,
+        "mean_offered_gap_s": 5.357,
+        "utilisation": 1.029,
+        "outliers": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "latency_basis": "successful requests only",
+  "runs": [
+    {
+      "jtl_file": "jmeter/results/a2_qwen2.5_7b_run1.jtl",
+      "requests_sent": 56,
+      "completed": 56,
+      "successful": 52,
+      "errored": 4,
+      "unfinished": 0,
+      "error_codes": {
+        "Non HTTP response code: org.apache.http.conn.ConnectTimeoutException": 4
+      },
+      "p50_ms": 6357.0,
+      "p50_sample_count": 52,
+      "measurement_window_seconds": 300.0,
+      "throughput_completed_per_second": 0.18667,
+      "throughput_successful_per_second": 0.17333,
+      "throughput_completed_per_hour": 672.0,
+      "error_rate": 0.0714
+    },
+    {
+      "jtl_file": "jmeter/results/a2_qwen2.5_7b_run2.jtl",
+      "requests_sent": 56,
+      "completed": 56,
+      "successful": 56,
+      "errored": 0,
+      "unfinished": 0,
+      "error_codes": {},
+      "p50_ms": 6925.0,
+      "p50_sample_count": 56,
+      "measurement_window_seconds": 344.161,
+      "throughput_completed_per_second": 0.16271,
+      "throughput_successful_per_second": 0.16271,
+      "throughput_completed_per_hour": 585.772,
+      "error_rate": 0.0
+    },
+    {
+      "jtl_file": "jmeter/results/a2_qwen2.5_7b_run3.jtl",
+      "requests_sent": 56,
+      "completed": 56,
+      "successful": 56,
+      "errored": 0,
+      "unfinished": 0,
+      "error_codes": {},
+      "p50_ms": 9288.0,
+      "p50_sample_count": 56,
+      "measurement_window_seconds": 300.0,
+      "throughput_completed_per_second": 0.18667,
+      "throughput_successful_per_second": 0.18667,
+      "throughput_completed_per_hour": 672.0,
+      "error_rate": 0.0
+    }
+  ],
+  "p50_ms_across_runs": {
+    "values": [
+      6357.0,
+      6925.0,
+      9288.0
+    ],
+    "mean": 7523.3,
+    "min": 6357.0,
+    "max": 9288.0,
+    "spread": 2931.0
+  },
+  "pooled_p95_ms": 26570.0,
+  "pooled_sample_count": 164
+}

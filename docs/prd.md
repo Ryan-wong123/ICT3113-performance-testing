@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; ready for Machine B speed runs.** Accuracy is complete: Qwen and cascade A qualify; both small models and cascade B do not. Machine A timing fixed S at 2.666 s, giving 11.253 arrivals/minute for a 5-minute window, 300-second timeout and 360-second trailing pause. The fixed JMeter Open Model plan and ordered 70-row workload projection (enlarged from 30 before any speed run so no ticket repeats within a run of ~56 arrivals) are committed under `jmeter/test_plans/`, with PowerShell run helpers for both machines in `scripts/`; three open-loop runs each for Qwen, cascade A and cascade B remain pending on separate Machine B.
+Status: **in progress; speed runs complete, results write-up pending.** Accuracy is complete: Qwen and cascade A qualify; both small models and cascade B do not. Machine A timing fixed S at 2.666 s, giving 11.253 arrivals/minute for a 5-minute window, 300-second timeout and 360-second trailing pause. The fixed JMeter Open Model plan and ordered 70-row workload projection (enlarged from 30 before any speed run so no ticket repeats within a run of ~56 arrivals) are committed under `jmeter/test_plans/`, with PowerShell run helpers for both machines in `scripts/`; three open-loop runs each for Qwen, cascade A and cascade B were completed from separate Machine B on 15 November 2026 (summaries in `analysis/a2/speed/`). Measured p50 means: Qwen 7.5 s, cascade A 38.8 s, cascade B 23.9 s; the recommendation and `docs/a2_results.md` remain.
 
 ## Objective
 
@@ -248,7 +248,7 @@ Identify the fastest triage configuration that satisfies the client's revised ac
 | Speed-test workload row numbers | `analysis/a2/speed_test_rows.csv` |
 | Test-set accuracy per configuration | `analysis/a2/accuracy/*.json` |
 | Raw JMeter results and service logs per run | `jmeter/results/a2_*.jtl`, `analysis/a2/speed/logs/*.jsonl`, run records `analysis/a2/speed/runs/*.json`, environment snapshots `analysis/a2/speed/environment/*.txt` |
-| Speed summaries | `analysis/a2/speed/*.json` |
+| Speed summaries | `analysis/a2/speed/{qwen2.5_7b,cascade_a,cascade_b}.json`, `analysis/a2/speed/service_times.json` |
 | Assignment 2 results and recommendation | `docs/a2_results.md` |
 | Assignment 2 deck (≤ 8 slides) | `GroupNum_A2.pptx` (submitted via xSiTe; not committed until final) |
 

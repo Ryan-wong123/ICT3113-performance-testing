@@ -1,0 +1,100 @@
+{
+  "latency_basis": "successful requests only",
+  "runs": [
+    {
+      "jtl_file": "jmeter/results/a2_cascade_b_run1.jtl",
+      "requests_sent": 56,
+      "completed": 56,
+      "successful": 56,
+      "errored": 0,
+      "unfinished": 0,
+      "error_codes": {},
+      "p50_ms": 18206.0,
+      "p50_sample_count": 56,
+      "measurement_window_seconds": 300.0,
+      "throughput_completed_per_second": 0.18667,
+      "throughput_successful_per_second": 0.18667,
+      "throughput_completed_per_hour": 672.0,
+      "error_rate": 0.0
+    },
+    {
+      "jtl_file": "jmeter/results/a2_cascade_b_run2.jtl",
+      "requests_sent": 56,
+      "completed": 56,
+      "successful": 56,
+      "errored": 0,
+      "unfinished": 0,
+      "error_codes": {},
+      "p50_ms": 22775.0,
+      "p50_sample_count": 56,
+      "measurement_window_seconds": 305.246,
+      "throughput_completed_per_second": 0.18346,
+      "throughput_successful_per_second": 0.18346,
+      "throughput_completed_per_hour": 660.451,
+      "error_rate": 0.0
+    },
+    {
+      "jtl_file": "jmeter/results/a2_cascade_b_run3.jtl",
+      "requests_sent": 56,
+      "completed": 56,
+      "successful": 56,
+      "errored": 0,
+      "unfinished": 0,
+      "error_codes": {},
+      "p50_ms": 30853.0,
+      "p50_sample_count": 56,
+      "measurement_window_seconds": 308.731,
+      "throughput_completed_per_second": 0.18139,
+      "throughput_successful_per_second": 0.18139,
+      "throughput_completed_per_hour": 652.996,
+      "error_rate": 0.0
+    }
+  ],
+  "p50_ms_across_runs": {
+    "values": [
+      18206.0,
+      22775.0,
+      30853.0
+    ],
+    "mean": 23944.7,
+    "min": 18206.0,
+    "max": 30853.0,
+    "spread": 12647.0
+  },
+  "pooled_p95_ms": 66467.0,
+  "pooled_sample_count": 168,
+  "cascade": {
+    "runs": [
+      {
+        "service_log": "analysis/a2/speed/logs/cascade_b_run1.jsonl",
+        "cascade_ticket_events": 56,
+        "successful_decisions": 56,
+        "failed_events": 0,
+        "escalated": 47,
+        "escalation_fraction": 0.8393,
+        "duplicate_ticket_rows": []
+      },
+      {
+        "service_log": "analysis/a2/speed/logs/cascade_b_run2.jsonl",
+        "cascade_ticket_events": 56,
+        "successful_decisions": 56,
+        "failed_events": 0,
+        "escalated": 49,
+        "escalation_fraction": 0.875,
+        "duplicate_ticket_rows": []
+      },
+      {
+        "service_log": "analysis/a2/speed/logs/cascade_b_run3.jsonl",
+        "cascade_ticket_events": 56,
+        "successful_decisions": 56,
+        "failed_events": 0,
+        "escalated": 50,
+        "escalation_fraction": 0.8929,
+        "duplicate_ticket_rows": []
+      }
+    ],
+    "total_successful_decisions": 168,
+    "total_escalated": 146,
+    "escalation_fraction": 0.869
+  }
+}
