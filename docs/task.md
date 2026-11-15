@@ -331,9 +331,9 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 ## Step 2 — Design the cascade
 
 - [x] `[machine: i9 · WS3]` **Memory check first (switch: off / Ollama only):** both `qwen2.5:7b` + `llama3.2:3b` and `qwen2.5:7b` + `llama3.2:1b` remained resident together on Machine A, with `ollama ps` reporting `100% CPU` and context 4096 for both models. Raw outputs are in `analysis/a2/environment/`; the result is documented in `docs/test_environment.md`.
-- [ ] `[machine: any, after i9 data · WS4]` Choose the escalation approach on the tuning set only (category-based, agreement, self-reported confidence, ticket length, or a custom rule); justify the choice.
-- [ ] `[machine: any, after i9 data · WS4]` Choose exactly two settings of the rule on the tuning set.
-- [ ] `[machine: any, after i9 data · WS4]` Write `docs/a2_escalation_rule.md` so another team could implement it from the description. **(commit before the first benchmark run)**
+- [x] `[machine: any, after i9 data · WS4]` Choose the escalation approach on the tuning set only: category-based, using the small model's parsed category; justification and limitations are in `docs/a2_escalation_rule.md`.
+- [x] `[machine: any, after i9 data · WS4]` Choose exactly two settings of the rule on the tuning set: A accepts Money transfer/Mortgage; B additionally accepts Bank account or service.
+- [x] `[machine: any, after i9 data · WS4]` Write `docs/a2_escalation_rule.md` so another team could implement it from the description. **Committed before the first Assignment 2 benchmark; frozen thereafter.**
 - [x] `[machine: any · WS1]` Implement the cascade inside `POST /tickets` behind an off-by-default, environment-driven switch (small model, large model, rule setting); no hardcoded model in `src/app/`; the response gives no hint which model answered. Implemented in `src/app/cascade.py`; exact rule values remain gated on tuning.
 - [x] `[machine: any · WS1]` Keep the baseline intact: with the switch off, behaviour is exactly Assignment 1 (synchronous, sequential, no caching/queue/batching/workers; `num_gpu: 0`). Stub verification confirms one baseline call; named-model tests confirm `num_gpu: 0`.
 - [x] `[machine: any · WS1]` Extend the request log with the Assignment 2 fields (`cascade_mode`, `rule_setting`, `small_model`, `large_model`, `small_category`, `final_model`, `escalated`) and report cascade mode in `GET /health`.
@@ -341,10 +341,10 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 ## Step 3 — Record predictions **(commit before any Assignment 2 benchmark; never edit afterwards)**
 
-- [ ] `[machine: any, after i9 data · WS4]` Predict which configuration will be the fastest that satisfies the limits, with reasons.
-- [ ] `[machine: any, after i9 data · WS4]` For the cascade at each setting: predict the escalation fraction, accuracy and median latency.
-- [ ] `[machine: any, after i9 data · WS4]` Predict which categories lose the most accuracy when the small model's answer is accepted.
-- [ ] `[machine: any, after i9 data · WS4]` Commit `predictions/a2_prediction_record.md` (specific enough to be shown wrong). Leave `predictions/prediction_record.md` untouched.
+- [x] `[machine: any, after i9 data · WS4]` Predict which configuration will be the fastest that satisfies the limits, with reasons: `qwen2.5:7b` alone.
+- [x] `[machine: any, after i9 data · WS4]` For the cascade at each setting, freeze predicted escalation, accuracy and median latency (A: 90%, 78%, 19.0 s; B: 81%, 76%, 17.4 s).
+- [x] `[machine: any, after i9 data · WS4]` Predict which categories lose the most accuracy when the small model's answer is accepted: Credit reporting and Money transfer or service.
+- [x] `[machine: any, after i9 data · WS4]` Commit `predictions/a2_prediction_record.md` (specific enough to be shown wrong). Leave `predictions/prediction_record.md` untouched. **Frozen thereafter.**
 
 ## Step 4 — Test and measure
 
@@ -388,8 +388,8 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 ## Deliverables
 
 - [ ] `[machine: any (skeleton now; fill results after i9 data) · WS5]` `GroupNum_A2.pptx` (e.g. `Group08_A2.pptx`), at most 8 slides: cover; cascade design; test environment and method; accuracy results; speed results; trade-off chart (accuracy vs latency, overall limit as a line); predictions, recommendation, defence; limitations, references, model licences, AI declaration.
-- [ ] `[machine: any, after i9 data · WS4]` Supporting files committed: prediction record, written escalation rule, speed-test row list.
-- [ ] `[machine: any, after i9 data · WS4]` Prediction record and escalation rule committed before the first Assignment 2 benchmark run.
+- [x] `[machine: any, after i9 data · WS4]` Supporting files committed: prediction record, written escalation rule, speed-test row list.
+- [x] `[machine: any, after i9 data · WS4]` Prediction record and escalation rule committed before the first Assignment 2 benchmark run.
 - [ ] `[machine: i9 + JMeter machine · WS3]` Raw `.jtl` files and service logs for every reported run retained in the repository.
 - [ ] `[machine: any, after i9 data · WS5]` Every figure on slides 4–7 traces to a log or `.jtl` file.
 - [ ] `[machine: any · WS5]` Acknowledge the Consumer Complaint Database, Ollama and model licences; AI declaration states what the tools produced and what the team did.

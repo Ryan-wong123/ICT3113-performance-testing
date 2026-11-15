@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **pre-benchmark implementation complete.** The golden-set split, default-off cascade, logging, health metadata, accuracy runner, speed summariser, and fixed speed rows are implemented and stub-tested. No real Assignment 2 model measurement has run. Assignment 1's Steps 1–6 above remain the preserved evidence baseline; with `CASCADE_ENABLED=false` the service still follows the original one-call, synchronous, sequential path.
+Status: **implementation and pre-test freeze complete.** The split, default-off cascade, logging, runners and fixed speed rows are implemented and stub-tested. The team-approved category rule and predictions are frozen in `docs/a2_escalation_rule.md` and `predictions/a2_prediction_record.md` before any Assignment 2 benchmark. Assignment 1's evidence remains preserved; with `CASCADE_ENABLED=false` the service follows the original one-call, synchronous, sequential path.
 
 ## Overview
 

@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; pre-benchmark code complete.** Implemented: the committed golden-set split (90 tuning / 85 test), the default-off cascade, A2 logging and health metadata, the split-aware accuracy runner, the three-run speed summariser, and the committed 36-row timing/warm-up/workload list. Stub tests pass and no Assignment 2 model measurement has been run. The Assignment 1 evidence remains unchanged and its single-model behaviour is preserved when `CASCADE_ENABLED=false`; Assignment 2 is added on branch `assignment-2`. The brief is recorded in `docs/PROJECT_CONTEXT.md` Section 26.
+Status: **in progress; ready for the first Assignment 2 benchmark.** The split, default-off cascade, logging, runners, fixed speed rows and code freeze are committed. The team approved and froze the two category-rule settings in `docs/a2_escalation_rule.md` and the falsifiable predictions in `predictions/a2_prediction_record.md`; no Assignment 2 model measurement preceded them. The Assignment 1 evidence remains unchanged and its single-model behaviour is preserved when `CASCADE_ENABLED=false`.
 
 ## Objective
 
