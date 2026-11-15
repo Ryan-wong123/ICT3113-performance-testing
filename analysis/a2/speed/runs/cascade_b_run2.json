@@ -1,0 +1,39 @@
+{
+    "config":  "cascade_b",
+    "run":  2,
+    "machine":  "Machine A",
+    "ollama_version":  "0.35.1",
+    "ollama_restarted_utc":  "2026-11-15T17:04:17.2110561Z",
+    "warmup_finished_utc":  "2026-11-15T17:06:15.4264027Z",
+    "ready_utc":  "2026-11-15T17:06:15.7311892Z",
+    "recorded_after_utc":  "2026-11-15T17:20:04.9937175Z",
+    "warmup_discarded":  [
+                             {
+                                 "row":  8875,
+                                 "seconds":  4.106,
+                                 "category":  "Mortgage"
+                             },
+                             {
+                                 "row":  8511,
+                                 "seconds":  12.529,
+                                 "category":  "Money transfer or service"
+                             },
+                             {
+                                 "row":  8631,
+                                 "seconds":  7.79,
+                                 "category":  "Mortgage"
+                             }
+                         ],
+    "ollama_ps_before":  "NAME           ID              SIZE      PROCESSOR    CONTEXT    UNTIL              \r\nqwen2.5:7b     845dbda0ea48    5.1 GB    100% CPU     4096       4 minutes from now    \r\nllama3.2:1b    baf6a787fdff    1.5 GB    100% CPU     4096       3 minutes from now",
+    "ollama_ps_after":  "NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL",
+    "models_still_resident_after":  false,
+    "residency_note_after":  "missing llama3.2:1b",
+    "stats_total_before":  904,
+    "stats_total_after":  960,
+    "stored_during_run":  56,
+    "log_lines_before":  2995,
+    "log_lines_after":  3053,
+    "log_segment":  "analysis/a2/speed/logs/cascade_b_run2.jsonl",
+    "jtl":  "jmeter/results/a2_cascade_b_run2.jtl",
+    "environment_snapshot":  "analysis/a2/speed/environment/cascade_b_run2.txt"
+}
