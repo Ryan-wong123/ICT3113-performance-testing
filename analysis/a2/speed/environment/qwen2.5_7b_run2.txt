@@ -1,0 +1,22 @@
+captured_utc: 2026-11-15T15:19:39.7324199Z
+config: qwen2.5_7b
+run: 2
+ollama_version: 0.35.1
+--- ollama list
+NAME           ID              SIZE      MODIFIED    
+qwen2.5:7b     845dbda0ea48    4.7 GB    6 weeks ago    
+llama3.2:3b    a80c4f17acd5    2.0 GB    6 weeks ago    
+llama3.2:1b    baf6a787fdff    1.3 GB    6 weeks ago    
+
+--- OLLAMA_* (process)
+
+--- OLLAMA_* (user)
+
+--- ollama ps after restart
+NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL 
+
+--- docker
+29.5.3
+
+--- git
+d116265685ceb9ed58c331f11ddd57c75514f65c

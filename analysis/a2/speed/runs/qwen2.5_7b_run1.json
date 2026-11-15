@@ -1,0 +1,39 @@
+{
+    "config":  "qwen2.5_7b",
+    "run":  1,
+    "machine":  "Machine A",
+    "ollama_version":  "0.35.1",
+    "ollama_restarted_utc":  "2026-11-15T14:59:42.5398222Z",
+    "warmup_finished_utc":  "2026-11-15T15:00:01.3772956Z",
+    "ready_utc":  "2026-11-15T15:00:01.5918192Z",
+    "recorded_after_utc":  "2026-11-15T15:14:38.1838806Z",
+    "warmup_discarded":  [
+                             {
+                                 "row":  8875,
+                                 "seconds":  10.693,
+                                 "category":  "Mortgage"
+                             },
+                             {
+                                 "row":  8511,
+                                 "seconds":  2.423,
+                                 "category":  "Money transfer or service"
+                             },
+                             {
+                                 "row":  8631,
+                                 "seconds":  5.394,
+                                 "category":  "Mortgage"
+                             }
+                         ],
+    "ollama_ps_before":  "NAME          ID              SIZE      PROCESSOR    CONTEXT    UNTIL              \r\nqwen2.5:7b    845dbda0ea48    5.1 GB    100% CPU     4096       4 minutes from now",
+    "ollama_ps_after":  "NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL",
+    "models_still_resident_after":  false,
+    "residency_note_after":  "missing qwen2.5:7b",
+    "stats_total_before":  495,
+    "stats_total_after":  547,
+    "stored_during_run":  52,
+    "log_lines_before":  2553,
+    "log_lines_after":  2607,
+    "log_segment":  "analysis/a2/speed/logs/qwen2.5_7b_run1.jsonl",
+    "jtl":  "jmeter/results/a2_qwen2.5_7b_run1.jtl",
+    "environment_snapshot":  "analysis/a2/speed/environment/qwen2.5_7b_run1.txt"
+}
