@@ -1,6 +1,6 @@
 # Assignment 2 — Accuracy Limits (Step 1)
 
-Status: **method fixed; numbers not yet derived.** Fill the tables below only from committed evidence. This file does not replace `docs/requirements.md` (Assignment 1 R1–R3), which is unchanged history.
+Status: **limits derived and fixed** from `analysis/a2/accuracy/qwen2.5_7b.json`, measured on Machine A on 15 November 2026. This file does not replace `docs/requirements.md` (Assignment 1 R1–R3), which is unchanged history.
 
 ## 1. Golden-set split (commit before anything else)
 
@@ -32,22 +32,22 @@ Small-number warning, known before any model is run: every test category has few
 | Overall limit | Top model's **test-set** accuracy − 10 percentage points |
 | Per-category limit | For each of the seven categories: top model's test-set accuracy on that category − 15 percentage points |
 
-Example from the brief (not our numbers): a top model scoring 74.4% on the test set gives an overall limit of 64.4%.
+The top model scored **66/85 = 77.65%**, including one invalid-category response counted as wrong. Therefore the fixed overall limit is **67.65%** (77.65% − 10 percentage points).
 
-### Derived values (to fill from the test-set run of the top model)
+### Derived values
 
 | Category | Test tickets (n) | Top model correct/wrong | Top model accuracy | Per-category limit | Fair test? |
 | --- | --- | --- | --- | --- | --- |
-| Credit reporting | | | | | |
-| Debt collection | | | | | |
-| Mortgage | | | | | |
-| Credit card | | | | | |
-| Bank account or service | | | | | |
-| Consumer loan | | | | | |
-| Money transfer or service | | | | | |
-| **Overall** | | | | | — |
+| Credit reporting | 15 | 15/0 | 100.00% | **85.00%** | Limited (n=15) |
+| Debt collection | 9 | 4/5 | 44.44% | **29.44%** | **No — too small (n=9)** |
+| Mortgage | 9 | 7/2 | 77.78% | **62.78%** | **No — too small (n=9)** |
+| Credit card | 12 | 10/2 | 83.33% | **68.33%** | Limited (n=12) |
+| Bank account or service | 13 | 11/2 | 84.62% | **69.62%** | Limited (n=13) |
+| Consumer loan | 14 | 10/4 | 71.43% | **56.43%** | Limited (n=14) |
+| Money transfer or service | 13 | 9/4 | 69.23% | **54.23%** | Limited (n=13) |
+| **Overall** | **85** | **66/19** | **77.65%** | **67.65%** | — |
 
-With about 90 test tickets, some categories have fewer than 10 tickets (one ticket in a category of 8 is 12.5 points). Show counts beside every percentage and mark a category "too small for a fair per-category test" where that applies.
+Debt collection and Mortgage contain only 9 tickets, so one result changes their reported accuracy by 11.11 percentage points. Every other category is also limited (12–15 tickets); counts must always accompany percentages.
 
 ## 3. Pass rule
 

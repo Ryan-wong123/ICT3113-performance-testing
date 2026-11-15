@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; ready for the first Assignment 2 benchmark.** The split, default-off cascade, logging, runners, fixed speed rows and code freeze are committed. The team approved and froze the two category-rule settings in `docs/a2_escalation_rule.md` and the falsifiable predictions in `predictions/a2_prediction_record.md`; no Assignment 2 model measurement preceded them. The Assignment 1 evidence remains unchanged and its single-model behaviour is preserved when `CASCADE_ENABLED=false`.
+Status: **in progress; accuracy limits established.** The pre-test code, rule and prediction freezes were committed before measurement. The first A2 run measured `qwen2.5:7b` on the 85-ticket test set at 66/85 (77.65%), fixing the overall limit at 67.65% and the category limits in `docs/a2_accuracy_limits.md`. Remaining single-model and cascade accuracy runs have not yet been performed. Assignment 1 evidence remains unchanged.
 
 ## Objective
 

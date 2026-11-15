@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **implementation and pre-test freeze complete.** The split, default-off cascade, logging, runners and fixed speed rows are implemented and stub-tested. The team-approved category rule and predictions are frozen in `docs/a2_escalation_rule.md` and `predictions/a2_prediction_record.md` before any Assignment 2 benchmark. Assignment 1's evidence remains preserved; with `CASCADE_ENABLED=false` the service follows the original one-call, synchronous, sequential path.
+Status: **measurement in progress.** Implementation, code freeze, rule and predictions were committed before testing. The top-model test-set run is now preserved in `analysis/a2/accuracy/qwen2.5_7b.json`; it establishes the fixed limits in `docs/a2_accuracy_limits.md`. Remaining accuracy configurations and all speed runs are pending. Assignment 1 evidence remains preserved.
 
 ## Overview
 
