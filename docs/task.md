@@ -363,8 +363,11 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 - [x] `[machine: i9 · WS3]` Restart Ollama, warm up, then time Qwen on rows 8685 (2.404 s), 8242 (2.979 s), and 8345 (2.666 s). **S = 2.666 s**; evidence: `analysis/a2/timing/qwen_s.json`.
 - [x] `[machine: any, after i9 data · WS4]` Common parameters fixed: one ticket every 5.332 s = 11.253/min; 5-minute arrival window; 300-second timeout; 360-second trailing pause.
 - [x] `[machine: any · WS2]` **(commit)** Fixed ordered workload in `analysis/a2/speed_test_rows.csv`: 3 timing + 3 warm-up + 30 ordered workload tickets, all distinct and outside the golden set; workload tickets alternate near-p50 and near-p95 lengths.
-- [x] `[machine: any · WS2]` Added the fixed JMeter 5.6.3 Open Model plan `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` and ordered 30-row projection `jmeter/test_plans/a2_speed_narratives.csv`; committed defaults are 11.253/min for 5 minutes, seed 8, 300-second timeout, and a 360-second trailing pause.
-- [ ] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration.
+- [x] `[machine: any · WS2]` Added the fixed JMeter 5.6.3 Open Model plan `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` and ordered workload projection `jmeter/test_plans/a2_speed_narratives.csv` (30 rows at first; 70 since the enlargement below); committed defaults are 11.253/min for 5 minutes, seed 8, 300-second timeout, and a 360-second trailing pause.
+- [x] `[machine: any · WS2]` Workload enlarged from 30 to 70 ordered rows before any speed run (≈56 arrivals per run would otherwise recycle ≈26 tickets); timing, warm-up and the first 30 workload rows unchanged (`python3 scripts/build_a2_speed_rows.py --check`).
+- [x] `[machine: any · WS2]` Speed summariser corrected before any speed data exists: p50/p95 from successful requests only (brief wording), throughput per second as well as per hour, escalation fraction over successful cascade decisions, duplicate-row detection; added `scripts/extract_a2_log_segment.py`. Analysis tooling only — `src/app/` is unchanged since the code freeze.
+- [x] `[machine: any · WS2]` Run helpers: `scripts/a2_start_service.ps1` and `scripts/a2_speed_run.ps1` (Machine A), `scripts/a2_jmeter_run.ps1` (Machine B); procedure in `docs/test_playbook.md`.
+- [ ] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration (`a2_speed_run.ps1` writes `analysis/a2/speed/environment/<config>_run<n>.txt` and stops if a model ID changes).
 - [x] `[machine: any, after i9 data · WS4]` Test rate 11.253 submissions/min is above the client's 0.121305/min peak submission rate by 92.77× (and above the 0.145566/min combined peak by 77.31×).
 - [ ] `[machine: i9 + JMeter machine · WS3]` Use a separate load-generator machine (Machine B).
 
@@ -407,6 +410,7 @@ python3 scripts/split_golden_set.py --check
 python3 -m unittest tests.test_split_golden_set -v
 python3 scripts/build_a2_speed_rows.py --check
 python3 -m unittest tests.test_a2_cascade tests.test_a2_accuracy tests.test_a2_speed tests.test_build_a2_speed_rows -v
+git diff --exit-code 3752b350984145462dbfc724c2a6d9969f324dd5 -- src/app   # service code unchanged since the freeze
 python3 -m compileall -q src scripts tests
 
 # Assignment 2 service/tooling code freeze (configuration and evidence may change; service code may not):

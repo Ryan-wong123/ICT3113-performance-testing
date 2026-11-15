@@ -75,7 +75,7 @@ done
 
 # Assignment 2 Playbook (in progress)
 
-Steps 1–8 are complete; speed runs in step 9 are next. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for single-model work; on only for cascade work, confirmed before each run. Fixed speed parameters are 11.253 arrivals/minute for 5 minutes, a 300-second timeout, and a 360-second trailing pause. Machine B uses `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` and its 30-row projection `jmeter/test_plans/a2_speed_narratives.csv`; the projection is derived in order from the `workload` rows in `analysis/a2/speed_test_rows.csv`.
+Steps 1–8 are complete; speed runs in step 9 are next. Cascade switch (default off, see `docs/task.md` "When to turn the cascade switch on"): off for single-model work; on only for cascade work, confirmed before each run. Fixed speed parameters are 11.253 arrivals/minute for 5 minutes, a 300-second timeout, and a 360-second trailing pause. Machine B uses `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` and its 70-row projection `jmeter/test_plans/a2_speed_narratives.csv`; the projection is derived in order from the `workload` rows in `analysis/a2/speed_test_rows.csv`.
 
 1. **Split the golden set (commit first).** Odd rows = tuning, even rows = test; write `analysis/a2/golden_split.csv`.
 2. **Memory check.** Start the service with Ollama; load the large and small model; run a few tickets through each; run `ollama ps` in the Ollama container and confirm both are listed and stay listed. Save the output. If they do not both stay loaded, try a smaller pair; if none fits, stop and report that a cascade is not feasible.
@@ -85,25 +85,64 @@ Steps 1–8 are complete; speed runs in step 9 are next. Cascade switch (default
 6. **Predictions (commit first).** Commit `predictions/a2_prediction_record.md` and `docs/a2_escalation_rule.md` before any cascade benchmark.
 7. **Cascade accuracy.** Test-set run at both settings, with escalated count, and accuracy of escalated vs non-escalated tickets.
 8. **Pick the speed-test parameters.** Restart Ollama and warm up; send three different typical-length tickets one at a time to the top model; S = the middle time. Rate = one ticket per 2×S seconds. Run length = S minutes (minimum 5). Same for every configuration. Choose and commit the fixed ordered workload rows (outside the golden set, some typical and some long) in `analysis/a2/speed_test_rows.csv`.
-9. **Each speed run (three per configuration).**
-   1. Restart the Ollama container; check `GET /health` or `ollama ps`.
-   2. Send the same three fixed warm-up tickets one at a time; discard timings. For the cascade, make sure both models are loaded (warm-up tickets that the rule escalates, or one sent directly to the large model); confirm both in `ollama ps`.
-   3. Call `GET /stats` and note the total.
-   4. On Machine B, from the repository root, run JMeter in non-GUI mode with `jmeter/test_plans/a2_ticket_triage_speed_test.jmx`. Its Open Model schedule is `rate(11.253/min) random_arrivals(5 min) pause(360 sec)`, its seed is fixed at 8, and its HTTP timeout is 300 seconds. Pass only Machine A's host, port, and the run-specific `.jtl` name; do not change the schedule, seed, CSV or timeout between configurations/runs.
-   5. Call `GET /stats` again; the increase is the number of requests completed and stored.
-   6. Keep the raw `.jtl` as `jmeter/results/a2_<config>_run<n>.jtl` and the segment of the service log for the run.
-10. **Report per run:** sent, completed, errored, unfinished; p50 (mean and spread across the three runs); p95 pooled over the three runs (state the sample count); throughput; error rate; cascade escalation fraction from the service log. No p99. Compare the test rate with the client's peak from `analysis/workload_model.json`. Do not reuse Assignment 1 speed figures.
+9. **Speed runs (three per configuration).** Follow "Speed runs — step by step" below. Configurations: `qwen2.5_7b`, `cascade_a`, `cascade_b` (both small models failed accuracy, so they are not speed-tested).
+10. **Report per run:** sent, completed, errored, unfinished; p50 from successful requests (mean and spread across the three runs); p95 pooled over the three runs (state the sample count); throughput; error rate; cascade escalation fraction from the service-log segment. No p99. Compare the test rate with the client's peak from `analysis/workload_model.json`. Do not reuse Assignment 1 speed figures.
 11. **Reconcile and recommend.** Every figure must trace to a `.jtl`, log or JSON in the repository; compare the recommendation, predictions and outcomes in `docs/a2_results.md`.
 
-Machine B command template (replace `<machine-a-ip>`, `<config>` and `<run>` only):
+## Speed runs — step by step
+
+Fixed for every run: `rate(11.253/min) random_arrivals(5 min) pause(360 sec)`, seed 8, 300-second HTTP timeout, the 70-row ordered workload. Nothing is overridden on the command line except Machine A's address. One run takes about 13–15 minutes (restart, warm-up, 5-minute arrivals, 6-minute drain), so 9 runs take about 2.5 hours.
+
+### Once, before the first run
+
+| Machine A (i9: service + Ollama) | Machine B (i7: JMeter only) |
+| --- | --- |
+| `git checkout assignment-2; git pull` | `git checkout assignment-2; git pull` |
+| Close every other application; plug in the charger; set Windows power mode to *Best performance*; disable sleep. | Plug in; disable sleep. |
+| Find the LAN IP: `ipconfig` (IPv4 of the active adapter). | Check JMeter: `jmeter.bat --version` shows 5.6.3 (or note its full path for `-JMeter`). |
+| Allow Machine B in (admin PowerShell, once): `New-NetFirewallRule -DisplayName "A2 triage 8000" -Direction Inbound -Protocol TCP -LocalPort 8000 -Action Allow` | Check reachability: `Invoke-RestMethod http://<machine-a-ip>:8000/health` |
+| If scripts are blocked: `Set-ExecutionPolicy -Scope Process Bypass` in each new PowerShell window. | Same execution-policy note. |
+
+Both machines on the same network, both on wired or both on the same Wi-Fi; do not change networks between configurations.
+
+### Per configuration (do `qwen2.5_7b`, then `cascade_a`, then `cascade_b`)
+
+On **Machine A**, from the repository root:
 
 ```powershell
-& $jmeter -n `
-  -t "jmeter\test_plans\a2_ticket_triage_speed_test.jmx" `
-  -l "jmeter\results\a2_<config>_run<run>.jtl" `
-  -j "jmeter\results\a2_<config>_run<run>.jmeter.log" `
-  "-Jhost=<machine-a-ip>" `
-  "-Jport=8000"
+.\scripts\a2_start_service.ps1 -Config qwen2.5_7b      # later: cascade_a, then cascade_b
 ```
 
-Valid configuration names are `qwen2.5_7b`, `cascade_a`, and `cascade_b`. The plan's committed defaults are the frozen test parameters; no rate/duration overrides are needed.
+It sets every variable explicitly (nothing carries over from the previous configuration), recreates the container, and stops with "Configuration mismatch, do NOT run" unless `/health` **and** the container's escalation list match `docs/a2_escalation_rule.md`.
+
+### Per run (repeat for `-Run 1`, `2`, `3`)
+
+1. **Machine A:** `.\scripts\a2_speed_run.ps1 -Config qwen2.5_7b -Run 1`
+   - restarts Ollama (pass `-OllamaApp "<path>\ollama app.exe"` if it is not in the default location), checks the three model IDs, saves `analysis/a2/speed/environment/<config>_run<n>.txt`;
+   - sends the three fixed warm-up tickets (timings discarded); for the cascade it also loads `qwen2.5:7b` directly with `num_gpu: 0`;
+   - stops unless `ollama ps` lists the expected model(s) at 100% CPU;
+   - records `GET /stats` and the log line count, then prints **READY**.
+2. **Machine B, within 4 minutes of READY** (Ollama unloads idle models after 5 minutes):
+   `.\scripts\a2_jmeter_run.ps1 -Config qwen2.5_7b -Run 1 -HostA <machine-a-ip>`
+   It refuses to start if Machine A's `/health` does not match the configuration, then runs the committed plan unchanged and prints sample and success counts. Do not touch either machine for the ~11 minutes it runs.
+3. **Machine A:** when Machine B has finished, press **Enter** in the waiting window. The script records `/stats` and the log line count again, re-checks `ollama ps`, and writes `analysis/a2/speed/runs/<config>_run<n>.json` and the log segment `analysis/a2/speed/logs/<config>_run<n>.jsonl`. If it warns that a model was unloaded during the run, keep the run and report it.
+4. **Check the run:** `stored_during_run` (Machine A) should equal the successful samples (Machine B). Any gap is unfinished or failed requests: report it, never delete the run. A repeated run is a new run number and both are reported.
+
+### Commit after each configuration (avoid conflicts)
+
+- **Machine B** commits only its JTLs: `git add jmeter/results/a2_<config>_run*.jtl; git commit -m "A2 speed runs: <config> JTLs"; git pull --rebase; git push`. (`*.jmeter.log` files are git-ignored debug output.)
+- **Machine A** then pulls and commits only its own evidence: `git pull; git add analysis/a2/speed logs/requests.jsonl; git commit -m "A2 speed runs: <config> service evidence"; git push`.
+- Never edit `docs/a2_escalation_rule.md` or `predictions/a2_prediction_record.md`. Never truncate `logs/requests.jsonl`.
+
+### After all nine runs (any machine)
+
+The arrival count is fixed by the seed, so every run should send the same number of requests. Use the largest JTL sample count as `--expected-sent` unless a JMeter log shows otherwise, and state the number in the report.
+
+```bash
+python3 scripts/summarize_a2_speed.py \
+  --jtl jmeter/results/a2_cascade_a_run1.jtl --jtl jmeter/results/a2_cascade_a_run2.jtl --jtl jmeter/results/a2_cascade_a_run3.jtl \
+  --service-log analysis/a2/speed/logs/cascade_a_run1.jsonl --service-log analysis/a2/speed/logs/cascade_a_run2.jsonl --service-log analysis/a2/speed/logs/cascade_a_run3.jsonl \
+  --expected-sent <N> --arrival-window-seconds 300 --output analysis/a2/speed/cascade_a.json
+```
+
+Repeat for `cascade_b` and for `qwen2.5_7b` (no `--service-log` for the single model). Check `duplicate_ticket_rows` is empty and that each run's `completed` matches `stored_during_run` plus errors.
