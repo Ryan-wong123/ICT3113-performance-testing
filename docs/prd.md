@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; ready for Machine B speed runs.** Accuracy is complete: Qwen and cascade A qualify; both small models and cascade B do not. Machine A timing fixed S at 2.666 s, giving 11.253 arrivals/minute for a 5-minute window, 300-second timeout and 360-second trailing pause. Three open-loop runs each for Qwen, cascade A and cascade B remain pending on separate Machine B.
+Status: **in progress; ready for Machine B speed runs.** Accuracy is complete: Qwen and cascade A qualify; both small models and cascade B do not. Machine A timing fixed S at 2.666 s, giving 11.253 arrivals/minute for a 5-minute window, 300-second timeout and 360-second trailing pause. The fixed JMeter Open Model plan and ordered 30-row workload projection are committed under `jmeter/test_plans/`; three open-loop runs each for Qwen, cascade A and cascade B remain pending on separate Machine B.
 
 ## Objective
 

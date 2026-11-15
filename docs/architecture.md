@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **speed execution pending.** Accuracy is complete and the common speed parameters are frozen from `analysis/a2/timing/qwen_s.json`: 11.253 arrivals/minute, 300-second arrival window, 300-second timeout and 360-second trailing pause. Machine B must now run three open-loop repeats each for Qwen, cascade A and cascade B against Machine A.
+Status: **speed execution pending.** Accuracy is complete and the common speed parameters are frozen from `analysis/a2/timing/qwen_s.json`: 11.253 arrivals/minute, 300-second arrival window, 300-second timeout and 360-second trailing pause. `jmeter/test_plans/a2_ticket_triage_speed_test.jmx` implements those values with JMeter 5.6.3's Open Model Thread Group and fixed seed 8; `jmeter/test_plans/a2_speed_narratives.csv` is the ordered 30-workload-row projection of the committed source list. Machine B must now run three open-loop repeats each for Qwen, cascade A and cascade B against Machine A.
 
 ## Overview
 
