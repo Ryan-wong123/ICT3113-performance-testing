@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; single-model accuracy complete.** The pre-test freezes preceded measurement. On the 85-ticket test set, `qwen2.5:7b` scored 66/85 (77.65%), `llama3.2:3b` scored 24/85 (28.24%), and `llama3.2:1b` scored 22/85 (25.88%). Both small single models fail the 67.65% overall limit and will not be speed-tested alone. Cascade accuracy and all speed work remain pending.
+Status: **in progress; accuracy complete.** Qwen (66/85, 77.65%) and cascade Setting A (69/85, 81.18%) pass the overall and all category limits. Both small models fail overall. Setting B scores 67/85 (78.82%) but fails Money transfer or service by one ticket (7/13 = 53.85% vs 54.23%), so it is not a qualifying configuration. Speed set-up and runs remain pending; both cascade settings must still be speed-tested.
 
 ## Objective
 

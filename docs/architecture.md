@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **measurement in progress.** The three single-model test-set JSON files are preserved in `analysis/a2/accuracy/`. Qwen establishes the limits; both smaller models fail the overall floor. The two frozen cascade settings and all speed runs remain pending. Implementation, rule and predictions were frozen before measurement, and Assignment 1 evidence remains preserved.
+Status: **accuracy measurement complete; speed pending.** All five test-set JSON files are preserved in `analysis/a2/accuracy/`. Qwen and cascade A qualify; both small models fail overall, and cascade B fails one category floor. The log-derived cascade evidence records 79/84 successful Setting A decisions escalated and 71/84 Setting B decisions escalated; each run also had one invalid-category HTTP 502 excluded from the successful-decision denominator. Speed set-up and all JMeter evidence remain pending.
 
 ## Overview
 

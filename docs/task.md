@@ -352,10 +352,10 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 - [x] `[machine: any · WS2]` Write the Assignment 2 accuracy runner (test set only, through `POST /tickets`) and the speed-run helpers; test them against a stub, not real models. Implemented as `scripts/run_a2_accuracy_test.py` and `scripts/summarize_a2_speed.py`; the runner also permits the explicitly labelled tuning split for rule design. Code-freeze hash is recorded below.
 - [x] `[machine: i9 · WS3]` Each other single model alone — switch off: `llama3.2:3b` 24/85 = 28.24% (0 errors); `llama3.2:1b` 22/85 = 25.88% (1 invalid-category response). Both fail the 67.65% overall limit.
-- [ ] `[machine: i9 · WS3]` Cascade at setting A and at setting B — switch: **on**.
-- [ ] `[machine: any, after i9 data · WS4]` Report overall accuracy (count and percentage), per-category accuracy against the per-category limit, and a confusion matrix for every configuration.
-- [ ] `[machine: any, after i9 data · WS4]` For the cascade: number escalated, and accuracy of escalated vs non-escalated tickets.
-- [ ] `[machine: any, after i9 data · WS4]` Mark which configurations pass both limits; optionally show tuning-set results, but only test-set results decide pass/fail.
+- [x] `[machine: i9 · WS3]` Cascade at setting A and at setting B — switch on, both models confirmed resident at 100% CPU before each run. A: 69/85 = 81.18%; B: 67/85 = 78.82%; each had one invalid-category HTTP 502.
+- [x] `[machine: any, after i9 data · WS4]` Report overall/per-category accuracy with counts and confusion matrices for all five configurations in `analysis/a2/accuracy/*.json`.
+- [x] `[machine: any, after i9 data · WS4]` Cascade evidence: A escalated 79/84 successful logged decisions (94.05%), with non-escalated 5/5 and escalated 64/79 correct; B escalated 71/84 (84.52%), with non-escalated 8/13 and escalated 59/71 correct. The one failed request per run has no completed decision and is excluded from these denominators.
+- [x] `[machine: any, after i9 data · WS4]` Pass/fail: Qwen and cascade A pass both limits; 1B and 3B fail overall; cascade B passes overall but fails Money transfer or service (7/13 = 53.85% vs 54.23%).
 - [ ] `[machine: any, after i9 data · WS4]` If any Assignment 1 single-model records are reused, score only test-set rows and say so in the report.
 
 ### Speed test — set-up (switch: off for S)
