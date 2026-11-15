@@ -85,7 +85,7 @@ Assignment 2 retains the Assignment 1 machines and hardware. Machine A runs the 
 | --- | --- |
 | Machine A | ASUS TUF Gaming F16 FX607JIR; Intel Core i9-14900HX; 24 cores / 32 logical processors; approximately 15.62 GiB physical RAM |
 | Machine B | Acer Nitro AN515-54; Intel Core i7-9750H; 6 cores / 12 logical processors; 15.85 GiB RAM; used only for JMeter |
-| Machine B re-check (15 Nov 2026, before speed runs) | Same hardware re-confirmed (Acer Nitro AN515-54, i7-9750H 6/12, 15.85 GiB, Windows 11 Home build 22631). JMeter was not on the PATH or at the Assignment 1 path, so Apache JMeter 5.6.3 was reinstalled from the Apache archive (SHA-512 verified) under `%LOCALAPPDATA%\Programs\Apache\apache-jmeter-5.6.3`: same version as Assignment 1, different install folder. Java version: _to record from `java -version`_. |
+| Machine B re-check (15 Nov 2026, before speed runs) | Same hardware re-confirmed (Acer Nitro AN515-54, i7-9750H 6/12, 15.85 GiB, Windows 11 Home build 22631). JMeter was not on the PATH or at the Assignment 1 path, so Apache JMeter 5.6.3 was reinstalled from the Apache archive (SHA-512 verified) under `%LOCALAPPDATA%\Programs\Apache\apache-jmeter-5.6.3`: same version as Assignment 1, different install folder. Java: Microsoft OpenJDK 21.0.12.1 (build 21.0.12.1+1-LTS), the same OpenJDK 21.0.12 release recorded for Assignment 1 (installer version 21.0.12.101). |
 | Docker | Engine 29.5.3; Compose v5.1.4 |
 | Docker allocation | 32 logical CPUs; 8,121,454,592 bytes, approximately 7.56 GiB |
 | Ollama | Native Windows Ollama 0.35.1 on Machine A |
