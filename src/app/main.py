@@ -8,7 +8,7 @@ import uuid
 from fastapi import FastAPI, HTTPException, Query, Request
 from pydantic import BaseModel, Field
 
-from .categories import CATEGORIES
+from .cascade import classify_ticket, validate_cascade_settings
 from .config import Settings
 from .ollama_client import OllamaClassifier, OllamaError
 from .request_logging import RequestLogger
@@ -23,6 +23,7 @@ request_logger = RequestLogger(settings.request_log_path)
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    validate_cascade_settings(settings)
     store.initialize()
     yield
 
@@ -56,6 +57,13 @@ async def instrument_requests(request: Request, call_next):
     request.state.ticket_row = None
     request.state.predicted_category = None
     request.state.error = None
+    request.state.cascade_mode = None
+    request.state.rule_setting = None
+    request.state.small_model = None
+    request.state.large_model = None
+    request.state.small_category = None
+    request.state.final_model = None
+    request.state.escalated = None
     error = None
     try:
         response = await call_next(request)
@@ -72,7 +80,11 @@ async def instrument_requests(request: Request, call_next):
                 "request_id": request_id,
                 "endpoint": request.url.path,
                 "method": request.method,
-                "model": classifier.model if request.url.path == "/tickets" else None,
+                "model": (
+                    request.state.final_model or classifier.model
+                    if request.url.path == "/tickets"
+                    else None
+                ),
                 "ticket_row_if_available": request.state.ticket_row,
                 "request_start": start_wall.isoformat(),
                 "request_end": end_wall.isoformat(),
@@ -80,6 +92,13 @@ async def instrument_requests(request: Request, call_next):
                 "http_status": getattr(locals().get("response", None), "status_code", 500),
                 "predicted_category": request.state.predicted_category,
                 "error": error,
+                "cascade_mode": request.state.cascade_mode,
+                "rule_setting": request.state.rule_setting,
+                "small_model": request.state.small_model,
+                "large_model": request.state.large_model,
+                "small_category": request.state.small_category,
+                "final_model": request.state.final_model,
+                "escalated": request.state.escalated,
             }
         )
     response.headers["X-Request-ID"] = request_id
@@ -93,14 +112,32 @@ def ticket_response(ticket: StoredTicket) -> TicketResponse:
 @app.post("/tickets", response_model=TicketResponse, status_code=201)
 def create_ticket(submission: TicketSubmission, request: Request) -> TicketResponse:
     request.state.ticket_row = submission.ticket_row
+    request.state.cascade_mode = "on" if settings.cascade_enabled else "off"
+    request.state.final_model = classifier.model if not settings.cascade_enabled else None
+    if settings.cascade_enabled:
+        request.state.rule_setting = settings.cascade_rule_setting
+        request.state.small_model = settings.cascade_small_model
+        request.state.large_model = settings.cascade_large_model
     try:
-        category = classifier.classify(submission.narrative)
+        outcome = classify_ticket(submission.narrative, classifier, settings)
     except OllamaError as exc:
         request.state.error = str(exc)
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
-    request.state.predicted_category = category
-    stored_ticket = store.insert(submission.ticket_row, submission.narrative, category, classifier.model)
+    request.state.predicted_category = outcome.category
+    request.state.cascade_mode = outcome.cascade_mode
+    request.state.rule_setting = outcome.rule_setting
+    request.state.small_model = outcome.small_model
+    request.state.large_model = outcome.large_model
+    request.state.small_category = outcome.small_category
+    request.state.final_model = outcome.final_model
+    request.state.escalated = outcome.escalated
+    stored_ticket = store.insert(
+        submission.ticket_row,
+        submission.narrative,
+        outcome.category,
+        outcome.public_model,
+    )
     return ticket_response(stored_ticket)
 
 
@@ -115,5 +152,20 @@ def ticket_stats() -> dict[str, object]:
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok", "model": classifier.model, "classification_mode": "synchronous_sequential"}
+def health() -> dict[str, object]:
+    payload: dict[str, object] = {
+        "status": "ok",
+        "model": classifier.model,
+        "classification_mode": "synchronous_sequential",
+        "cascade_mode": "on" if settings.cascade_enabled else "off",
+    }
+    if settings.cascade_enabled:
+        payload.update(
+            {
+                "rule_setting": settings.cascade_rule_setting,
+                "rule_type": settings.cascade_rule_type,
+                "small_model": settings.cascade_small_model,
+                "large_model": settings.cascade_large_model,
+            }
+        )
+    return payload

@@ -334,10 +334,10 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 - [ ] `[machine: any, after i9 data · WS4]` Choose the escalation approach on the tuning set only (category-based, agreement, self-reported confidence, ticket length, or a custom rule); justify the choice.
 - [ ] `[machine: any, after i9 data · WS4]` Choose exactly two settings of the rule on the tuning set.
 - [ ] `[machine: any, after i9 data · WS4]` Write `docs/a2_escalation_rule.md` so another team could implement it from the description. **(commit before the first benchmark run)**
-- [ ] `[machine: any · WS1]` Implement the cascade inside `POST /tickets` behind an off-by-default, environment-driven switch (small model, large model, rule setting); no hardcoded model in `src/app/`; the response gives no hint which model answered.
-- [ ] `[machine: any · WS1]` Keep the baseline intact: with the switch off, behaviour is exactly Assignment 1 (synchronous, sequential, no caching/queue/batching/workers; `num_gpu: 0`).
-- [ ] `[machine: any · WS1]` Extend the request log with the Assignment 2 fields (`cascade_mode`, `rule_setting`, `small_model`, `large_model`, `small_category`, `final_model`, `escalated`) and report cascade mode in `GET /health`.
-- [ ] `[machine: any · WS1]` Unit-test the rule and the split; update `docs/architecture.md` / `docs/prd.md` to match the code as built.
+- [x] `[machine: any · WS1]` Implement the cascade inside `POST /tickets` behind an off-by-default, environment-driven switch (small model, large model, rule setting); no hardcoded model in `src/app/`; the response gives no hint which model answered. Implemented in `src/app/cascade.py`; exact rule values remain gated on tuning.
+- [x] `[machine: any · WS1]` Keep the baseline intact: with the switch off, behaviour is exactly Assignment 1 (synchronous, sequential, no caching/queue/batching/workers; `num_gpu: 0`). Stub verification confirms one baseline call; named-model tests confirm `num_gpu: 0`.
+- [x] `[machine: any · WS1]` Extend the request log with the Assignment 2 fields (`cascade_mode`, `rule_setting`, `small_model`, `large_model`, `small_category`, `final_model`, `escalated`) and report cascade mode in `GET /health`.
+- [x] `[machine: any · WS1]` Unit-test the rule and the split; update `docs/architecture.md` / `docs/prd.md` to match the code as built.
 
 ## Step 3 — Record predictions **(commit before any Assignment 2 benchmark; never edit afterwards)**
 
@@ -350,7 +350,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 ### Accuracy test (test set only, through `POST /tickets`, once per configuration)
 
-- [ ] `[machine: any · WS2]` Write the Assignment 2 accuracy runner (test set only, through `POST /tickets`) and the speed-run helpers; test them against a stub, not real models. Finish and commit the service code before the first benchmark and record the commit hash with the results.
+- [x] `[machine: any · WS2]` Write the Assignment 2 accuracy runner (test set only, through `POST /tickets`) and the speed-run helpers; test them against a stub, not real models. Implemented as `scripts/run_a2_accuracy_test.py` and `scripts/summarize_a2_speed.py`; the runner also permits the explicitly labelled tuning split for rule design. Code-freeze hash is recorded below.
 - [ ] `[machine: i9 · WS3]` Each other single model alone (`llama3.2:3b`, `llama3.2:1b`) — switch: off.
 - [ ] `[machine: i9 · WS3]` Cascade at setting A and at setting B — switch: **on**.
 - [ ] `[machine: any, after i9 data · WS4]` Report overall accuracy (count and percentage), per-category accuracy against the per-category limit, and a confusion matrix for every configuration.
@@ -362,7 +362,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 - [ ] `[machine: i9 · WS3]` Restart Ollama, warm up, send three different typical-length tickets one at a time to the top model; S = the middle time; record the three timings and ticket row numbers.
 - [ ] `[machine: any, after i9 data · WS4]` Arrival rate = one ticket every 2×S seconds; run length = S minutes (minimum 5); same for every configuration.
-- [ ] `[machine: any · WS2]` **(commit)** Fixed ordered workload (rows outside the golden set, typical and long) in `analysis/a2/speed_test_rows.csv`.
+- [x] `[machine: any · WS2]` **(commit)** Fixed ordered workload in `analysis/a2/speed_test_rows.csv`: 3 timing + 3 warm-up + 30 ordered workload tickets, all distinct and outside the golden set; workload tickets alternate near-p50 and near-p95 lengths.
 - [ ] `[machine: i9 + JMeter machine · WS3]` Record software versions, model digests and Ollama settings once; re-check before each configuration.
 - [ ] `[machine: any, after i9 data · WS4]` Compare the test rate with the client's peak from `analysis/workload_model.json` and note which side it is on.
 - [ ] `[machine: i9 + JMeter machine · WS3]` Use a separate load-generator machine (Machine B).
@@ -397,12 +397,17 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 ## Verification
 
 ```bash
-# Assignment 1 evidence is unchanged on this branch:
-git diff --exit-code main -- analysis/accuracy predictions/prediction_record.md docs/requirements.md docs/recommendation.md src/app
+# Assignment 1 result evidence is unchanged on this branch:
+git diff --exit-code main -- analysis/accuracy predictions/prediction_record.md docs/requirements.md docs/recommendation.md
 
 # With the cascade switch off (default), the Assignment 1 baseline commands in README.md and above must still work unchanged.
 # Assignment 2 golden-set split (implemented):
 python3 scripts/split_golden_set.py --check
 python3 -m unittest tests.test_split_golden_set -v
-# Further Assignment 2 verification commands will be added here as each script is implemented.
+python3 scripts/build_a2_speed_rows.py --check
+python3 -m unittest tests.test_a2_cascade tests.test_a2_accuracy tests.test_a2_speed tests.test_build_a2_speed_rows -v
+python3 -m compileall -q src scripts tests
+
+# Code freeze (record the commit hash immediately after committing this implementation):
+# CODE_FREEZE_COMMIT: PENDING
 ```

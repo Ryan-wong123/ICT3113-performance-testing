@@ -27,12 +27,19 @@ class OllamaClassifier:
     def classify(self, narrative: str) -> str:
         # This lock is an explicit baseline constraint, not a throughput optimisation.
         with self._inference_lock:
-            return self._classify_once(narrative)
+            return self._classify_once(narrative, self._settings.ollama_model)
 
-    def _classify_once(self, narrative: str) -> str:
+    def classify_with_model(self, narrative: str, model: str) -> str:
+        """Classify with a named candidate while retaining the same global lock."""
+        if not model:
+            raise ValueError("model must not be empty")
+        with self._inference_lock:
+            return self._classify_once(narrative, model)
+
+    def _classify_once(self, narrative: str, model: str) -> str:
         payload = json.dumps(
             {
-                "model": self._settings.ollama_model,
+                "model": model,
                 "prompt": f"{category_prompt()}\n\nTicket narrative:\n{narrative}",
                 "stream": False,
                 "options": {"num_gpu": 0},

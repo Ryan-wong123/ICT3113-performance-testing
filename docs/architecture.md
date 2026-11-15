@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **design, with the golden-set split implemented** (`scripts/split_golden_set.py`, a stdlib-only script that writes `analysis/a2/golden_split.csv` with `row,final_label,split`; odd `row` value = tuning, even = test; `--check` verifies the committed file; no model is run). The cascade itself is not yet implemented. Assignment 1's Steps 1–6 above describe the preserved baseline and are unchanged. With the cascade switch off (the default) the service is exactly the Step 2 baseline.
+Status: **pre-benchmark implementation complete.** The golden-set split, default-off cascade, logging, health metadata, accuracy runner, speed summariser, and fixed speed rows are implemented and stub-tested. No real Assignment 2 model measurement has run. Assignment 1's Steps 1–6 above remain the preserved evidence baseline; with `CASCADE_ENABLED=false` the service still follows the original one-call, synchronous, sequential path.
 
 ## Overview
 
@@ -339,20 +339,22 @@ TicketStore.insert() --> SQLite
 request log line (final_model, escalated, ...) --> logs/requests.jsonl
 ```
 
-## Planned components and changes
+## Implemented components
 
 | Component | Change |
 | --- | --- |
-| `src/app/config.py` | Add cascade settings, all environment-driven: a cascade switch (default off), small model, large model, and the rule setting. `OLLAMA_MODEL` stays the single-model setting; no model is hardcoded in `src/app/`. |
-| `src/app/ollama_client.py` | Allow the existing lock-serialised classifier to be called for a named model; inference options (`num_gpu: 0`, threads, context length) are unchanged and identical for every model and configuration. Still no caching, queue, batching or background workers. |
-| `src/app/main.py` | `POST /tickets` applies the rule when the cascade switch is on; response schema unchanged. |
-| `src/app/request_logging.py` | Add the Assignment 2 logged fields below. |
-| `scripts/` | `split_golden_set.py` (implemented), an A2 accuracy runner (test set only, through `POST /tickets`), and A2 speed-run helpers reusing `summarize_jtl.py`; p99 is not reported for A2 runs. |
-| `tests/` | Unit tests for the escalation rule and the split. |
+| `src/app/config.py` | Environment-driven cascade switch (default off), models, setting, rule type, category list and optional length threshold. `OLLAMA_MODEL` remains the baseline/public response value; no candidate is hardcoded in `src/app/`. |
+| `src/app/ollama_client.py` | The existing single lock can classify with a named model. Every call keeps the same prompt and `num_gpu: 0`; there is still no caching, queue, batching or worker. |
+| `src/app/cascade.py` | Pluggable category, length, combined, always or never rule; small-model failures safely fall back to the large model. Enabled configuration is validated at startup. Exact setting values remain unset until tuning-set analysis. |
+| `src/app/main.py` | `POST /tickets` runs the baseline or cascade path. The response schema is unchanged and its `model` field remains the stable `OLLAMA_MODEL` value, so it cannot reveal which cascade model answered. The actual final model exists only in the request log. |
+| `scripts/run_a2_accuracy_test.py` | Selects exactly `test` (default) or `tuning` rows from the committed split, sends each through `POST /tickets`, joins request-log metadata by request ID, and writes counts, accuracy, confusion and escalation evidence. It reports p50/p95 only. |
+| `scripts/summarize_a2_speed.py` | Requires exactly three JTLs; reports sent/completed/error/unfinished counts, per-run p50, p50 mean/range/spread, pooled p95 and sample count, throughput, error rate and optional log-derived escalation fraction. No p99. |
+| `scripts/build_a2_speed_rows.py` | Deterministically selects 3 timing, 3 warm-up and 30 interleaved typical/long workload rows outside the golden set; `--check` verifies the committed CSV. |
+| `tests/` | Stub tests cover baseline one-call behaviour, accept/escalate/fallback paths, configuration, CPU-only named-model calls, accuracy evidence, speed summaries, row selection and the split. |
 
 ## Assignment 2 logged fields
 
-In addition to the Step 2 "Logged fields" above, every request logs (null when the cascade is off):
+In addition to the Step 2 "Logged fields" above, every request contains these keys. Non-applicable cascade details are null when the switch is off; `cascade_mode` is `off` or `on`:
 
 ```text
 cascade_mode        (off | on)
