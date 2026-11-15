@@ -408,6 +408,6 @@ python3 scripts/build_a2_speed_rows.py --check
 python3 -m unittest tests.test_a2_cascade tests.test_a2_accuracy tests.test_a2_speed tests.test_build_a2_speed_rows -v
 python3 -m compileall -q src scripts tests
 
-# Code freeze (record the commit hash immediately after committing this implementation):
-# CODE_FREEZE_COMMIT: PENDING
+# Assignment 2 service/tooling code freeze (configuration and evidence may change; service code may not):
+# CODE_FREEZE_COMMIT: 3752b350984145462dbfc724c2a6d9969f324dd5
 ```
