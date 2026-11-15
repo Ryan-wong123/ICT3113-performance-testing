@@ -351,7 +351,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 ### Accuracy test (test set only, through `POST /tickets`, once per configuration)
 
 - [x] `[machine: any · WS2]` Write the Assignment 2 accuracy runner (test set only, through `POST /tickets`) and the speed-run helpers; test them against a stub, not real models. Implemented as `scripts/run_a2_accuracy_test.py` and `scripts/summarize_a2_speed.py`; the runner also permits the explicitly labelled tuning split for rule design. Code-freeze hash is recorded below.
-- [ ] `[machine: i9 · WS3]` Each other single model alone (`llama3.2:3b`, `llama3.2:1b`) — switch: off.
+- [x] `[machine: i9 · WS3]` Each other single model alone — switch off: `llama3.2:3b` 24/85 = 28.24% (0 errors); `llama3.2:1b` 22/85 = 25.88% (1 invalid-category response). Both fail the 67.65% overall limit.
 - [ ] `[machine: i9 · WS3]` Cascade at setting A and at setting B — switch: **on**.
 - [ ] `[machine: any, after i9 data · WS4]` Report overall accuracy (count and percentage), per-category accuracy against the per-category limit, and a confusion matrix for every configuration.
 - [ ] `[machine: any, after i9 data · WS4]` For the cascade: number escalated, and accuracy of escalated vs non-escalated tickets.

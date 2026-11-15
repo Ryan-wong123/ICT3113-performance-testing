@@ -314,7 +314,7 @@ Step 6 changes no service code, golden label, requirement threshold, or predicti
 
 # Assignment 2 Architecture — Cascade Triage
 
-Status: **measurement in progress.** Implementation, code freeze, rule and predictions were committed before testing. The top-model test-set run is now preserved in `analysis/a2/accuracy/qwen2.5_7b.json`; it establishes the fixed limits in `docs/a2_accuracy_limits.md`. Remaining accuracy configurations and all speed runs are pending. Assignment 1 evidence remains preserved.
+Status: **measurement in progress.** The three single-model test-set JSON files are preserved in `analysis/a2/accuracy/`. Qwen establishes the limits; both smaller models fail the overall floor. The two frozen cascade settings and all speed runs remain pending. Implementation, rule and predictions were frozen before measurement, and Assignment 1 evidence remains preserved.
 
 ## Overview
 

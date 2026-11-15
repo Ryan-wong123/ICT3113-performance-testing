@@ -219,7 +219,7 @@ Answer the client's question — given CPU-only hardware and no public model API
 
 # Assignment 2 PRD — Fast Triage Within an Accuracy Floor
 
-Status: **in progress; accuracy limits established.** The pre-test code, rule and prediction freezes were committed before measurement. The first A2 run measured `qwen2.5:7b` on the 85-ticket test set at 66/85 (77.65%), fixing the overall limit at 67.65% and the category limits in `docs/a2_accuracy_limits.md`. Remaining single-model and cascade accuracy runs have not yet been performed. Assignment 1 evidence remains unchanged.
+Status: **in progress; single-model accuracy complete.** The pre-test freezes preceded measurement. On the 85-ticket test set, `qwen2.5:7b` scored 66/85 (77.65%), `llama3.2:3b` scored 24/85 (28.24%), and `llama3.2:1b` scored 22/85 (25.88%). Both small single models fail the 67.65% overall limit and will not be speed-tested alone. Cascade accuracy and all speed work remain pending.
 
 ## Objective
 
