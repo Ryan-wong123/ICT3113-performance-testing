@@ -77,19 +77,43 @@ For planning, the tested machine has substantial performance headroom over the m
 
 # Assignment 2 Test Environment
 
-Status: **not yet measured.** Assignment 2 uses the Assignment 1 machine (no extra CPU or RAM). The final Assignment 1 machine roles above (Machine A service/Ollama, Machine B JMeter) are the intended Assignment 2 roles; if they change, the change and its reason are recorded here.
+Status: **memory feasibility verified on 15 November 2026; accuracy and speed measurements have not started.**
 
-To record before the first Assignment 2 run (and re-check before each configuration):
+Assignment 2 retains the Assignment 1 machines and hardware. Machine A runs the service and native CPU-only Ollama; Machine B will run JMeter separately during the speed tests.
 
-| Item | Value |
+| Item | Assignment 2 value |
 | --- | --- |
-| Machine A / B hardware, OS, Docker and RAM given to Docker/Ollama | (refer to the Assignment 1 tables above if unchanged) |
-| Ollama version | |
-| Docker / service image versions | |
-| JMeter and JDK versions (Machine B) | |
-| Model digests (must match `docs/candidate_models.md`) | |
-| Ollama inference settings (threads, parallelism, context length, `num_gpu: 0`), recorded once and held constant | |
-| `ollama ps` output with both cascade models resident | |
-| Speed-test S, three timings and ticket row numbers, arrival rate, run length | |
+| Machine A | ASUS TUF Gaming F16 FX607JIR; Intel Core i9-14900HX; 24 cores / 32 logical processors; approximately 15.62 GiB physical RAM |
+| Machine B | Acer Nitro AN515-54; Intel Core i7-9750H; 6 cores / 12 logical processors; 15.85 GiB RAM; used only for JMeter |
+| Docker | Engine 29.5.3; Compose v5.1.4 |
+| Docker allocation | 32 logical CPUs; 8,121,454,592 bytes, approximately 7.56 GiB |
+| Ollama | Native Windows Ollama 0.35.1 on Machine A |
+| Models | `llama3.2:1b` ID `baf6a787fdff`; `llama3.2:3b` ID `a80c4f17acd5`; `qwen2.5:7b` ID `845dbda0ea48`; all match the frozen digest prefixes |
+| Inference settings checked | `num_gpu: 0`; runtime context 4096; `ollama ps` reported `100% CPU` |
+| Assignment 2 branch at memory check | `assignment-2`, commit `6be6f8e` |
+
+## Cascade memory-feasibility check
+
+Both possible small/large pairs were loaded on Machine A using CPU-only requests with a ten-minute keep-alive.
+
+| Candidate pair | Result | Resident sizes | Processor | Context |
+| --- | --- | --- | --- | --- |
+| `llama3.2:3b` + `qwen2.5:7b` | PASS — both remained resident simultaneously | 2.6 GB + 5.1 GB | 100% CPU for both | 4096 |
+| `llama3.2:1b` + `qwen2.5:7b` | PASS — both remained resident simultaneously | 1.5 GB + 5.1 GB | 100% CPU for both | 4096 |
+
+Therefore, both Assignment 1 small models are technically feasible cascade partners for `qwen2.5:7b`. This memory check does not select the final pair; selection will use tuning-set accuracy and expected escalation cost.
+
+The prompts used here were only model-loading checks. They are not accuracy or benchmark evidence and did not use the golden test set.
+
+Raw environment evidence:
+
+- `analysis/a2/environment/machine_a.txt`
+- `analysis/a2/environment/docker_environment.txt`
+- `analysis/a2/environment/ollama_version.txt`
+- `analysis/a2/environment/ollama_models.txt`
+- `analysis/a2/environment/memory_qwen7b_llama1b.txt`
+- `analysis/a2/environment/memory_qwen7b_llama3b.txt`
+
+The Ollama thread and parallelism settings must be recorded and held constant before the first Assignment 2 benchmark. The speed-test value `S`, timing rows, arrival rate and run length will also be added before the speed runs.
 
 Known mismatch to resolve: the Assignment 1 accuracy JSONs were produced on the i7 / Ollama 0.34.4 environment, while the final load results are from the i9 / Ollama 0.35.1 Machine A. The Assignment 2 brief permits reusing Assignment 1 single-model accuracy only if the digest, prompt, Ollama version and machine are unchanged, so the default is to re-run test-set accuracy on the final Machine A. The service does not currently pin `temperature` or `seed`; any change to inference options must be recorded and held constant across configurations.

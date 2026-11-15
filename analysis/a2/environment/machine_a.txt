@@ -1,0 +1,13 @@
+
+
+Manufacturer : ASUSTeK COMPUTER INC.
+Model        : ASUS TUF Gaming F16 FX607JIR_FX607JIR
+RAM_GB       : 15.62
+
+
+
+
+
+Name                      : Intel(R) Core(TM) i9-14900HX
+NumberOfCores             : 24
+NumberOfLogicalProcessors : 32

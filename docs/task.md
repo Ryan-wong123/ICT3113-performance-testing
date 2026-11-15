@@ -330,7 +330,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 ## Step 2 — Design the cascade
 
-- [ ] `[machine: i9 · WS3]` **Memory check first (switch: off / Ollama only):** load both models of each candidate pair, run a few tickets through each, confirm `ollama ps` lists both and they stay loaded; save the output in `docs/test_environment.md` (Assignment 2 section). If no pair fits, record that a cascade is not feasible and recommend a single model.
+- [x] `[machine: i9 · WS3]` **Memory check first (switch: off / Ollama only):** both `qwen2.5:7b` + `llama3.2:3b` and `qwen2.5:7b` + `llama3.2:1b` remained resident together on Machine A, with `ollama ps` reporting `100% CPU` and context 4096 for both models. Raw outputs are in `analysis/a2/environment/`; the result is documented in `docs/test_environment.md`.
 - [ ] `[machine: any, after i9 data · WS4]` Choose the escalation approach on the tuning set only (category-based, agreement, self-reported confidence, ticket length, or a custom rule); justify the choice.
 - [ ] `[machine: any, after i9 data · WS4]` Choose exactly two settings of the rule on the tuning set.
 - [ ] `[machine: any, after i9 data · WS4]` Write `docs/a2_escalation_rule.md` so another team could implement it from the description. **(commit before the first benchmark run)**
