@@ -242,7 +242,7 @@ python3 -m unittest tests.test_build_step6_analysis tests.test_summarize_jtl tes
 
 The Assignment 1 baseline (Steps 1–6 above) is preserved. Assignment 2 is added on branch `assignment-2`. Brief: `docs/PROJECT_CONTEXT.md` Section 26. Due 2359, Friday 27 November. The steps below follow the brief's own Steps 1–5 and Deliverables. Order matters: items marked **(commit first)** must be committed before the later work they gate.
 
-Legend for the cascade switch (not yet implemented): **off** = Assignment 1 single-model path (`OLLAMA_MODEL`); **on** = cascade.
+Legend for the cascade switch: **off** = Assignment 1 single-model path (`OLLAMA_MODEL`); **on** = cascade.
 
 ## Execution plan by machine
 
@@ -356,7 +356,7 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 - [x] `[machine: any, after i9 data · WS4]` Report overall/per-category accuracy with counts and confusion matrices for all five configurations in `analysis/a2/accuracy/*.json`.
 - [x] `[machine: any, after i9 data · WS4]` Cascade evidence: A escalated 79/84 successful logged decisions (94.05%), with non-escalated 5/5 and escalated 64/79 correct; B escalated 71/84 (84.52%), with non-escalated 8/13 and escalated 59/71 correct. The one failed request per run has no completed decision and is excluded from these denominators.
 - [x] `[machine: any, after i9 data · WS4]` Pass/fail: Qwen and cascade A pass both limits; 1B and 3B fail overall; cascade B passes overall but fails Money transfer or service (7/13 = 53.85% vs 54.23%).
-- [ ] `[machine: any, after i9 data · WS4]` If any Assignment 1 single-model records are reused, score only test-set rows and say so in the report.
+- [x] `[machine: any, after i9 data · WS4]` If any Assignment 1 single-model records are reused, score only test-set rows and say so in the report. Single-model accuracy was re-run on Machine A (no Assignment 1 scoring reused). Assignment 1 predictions restricted to the 90 tuning tickets were used for rule design instead of fresh tuning runs; this is disclosed in `docs/a2_escalation_rule.md` and `docs/a2_results.md` Section 9.
 
 ### Speed test — set-up (switch: off for S)
 
@@ -383,20 +383,20 @@ Before every cascade run, confirm: `GET /health` reports cascade on with the int
 
 ## Step 5 — Recommendation
 
-- [ ] `[machine: any, after i9 data · WS4]` Recommend one configuration that passes both limits on the test set and is the fastest of those that do, by the team's own measurements at the chosen rate.
-- [ ] `[machine: any, after i9 data · WS4]` State how much faster it is than the top model and how much accuracy it gives up, overall and by category.
-- [ ] `[machine: any, after i9 data · WS4]` If the cascade was not the fastest qualifying configuration, say so and explain with the measured escalation fraction and latencies; if nothing but the top model qualifies, recommend it and describe what was tried and what it cost.
-- [ ] `[machine: any, after i9 data · WS4]` Compare predictions with outcomes and explain differences without editing the prediction record.
-- [ ] `[machine: any, after i9 data · WS4]` Write `docs/a2_results.md`; every figure must reconcile with a `.jtl`, log or JSON in the repository.
+- [x] `[machine: any, after i9 data · WS4]` Recommend one configuration that passes both limits on the test set and is the fastest of those that do, by the team's own measurements at the chosen rate. Recommended and approved 16 November 2026: `qwen2.5:7b` alone, mean p50 7.52 s at 11.253/min (`docs/a2_results.md` Section 8; slide 7 of `Group08_A2.pptx`).
+- [x] `[machine: any, after i9 data · WS4]` State how much faster it is than the top model and how much accuracy it gives up, overall and by category. It is the top model: 0 s faster and 0 points given up overall and in every category; the only other qualifying configuration, cascade A, has a mean p50 of 38.83 s.
+- [x] `[machine: any, after i9 data · WS4]` If the cascade was not the fastest qualifying configuration, say so and explain with the measured escalation fraction and latencies; if nothing but the top model qualifies, recommend it and describe what was tried and what it cost.  Explained in `docs/a2_results.md` Sections 4.3 and 6 using escalation 91.67% / 86.90% under load and the break-even analysis.
+- [x] `[machine: any, after i9 data · WS4]` Compare predictions with outcomes and explain differences without editing the prediction record. Drafted in `docs/a2_results.md` Section 7 (verdicts pending team confirmation).
+- [x] `[machine: any, after i9 data · WS4]` Write `docs/a2_results.md`; every figure must reconcile with a `.jtl`, log or JSON in the repository. Drafted 16 November 2026 (recommendation still awaiting team approval).
 
 ## Deliverables
 
-- [ ] `[machine: any (skeleton now; fill results after i9 data) · WS5]` `GroupNum_A2.pptx` (e.g. `Group08_A2.pptx`), at most 8 slides: cover; cascade design; test environment and method; accuracy results; speed results; trade-off chart (accuracy vs latency, overall limit as a line); predictions, recommendation, defence; limitations, references, model licences, AI declaration.
+- [x] `[machine: any (skeleton now; fill results after i9 data) · WS5]` `GroupNum_A2.pptx` (e.g. `Group08_A2.pptx`), at most 8 slides: cover; cascade design; test environment and method; accuracy results; speed results; trade-off chart (accuracy vs latency, overall limit as a line); predictions, recommendation, defence; limitations, references, model licences, AI declaration. `Group08_A2.pptx` (8 slides) built; its figures were checked against `docs/a2_results.md` and the raw files. Not committed to the repository (submitted via xSiTe). Still to fix before submission: see `docs/a2_results.md` Section 11 item 5.
 - [x] `[machine: any, after i9 data · WS4]` Supporting files committed: prediction record, written escalation rule, speed-test row list.
 - [x] `[machine: any, after i9 data · WS4]` Prediction record and escalation rule committed before the first Assignment 2 benchmark run.
 - [x] `[machine: i9 + JMeter machine · WS3]` Raw `.jtl` files and service logs for every reported run retained in the repository.
-- [ ] `[machine: any, after i9 data · WS5]` Every figure on slides 4–7 traces to a log or `.jtl` file.
-- [ ] `[machine: any · WS5]` Acknowledge the Consumer Complaint Database, Ollama and model licences; AI declaration states what the tools produced and what the team did.
+- [x] `[machine: any, after i9 data · WS5]` Every figure on slides 4–7 traces to a log or `.jtl` file. Checked 16 November 2026: slide 4 and 5 tables, slide 6 chart points and slide 7 prediction table all reconcile with `analysis/a2/accuracy/*.json`, `analysis/a2/speed/*.json`, `service_times.json` and the logs; each slide's speaker notes cite its source files.
+- [ ] `[machine: any · WS5]` Acknowledge the Consumer Complaint Database, Ollama and model licences; AI declaration states what the tools produced and what the team did. Slide 8 has the references, licences and a drafted AI declaration; it still contains the placeholder `[Team to confirm: name the tools and versions used.]`, so this item stays open until that is filled.
 
 ## Verification
 

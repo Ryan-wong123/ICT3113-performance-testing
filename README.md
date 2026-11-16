@@ -212,7 +212,7 @@ python3 -m unittest tests.test_build_step6_analysis -v
 # Assignment 2 — Fast Triage Within an Accuracy Floor
 The brief is recorded in `docs/PROJECT_CONTEXT.md` Section 26; the task checklist is in `docs/task.md`.
 
-**Status: in progress — pre-benchmark code and fixed row lists are ready; no Assignment 2 measurement has been run yet.** With the cascade switch off (the default) the service uses the Assignment 1 single-model path. The exact rule values and predictions are deliberately not frozen until the tuning-set work is complete.
+**Status: in progress — accuracy and speed measurements are complete; `docs/a2_results.md` is written, the recommendation (`qwen2.5:7b` alone) is approved and the 8-slide deck is built; only the AI-declaration tool names and a few slide fixes remain.** With the cascade switch off (the default) the service uses the Assignment 1 single-model path. The exact rule values and predictions are deliberately not frozen until the tuning-set work is complete.
 
 Planned artefacts: `docs/a2_accuracy_limits.md`, `docs/a2_escalation_rule.md`, `predictions/a2_prediction_record.md`, `analysis/a2/`, `jmeter/results/a2_*`, `docs/a2_results.md`, and `GroupNum_A2.pptx` (≤ 8 slides, due 2359 Friday 27 November).
 
